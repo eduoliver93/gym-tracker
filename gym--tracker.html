@@ -474,11 +474,10 @@ body::after {
 
 .mob-logo {
   font-family: var(--font-d);
-  font-size: 18px; font-weight: 800; flex: 0; /* Desativado o flex:1 antigo para caber o seletor centralizado */
+  font-size: 18px; font-weight: 800; flex: 0;
   white-space: nowrap;
 }
 
-/* NOVO SELETOR DE IDIOMAS MOBILE AJUSTADO PARA O TOP BAR */
 .mob-lang-container {
   flex: 1;
   display: flex;
@@ -526,6 +525,7 @@ body::after {
 .mob-timer-row {
   display: none;
   position: fixed; top: 54px; left:0; right:0;
+  height: 54px; /* Altura explícita definida para cálculo do container */
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 10px 16px; z-index: 199;
@@ -585,20 +585,37 @@ body::after {
 }
 .mob-tab.active .mob-tab-dot { background: var(--lime); }
 
-/* ── RESPONSIVE ─────────────────────────────────── */
+/* ── RESPONSIVE CORRIGIDO SEM SOBREPOSIÇÃO ─────────────────── */
 @media (max-width: 700px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar { display: none; }
+  
+  /* .main agora empurra as coisas considerando o mob-top (52px) + mob-timer-row (54px) */
   .main { 
-    padding-top: calc(108px + env(safe-area-inset-top, 0)); 
+    padding-top: calc(106px + env(safe-area-inset-top, 0)); 
     padding-bottom: calc(68px + env(safe-area-inset-bottom, 0)); 
   }
   .main-header { display: none; }
+  
+  /* A barra de filtros fixa agora inicia exatamente abaixo do cronômetro mobile (52px + 54px = 106px) */
   .filter-bar { 
     padding: 12px 16px; 
+    position: fixed;
     top: calc(106px + env(safe-area-inset-top, 0)); 
+    left: 0;
+    right: 0;
+    height: 50px;
+    z-index: 150;
+    border-bottom: 1px solid var(--border);
   }
-  .ex-grid { padding: 16px 16px 24px; grid-template-columns: 1fr; gap: 8px; }
+  
+  /* O grid de exercícios ganha um espaçamento superior extra correspondente à altura da barra de filtros fixa */
+  .ex-grid { 
+    padding: 66px 16px 24px; 
+    grid-template-columns: 1fr; 
+    gap: 8px; 
+  }
+  
   .mob-top { display: flex; }
   .mob-prog-line { display: block; }
   .mob-timer-row { display: flex; }
@@ -832,7 +849,7 @@ const I18N = {
       "Lunges":"Zancadas","Walking Lunges":"Zancadas Caminando","Lying Leg Curl":"Curl Fem. Tumbado",
       "Seated Leg Curl":"Curl Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera",
       "Leg Extension":"Extensión Cuád.","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Gemelos Pie",
-      "Calf Raise (Seat)":"Gemelos Sentado","Bench Press":"Press Banca","Incline Press":"Press Inclinado",
+      "Calf Raise (Seat)":"Gemelos Sentado","Press Banca":"Press Banca","Incline Press":"Press Inclinado",
       "Chest Machine":"Máquina Pecho","Chest Fly":"Aperturas","Reverse Fly":"Aperturas Inv.",
       "Push-Ups":"Flexiones","Lat Pulldown":"Jalón al Pecho","Bent Over Row":"Remo Inclinado",
       "Seated Row":"Remo Bajo","Deadlift":"Peso Muerto","Shoulder Press":"Press Hombro",
@@ -909,7 +926,6 @@ function updateTexts() {
   document.getElementById("btn-reset-day").textContent  = l.clearDay;
   document.getElementById("sb-reset").textContent    = l.reset;
   
-  // SINCRONIZA OS DOIS SELETORES (DESKTOP E MOBILE)
   document.getElementById("lang-sel").value          = lang;
   document.getElementById("mob-lang-sel").value      = lang;
   
@@ -919,7 +935,6 @@ function updateTexts() {
 function renderNav() {
   const l = L();
   const counts = tabActiveCounts();
-  // sidebar
   document.getElementById("sb-nav").innerHTML = Object.keys(EXERCISES).map(k => `
     <button class="nav-btn${tab===k?" active":""}" onclick="switchTab('${k}')">
       <span class="nav-accent"></span>
@@ -927,7 +942,7 @@ function renderNav() {
       ${counts[k]>0 ? `<span class="nav-count">${counts[k]}</span>` : ""}
     </button>
   `).join("");
-  // mobile bottom
+
   document.getElementById("mob-tabs").innerHTML = Object.keys(EXERCISES).map(k => `
     <button class="mob-tab${tab===k?" active":""}" onclick="switchTab('${k}')">
       <span class="mob-tab-dot"></span>${l.tabs[k]}
@@ -974,7 +989,6 @@ function updateProgress() {
   const { all, done, pct } = calcProgress();
   const l = L();
 
-  // Desktop
   document.getElementById("sb-pct").textContent = `${pct}%`;
   document.getElementById("sb-fraction").textContent = `${done}/${all.length}`;
   document.getElementById("sb-ex-count").textContent = `${all.length} ${l.exercises}`;
@@ -984,17 +998,14 @@ function updateProgress() {
   if (pct > 0) document.getElementById("track-fill").classList.add("has-progress");
   else document.getElementById("track-fill").classList.remove("has-progress");
 
-  // Mobile
   document.getElementById("mob-pct").textContent = `${pct}%`;
   document.getElementById("mob-fill").style.width = `${pct}%`;
 
-  // Color dynamics
   const color = pct === 100 ? "var(--green)" : "var(--lime)";
   document.getElementById("sb-pct").style.color = color;
   document.getElementById("hd-pct").style.color = color;
   document.getElementById("mob-pct").style.color = color;
 
-  // Toast alert
   if (pct === 100 && prevPct < 100 && all.length > 0) {
     showToast();
   }
@@ -1005,9 +1016,9 @@ function updateProgress() {
 function switchTab(k) {
   tab = k; filter = "all";
   renderFilters(); renderGrid(); renderNav(); updateTexts(); persist();
+  window.scrollTo({ top: 0 }); // Retorna o scroll para o topo para evitar desalinhamento visual ao trocar de aba
 }
 
-// Adicionada função explícita exigida pelo botão reset do topo
 function resetDay() {
   if(!confirm("Reset entire tracking dataset?")) return;
   exState = {}; sec = 0; resetTimerLogic();
@@ -1070,7 +1081,6 @@ function updateTimerBtn() {
   const l = L();
   const txt = running ? l.stop : l.start;
   
-  // Desktop
   const btn = document.getElementById("sb-toggle");
   if(btn) {
     btn.textContent = txt;
@@ -1078,7 +1088,6 @@ function updateTimerBtn() {
     else { btn.classList.remove("btn-stop"); btn.classList.add("btn-lime"); }
   }
 
-  // Mobile
   const mBtn = document.getElementById("mob-toggle");
   if(mBtn) {
     mBtn.textContent = txt;
@@ -1094,7 +1103,6 @@ function showToast() {
   setTimeout(() => t.classList.remove("show"), 3500);
 }
 
-// ── INITIALIZATION ────────────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", () => {
   loadState();
   renderAll();
