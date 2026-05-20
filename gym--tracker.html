@@ -5,318 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1a1c20">
-<title>BODY LIFE</title>
+<meta name="theme-color" content="#0e1116">
+<title>BODY LIFE - PREMIUM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght=400;600;700;800&family=JetBrains+Mono:wght=400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=JetBrains+Mono:wght=400;700&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & TOKENS ─────────────────────────────────────────────── */
+/* ── RESET & DESIGN SYSTEM PREMIUM ──────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg:        #1a1c20; 
-  --s1:        #22252a; 
-  --s2:        #2c3038; 
-  --s3:        #373c46; 
-  --border:    rgba(255,255,255,0.05);
-  --border-hi: rgba(255,255,255,0.12);
-  --lime:      #c8ff00; 
-  --lime-glow: rgba(200,255,0,0.15);
-  --red:       #ff4444;
-  --green:     #00ff87;
-  --cyan:      #00d2ff;
-  --text:      #ffffff;
-  --muted:     #626875;
-  --muted2:    #9097a6;
-  --font-d:    'Syne', sans-serif;
-  --font-m:    'JetBrains Mono', monospace;
-  --shadow:    0 4px 12px rgba(0,0,0,0.15);
+  --bg:          #0e1116; 
+  --surface:     #171c26; 
+  --surface-hi:  #222936; 
+  --border:      rgba(255,255,255,0.06);
+  --border-hi:   rgba(255,255,255,0.12);
+  --blue-brand:  #007aff;
+  --blue-glow:   rgba(0,122,255,0.15);
+  --cyan:        #00d2ff;
+  --lime:        #ccff00;
+  --red:         #ff3b30;
+  --green:       #34c759;
+  --text:        #ffffff;
+  --muted:       #6e788c;
+  --muted2:      #a2adb9;
+  --font-d:      'Plus Jakarta Sans', sans-serif;
+  --font-m:      'JetBrains Mono', monospace;
   color-scheme: dark;
 }
 
 html { scroll-behavior: smooth; height: 100%; }
-
-body {
-  font-family: var(--font-d);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh;
-  overflow-x: hidden;
-  position: relative;
-}
+body { font-family: var(--font-d); background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
 
 .app-container {
-  max-width: 600px;
+  max-width: 480px;
   margin: 0 auto;
   background: var(--bg);
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)); 
+  padding: 20px 20px calc(100px + env(safe-area-inset-bottom, 0)); 
 }
 
-/* ── HEADER DA MARCA ── */
-.brand-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 16px 10px;
-}
+/* ── HEADER PREMIUM ── */
+.brand-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 4px 20px; }
+.brand-title { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase; }
+.brand-title span { color: var(--blue-brand); }
+.brand-right { display: flex; align-items: center; gap: 12px; }
+.lang-dropdown { background: var(--surface); color: var(--text); border: 1px solid var(--border-hi); padding: 6px 12px; border-radius: 12px; font-family: var(--font-m); font-weight: 700; font-size: 12px; outline: none; }
+.global-pct { font-size: 14px; font-weight: 700; background: var(--blue-glow); color: var(--cyan); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(0,210,255,0.2); }
 
-.brand-title {
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -1px;
+/* ── PAINEL CENTRAL ── */
+.control-panel { 
+  background: linear-gradient(145deg, var(--surface), #121620);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+  text-align: center;
 }
-.brand-title span { color: var(--lime); }
+.panel-title { font-size: 13px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
 
-.brand-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+/* Cronômetro Circular Analógico/Digital */
+.circular-timer-box { position: relative; width: 160px; height: 160px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+.circular-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.circular-bg { fill: none; stroke: var(--surface-hi); stroke-width: 6; }
+.circular-progress { fill: none; stroke: var(--blue-brand); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 110; transition: stroke-dashoffset 1s linear; }
+.timer-display { font-family: var(--font-m); font-size: 32px; font-weight: 700; color: var(--text); position: relative; z-index: 2; }
 
-.lang-dropdown {
-  background: var(--s2);
-  color: var(--text);
-  border: 1px solid var(--border-hi);
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-family: var(--font-m);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-  outline: none;
-}
+.timer-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.btn-start { background: var(--blue-brand); color: #fff; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 20px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(0,122,255,0.4); }
+.btn-start.active { background: var(--red); box-shadow: 0 4px 14px rgba(255,59,48,0.4); }
+.btn-reset { background: transparent; color: var(--muted2); border: 1px solid var(--border-hi); font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 20px; cursor: pointer; }
 
-.global-pct {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--lime);
-}
-
-/* ── CONTROL PANEL ── */
-.control-panel {
-  padding: 10px 16px 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.timer-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.timer-wrapper .lbl {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.timer-display {
-  font-family: var(--font-m);
-  font-size: 42px;
-  font-weight: 700;
-  color: var(--lime);
-  line-height: 1.1;
-}
-
-.timer-controls {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-start {
-  background: var(--lime);
-  color: #000;
-  font-family: var(--font-m);
-  font-size: 14px;
-  font-weight: 800;
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-reset {
-  background: var(--s2);
-  color: var(--text);
-  border: 1px solid var(--border-hi);
-  font-family: var(--font-m);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.workout-actions-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.action-btns {
-  display: flex;
-  gap: 12px;
-}
-
-.btn-train {
-  background: var(--cyan);
-  color: #000;
-  font-family: var(--font-m);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.btn-finish {
-  background: var(--red);
-  color: #fff;
-  font-family: var(--font-m);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.secondary-timer {
-  font-family: var(--font-m);
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
-}
+.workout-actions-row { display: flex; background: var(--surface-hi); padding: 8px; border-radius: 20px; align-items: center; justify-content: space-between; }
+.btn-train { background: var(--surface); color: var(--cyan); font-size: 12px; font-weight: 700; padding: 10px 16px; border-radius: 14px; border: 1px solid rgba(0,210,255,0.2); cursor: pointer; }
+.btn-finish { background: var(--red); color: #fff; font-size: 12px; font-weight: 700; padding: 10px 16px; border-radius: 14px; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(255,59,48,0.25); }
+.secondary-timer { font-family: var(--font-m); font-size: 16px; font-weight: 700; color: #fff; }
 
 /* ── DIAS DA SEMANA ── */
-.weekday-bar {
-  display: flex;
-  gap: 6px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-}
+.weekday-bar { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
 .weekday-bar::-webkit-scrollbar { display: none; }
+.day-chip { flex: 1; min-width: 60px; text-align: center; font-size: 12px; font-weight: 600; padding: 12px 6px; border-radius: 16px; border: 1px solid transparent; background: var(--surface); color: var(--muted); cursor: pointer; transition: all 0.2s ease; }
+.day-chip.active { background: #fff; color: var(--bg); font-weight: 700; transform: scale(1.05); }
 
-.day-chip {
-  flex: 1;
-  min-width: 75px;
-  text-align: center;
-  font-family: var(--font-m);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: 10px 6px;
-  border-radius: 12px;
-  border: 1px solid var(--border-hi);
-  background: var(--s1);
-  color: var(--muted2);
-  cursor: pointer;
-  transition: all .2s;
-}
-.day-chip.active {
-  background: var(--lime);
-  color: #000;
-  border-color: var(--lime);
-  font-weight: 700;
-}
+/* ── SUB-FILTROS HORIZONTAIS ── */
+.sub-filter-bar { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
+.sub-filter-bar::-webkit-scrollbar { display: none; }
+.filter-chip { background: transparent; border: 1px solid var(--border-hi); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--muted2); white-space: nowrap; transition: all 0.2s; }
+.filter-chip.active { background: var(--blue-brand); color: #fff; border-color: var(--blue-brand); }
 
-/* ── LISTA DE EXERCÍCIOS ── */
-.ex-grid {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.swipe-container {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  width: 100%;
-}
-
-.ex-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.ex-card.done {
-  border-color: rgba(0,255,135,0.3);
-  background: rgba(0,255,135,0.02);
-}
-
+/* ── CARDS DE EXERCÍCIO ESTILO PREMIUM ── */
+.ex-grid { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.swipe-container { width: 100%; }
+.ex-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: all 0.25s ease; }
+.ex-card.done { border-color: rgba(52,199,89,0.3); background: rgba(52,199,89,0.03); opacity: 0.8; }
 .ex-info { flex: 1; }
-.ex-name { font-size: 16px; font-weight: 700; }
-.ex-group { font-family: var(--font-m); font-size: 10px; color: var(--muted2); text-transform: uppercase; margin-top: 4px; }
+.ex-name { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.4; }
+.ex-group { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px; }
 
-.check-wrap { width: 32px; height: 32px; position: relative; }
+/* Checkbox Premium Customizado Circular */
+.check-wrap { width: 26px; height: 26px; position: relative; }
 .check-wrap input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; z-index: 2; }
-.check-box {
-  width: 32px; height: 32px; border-radius: 10px;
-  border: 2px solid var(--s3); background: var(--s2);
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; color: transparent; font-size: 14px; font-weight: bold;
-}
-.check-wrap input:checked + .check-box { background: var(--green); border-color: var(--green); color: #000; }
+.check-box { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface-hi); background: #121620; display: flex; align-items: center; justify-content: center; transition: all .25s ease; color: transparent; font-size: 11px; font-weight: bold; }
+.check-wrap input:checked + .check-box { background: var(--blue-brand); border-color: var(--blue-brand); color: #fff; transform: scale(1.05); }
+.ex-card.done .check-wrap input:checked + .check-box { background: var(--green); border-color: var(--green); }
 
-.indicator-tag {
-  font-family: var(--font-m);
-  font-size: 9px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: var(--s2);
-  color: var(--muted2);
-}
-.indicator-tag.active {
-  background: var(--lime-glow);
-  color: var(--lime);
-}
+.indicator-tag { font-size: 10px; font-weight: 700; padding: 6px 12px; border-radius: 12px; background: var(--surface-hi); color: var(--muted2); }
+.indicator-tag.active { background: var(--blue-glow); color: var(--cyan); }
 
-/* ── BARRA INFERIOR DE ABAS ── */
-.mob-bottom {
-  position: fixed; bottom: 0; left: 0; right: 0; background: #15171a; 
-  border-top: 1px solid var(--border-hi); z-index: 9999;
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0));
-}
-.mob-tabs { display: flex; gap: 6px; align-items: center; justify-content: space-between; width: 100%; }
-.mob-tab {
-  flex: 1; font-family: var(--font-m); font-size: 9px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
-  border: 1px solid var(--border-hi); background: var(--s1); color: var(--muted2); padding: 12px 2px; border-radius: 10px;
-  cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; height: 52px; transition: all 0.15s;
-}
-.mob-tab.active { background: var(--lime); color: #000; border-color: var(--lime); box-shadow: 0 4px 16px rgba(200,255,0,0.25); }
-.mob-tab-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.15); }
-.mob-tab.active .mob-tab-dot { background: #000; }
+/* ── NAVEGAÇÃO INFERIOR MODERNA ── */
+.mob-bottom { position: fixed; bottom: 16px; left: 16px; right: 16px; background: rgba(23, 28, 38, 0.85); backdrop-filter: blur(20px); border: 1px solid var(--border-hi); border-radius: 24px; z-index: 9999; padding: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+.mob-tabs { display: flex; width: 100%; justify-content: space-between; }
+.mob-tab { flex: 1; border: none; background: transparent; color: var(--muted); padding: 12px 4px; border-radius: 18px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 48px; transition: all 0.2s; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.mob-tab.active { color: #fff; background: var(--surface-hi); }
+.mob-tab-dot { width: 4px; height: 4px; border-radius: 50%; background: transparent; }
+.mob-tab.active .mob-tab-dot { background: var(--blue-brand); }
 
-/* ── MODAL ── */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(20,22,25,0.85); backdrop-filter: blur(25px);
-  z-index: 10000; display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 24px;
-}
+/* ── MODAL GLASSMORPHISM ── */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(14,17,22,0.8); backdrop-filter: blur(20px); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
 .modal-overlay.open { opacity: 1; pointer-events: auto; }
-.modal-card { background: var(--s1); border: 1px solid var(--border-hi); width: 100%; max-width: 420px; border-radius: 24px; padding: 40px 32px; text-align: center; }
-.modal-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-.modal-summary-box { background: var(--s2); border-radius: 16px; padding: 20px; margin-top: 20px; }
-.modal-time-val { font-family: var(--font-m); font-size: 44px; font-weight: 700; color: var(--lime); }
-.modal-btn { background: var(--lime); color: #000; border: none; padding: 14px; border-radius: 12px; width: 100%; margin-top: 20px; font-weight: 700; cursor: pointer;}
+.modal-card { background: var(--surface); border: 1px solid var(--border-hi); width: 100%; max-width: 360px; border-radius: 28px; padding: 32px 24px; text-align: center; }
+.modal-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.modal-summary-box { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 20px; margin-top: 16px; border: 1px solid var(--border); }
+.modal-time-val { font-family: var(--font-m); font-size: 36px; font-weight: 700; color: var(--cyan); margin-top: 4px; }
+.modal-btn { background: #fff; color: #000; border: none; padding: 14px; border-radius: 16px; width: 100%; margin-top: 20px; font-weight: 700; cursor: pointer; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -335,28 +148,30 @@ body {
   </header>
 
   <section class="control-panel">
-    <div class="timer-section">
-      <div class="timer-wrapper">
-        <div class="lbl" id="lbl-descanso">DESCANSO</div>
-        <div class="timer-display" id="main-timer">00:00</div>
-      </div>
-      <div class="timer-controls">
-        <button class="btn-start" id="btn-toggle-timer" onclick="toggleTimer()">START</button>
-        <button class="btn-reset" onclick="resetTimer()">RESET</button>
-      </div>
+    <div class="panel-title" id="lbl-descanso">DESCANSO</div>
+    
+    <div class="circular-timer-box">
+      <svg class="circular-svg">
+        <circle class="circular-bg" cx="80" cy="80" r="70"></circle>
+        <circle class="circular-progress" id="circular-progress" cx="80" cy="80" r="70"></circle>
+      </svg>
+      <div class="timer-display" id="main-timer">00:00</div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="btn-start" id="btn-toggle-timer" onclick="toggleTimer()">START</button>
+      <button class="btn-reset" onclick="resetTimer()">RESET</button>
     </div>
 
     <div class="workout-actions-row">
-      <div class="action-btns">
-        <button class="btn-train" onclick="iniciarTreino()" id="btn-iniciar">INICIAR TREINO</button>
-        <button class="btn-finish" onclick="finishWorkout()" id="btn-finalizar">FINALIZAR</button>
-      </div>
+      <button class="btn-train" onclick="iniciarTreino()" id="btn-iniciar">INICIAR TREINO</button>
       <div class="secondary-timer" id="workout-timer">00:00</div>
+      <button class="btn-finish" onclick="finishWorkout()" id="btn-finalizar">FINALIZAR</button>
     </div>
   </section>
 
   <div class="weekday-bar" id="weekday-bar"></div>
-
+  <div class="sub-filter-bar" id="sub-filter-bar"></div>
   <main class="ex-grid" id="ex-grid"></main>
 </div>
 
@@ -368,7 +183,7 @@ body {
   <div class="modal-card">
     <div class="modal-title" id="modal-title">TREINO FINALIZADO!</div>
     <div class="modal-summary-box">
-      <div style="font-family: var(--font-m); font-size: 11px; color: var(--muted);">TEMPO TOTAL DE TREINO</div>
+      <div style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">TEMPO TOTAL DE TREINO</div>
       <div class="modal-time-val" id="modal-duration">00:00</div>
     </div>
     <button class="modal-btn" onclick="closeModal()">FECHAR</button>
@@ -376,34 +191,29 @@ body {
 </div>
 
 <script>
-// ── DATASET MAIOR MAPEADO COM TODOS OS 55 EXERCÍCIOS SOLICITADOS ──
 const EXERCISES = {
   lower: [
-    // Quadriceps
     {id:"l1", key:"agach_livre", gKey:"quadriceps"},
     {id:"l2", key:"leg_press", gKey:"quadriceps"},
     {id:"l3", key:"extensora", gKey:"quadriceps"},
     {id:"l4", key:"bulgaro", gKey:"quadriceps"},
     {id:"l5", key:"afundo", gKey:"quadriceps"},
     {id:"l6", key:"hack", gKey:"quadriceps"},
-    // Posteriores
+    {id:"l19", key:"smith", gKey:"quadriceps"},
     {id:"l7", key:"flexora_cad", gKey:"posterior"},
     {id:"l8", key:"flexora_mes", gKey:"posterior"},
     {id:"l9", key:"stiff", gKey:"posterior"},
     {id:"l10", key:"flex_pe", gKey:"posterior"},
     {id:"l11", key:"good_morning", gKey:"posterior"},
-    // Glúteos
     {id:"l12", key:"elev_pelvica", gKey:"gluteos"},
     {id:"l13", key:"abdutora", gKey:"gluteos"},
     {id:"l14", key:"gluteo_cabo", gKey:"gluteos"},
     {id:"l15", key:"sumo", gKey:"gluteos"},
-    // Panturrilhas
     {id:"l16", key:"gemeos_sent", gKey:"panturrilha"},
     {id:"l17", key:"gemeos_pe", gKey:"panturrilha"},
     {id:"l18", key:"pant_leg", gKey:"panturrilha"}
   ],
   upper: [
-    // Peitoral
     {id:"u1", key:"sup_reto", gKey:"peito"},
     {id:"u2", key:"sup_inc", gKey:"peito"},
     {id:"u3", key:"sup_dec", gKey:"peito"},
@@ -412,7 +222,6 @@ const EXERCISES = {
     {id:"u6", key:"pec_deck", gKey:"peito"},
     {id:"u7", key:"crossover", gKey:"peito"},
     {id:"u8", key:"flexao_braco", gKey:"peito"},
-    // Costas
     {id:"u9", key:"pux_aberta", gKey:"costas"},
     {id:"u10", key:"pux_supinada", gKey:"costas"},
     {id:"u11", key:"pux_triangulo", gKey:"costas"},
@@ -424,7 +233,6 @@ const EXERCISES = {
     {id:"u17", key:"rem_articulada", gKey:"costas"},
     {id:"u18", key:"terra", gKey:"costas"},
     {id:"u19", key:"ext_lombar", gKey:"costas"},
-    // Ombros & Trapézio
     {id:"u20", key:"desenv_halt", gKey:"ombros"},
     {id:"u21", key:"desenv_militar", gKey:"ombros"},
     {id:"u22", key:"elev_front", gKey:"ombros"},
@@ -436,7 +244,6 @@ const EXERCISES = {
     {id:"u28", key:"elev_inc_tronco", gKey:"ombros"},
     {id:"u29", key:"encolhimento", gKey:"trapezio"},
     {id:"u30", key:"rem_alta", gKey:"trapezio"},
-    // Braços (Bíceps, Tríceps, Antebraço)
     {id:"u31", key:"rosca_direta", gKey:"biceps"},
     {id:"u32", key:"rosca_alt", gKey:"biceps"},
     {id:"u33", key:"rosca_martelo", gKey:"biceps"},
@@ -458,62 +265,70 @@ const EXERCISES = {
   ]
 };
 
+const MAP_SUBGROUPS = {
+  lower: ["all", "quadriceps", "posterior", "gluteos", "panturrilha"],
+  upper: ["all", "peito", "costas", "ombros", "trapezio", "biceps", "triceps", "antebraço"],
+  core: ["all"]
+};
+
 const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
-// DICIONÁRIO INTERNACIONAL COM TODOS OS NOVOS TEXTOS TRADUZIDOS
 const I18N = {
   en: {
     descanso: "REST", iniciar: "START WORKOUT", finalizar: "FINISH", modalTitle: "WORKOUT DONE!", modalSub: "TOTAL WORKOUT TIME", modalBtn: "CLOSE",
-    emptyPlanner: "NO EXERCISES ADDED FOR THIS DAY YET. GO TO LOWER, UPPER OR CORE TO BUILD YOUR WORKOUT!", emptyCategory: "NO EXERCISES IN THIS CATEGORY",
-    weekdays: { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" },
+    emptyPlanner: "NO EXERCISES ADDED FOR THIS DAY YET.", emptyCategory: "NO EXERCISES FOUND",
+    all: "ALL",
+    weekdays: { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" },
     tabs: { today: "PLANNER", lower: "LOWER", upper: "UPPER", core: "CORE" },
     groups: { quadriceps: "Quadriceps", posterior: "Hamstrings", gluteos: "Glutes", panturrilha: "Calves", peito: "Chest", costas: "Back", ombros: "Shoulders", trapezio: "Trapezius", biceps: "Biceps", triceps: "Triceps", antebraço: "Forearms", abdomen: "Abs & Core" },
     names: {
-      agach_livre: "Free Squat (Barbell/Dumbbells)", leg_press: "Leg Press (45°/Horizontal)", extensora: "Leg Extension", bulgaro: "Bulgarian Split Squat", afundo: "Lunges (Walking/Static)", hack: "Hack Machine Squat",
-      flexora_cad: "Seated Leg Curl", flexora_mes: "Lying Leg Curl", stiff: "Stiff Leg Deadlift", flex_pe: "Standing Leg Curl (Single-Leg)", good_morning: "Good Morning (Barbell)",
-      elev_pelvica: "Hip Thrust", abdutora: "Hip Abductor Machine", gluteo_cabo: "Cable Glute Kickback", sumo: "Sumo Squat (Heavy Dumbbell)",
+      agach_livre: "Free Squat", leg_press: "Leg Press (45°/Horiz.)", extensora: "Leg Extension", bulgaro: "Bulgarian Split Squat", afundo: "Lunges", hack: "Hack Machine Squat", smith: "Smith Machine Squat",
+      flexora_cad: "Seated Leg Curl", flexora_mes: "Lying Leg Curl", stiff: "Stiff Leg Deadlift", flex_pe: "Standing Leg Curl", good_morning: "Good Morning",
+      elev_pelvica: "Hip Thrust", abdutora: "Hip Abductor Machine", gluteo_cabo: "Cable Glute Kickback", sumo: "Sumo Squat",
       gemeos_sent: "Seated Calf Raise", gemeos_pe: "Standing Calf Raise", pant_leg: "Calf Raise on Leg Press",
-      sup_reto: "Flat Bench Press", sup_inc: "Incline Bench Press", sup_dec: "Decline Bench Press", sup_maq: "Chest Press Machine", cruc_reto: "Dumbbell Fly (Flat/Incline)", pec_deck: "Pec Deck / Chest Fly Machine", crossover: "Cable Crossover", flexao_braco: "Push-Up (Bodyweight)",
-      pux_aberta: "Lat Pulldown (Wide Grip)", pux_supinada: "Underhand Lat Pulldown", pux_triangulo: "V-Bar Pulldown", barra_fixa: "Pull-Up / Chin-Up", rem_baixa: "Seated Cable Row", rem_curvada: "Barbell/Dumbbell Row", rem_cavalinho: "T-Bar Row", rem_uni: "Single-Arm Dumbbell Row (Rowing)", rem_articulada: "Leverage Machine Row", terra: "Deadlift", ext_lombar: "Hyperextension (Roman Chair)",
-      desenv_halt: "Dumbbell Shoulder Press", desenv_militar: "Military Press (Barbell)", elev_front: "Front Raise", elev_lat_halt: "Dumbbell Lateral Raise", elev_lat_cabo: "Cable Lateral Raise", elev_lat_maq: "Machine Lateral Raise", cruc_inv: "Reverse Fly / Rear Delt Deck", face_pull: "Cable Face Pull", elev_inc_tronco: "Bent-Over Lateral Raise", encolhimento: "Dumbbell/Barbell Shrug", rem_alta: "Upright Row",
-      rosca_direta: "Barbell/Dumbbell Biceps Curl", rosca_alt: "Alternating Dumbbell Curl", rosca_martelo: "Hammer Curl", rosca_scott: "Preacher Curl", rosca_concentrada: "Concentration Curl", triceps_pulley: "Triceps Pushdown (Cable/Rope)", triceps_testa: "Lying Triceps Extension (Skull Crusher)", triceps_coice: "Triceps Kickback", triceps_frances: "Overhead Triceps Extension", mergulho_banco: "Bench Dips / Parallel Bars", rosca_inversa: "Reverse Wrist Curl", flexao_punho: "Wrist Curl",
-      abd_supra: "Abdominal Crunch", abd_infra: "Hanging/Lying Leg Raise", abd_obliquo: "Heel Touch / Russian Twist", prancha_iso: "Isometric Plank (Front/Side)"
+      sup_reto: "Flat Bench Press", sup_inc: "Incline Bench Press", sup_dec: "Decline Bench Press", sup_maq: "Chest Press Machine", cruc_reto: "Dumbbell Fly", pec_deck: "Pec Deck / Voador", crossover: "Cable Crossover", flexao_braco: "Push-Up",
+      pux_aberta: "Lat Pulldown (Wide Grip)", pux_supinada: "Underhand Lat Pulldown", pux_triangulo: "V-Bar Pulldown", barra_fixa: "Pull-Up / Chin-Up", rem_baixa: "Seated Cable Row", rem_curvada: "Barbell/Dumbbell Row", rem_cavalinho: "T-Bar Row", rem_uni: "Single-Arm Dumbbell Row", rem_articulada: "Leverage Machine Row", terra: "Deadlift", ext_lombar: "Hyperextension",
+      desenv_halt: "Dumbbell Shoulder Press", desenv_militar: "Military Press", elev_front: "Front Raise", elev_lat_halt: "Dumbbell Lateral Raise", elev_lat_cabo: "Cable Lateral Raise", elev_lat_maq: "Machine Lateral Raise", cruc_inv: "Reverse Fly", face_pull: "Cable Face Pull", elev_inc_tronco: "Bent-Over Lateral Raise", encolhimento: "Dumbbell/Barbell Shrug", rem_alta: "Upright Row",
+      rosca_direta: "Barbell Biceps Curl", rosca_alt: "Alternating Dumbbell Curl", rosca_martelo: "Hammer Curl", rosca_scott: "Preacher Curl", rosca_concentrada: "Concentration Curl", triceps_pulley: "Triceps Pushdown", triceps_testa: "Lying Triceps Extension", triceps_coice: "Triceps Kickback", triceps_frances: "Overhead Triceps Extension", mergulho_banco: "Bench Dips", rosca_inversa: "Reverse Wrist Curl", flexao_punho: "Wrist Curl",
+      abd_supra: "Abdominal Crunch", abd_infra: "Leg Raise", abd_obliquo: "Russian Twist", prancha_iso: "Isometric Plank"
     }
   },
   pt: {
     descanso: "DESCANSO", iniciar: "INICIAR TREINO", finalizar: "FINALIZAR", modalTitle: "TREINO FINALIZADO!", modalSub: "TEMPO TOTAL DE TREINO", modalBtn: "FECHAR",
-    emptyPlanner: "NENHUM EXERCÍCIO ADICIONADO PARA ESTE DIA. VÁ EM INFERIOR, SUPERIOR OU CORE PARA MONTAR SEU TREINO!", emptyCategory: "NENHUM EXERCÍCIO NESTA CATEGORIA",
-    weekdays: { mon: "Segunda", tue: "Terça", wed: "Quarta", thu: "Quinta", fri: "Sexta", sat: "Sábado", sun: "Domingo" },
-    tabs: { today: "FICHA DE TREINO", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
-    groups: { quadriceps: "Quadríceps", posterior: "Posterior Coxa", gluteos: "Glúteos", panturrilha: "Panturrilhas", peito: "Peitoral", costas: "Costas", ombros: "Ombros", trapezio: "Trapézio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebraço", abdomen: "Abdômen (Core)" },
+    emptyPlanner: "NENHUM EXERCÍCIO ADICIONADO PARA ESTE DIA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO",
+    all: "TODOS",
+    weekdays: { mon: "Seg", tue: "Ter", wed: "Qua", thu: "Qui", fri: "Sex", sat: "Sáb", sun: "Dom" },
+    tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
+    groups: { quadriceps: "Quadríceps", posterior: "Posterior Coxa", gluteos: "Glúteos", panturrilha: "Panturrilhas", peito: "Peitoral", costas: "Costas", ombros: "Ombros", trapezio: "Trapézio", biceps: "Bíceps", triceps: "Trícep", antebraço: "Antebraço", abdomen: "Abdômen" },
     names: {
-      agach_livre: "Agachamento Livre", leg_press: "Leg Press (45° ou Horiz.)", extensora: "Cadeira Extensora", bulgaro: "Agachamento Búlgaro", afundo: "Afundo / Passada", hack: "Hack Machine",
-      flexora_cad: "Cadeira Flexora (Sentado)", flexora_mes: "Mesa Flexora (Deitado)", stiff: "Stiff (Barra/Halteres)", flex_pe: "Flexão de Pernas em Pé", good_morning: "Bom Dia (Good Morning)",
-      elev_pelvica: "Elevação Pélvica", abdutora: "Cadeira Abdutora", gluteo_cabo: "Glúteo no Cabo (Coice)", sumo: "Agachamento Sumô",
+      agach_livre: "Agachamento Livre", leg_press: "Leg Press (45° ou Horiz.)", extensora: "Cadeira Extensora", bulgaro: "Agachamento Búlgaro", afundo: "Afundo / Passada", hack: "Hack Machine", smith: "Agachamento Smith",
+      flexora_cad: "Cadeira Flexora", flexora_mes: "Mesa Flexora", stiff: "Stiff (Barra/Halteres)", flex_pe: "Flexão de Pernas em Pé", good_morning: "Bom Dia (Good Morning)",
+      elev_pelvica: "Elevação Pélvica", abdutora: "Cadeira Abdutora", gluteo_cabo: "Glúteo no Cabo", sumo: "Agachamento Sumô",
       gemeos_sent: "Gêmeos Sentado", gemeos_pe: "Gêmeos em Pé", pant_leg: "Panturrilha no Leg Press",
       sup_reto: "Supino Reto", sup_inc: "Supino Inclinado", sup_dec: "Supino Declinado", sup_maq: "Supino Máquina", cruc_reto: "Crucifixo Reto / Inclinado", pec_deck: "Pec Deck / Voador", crossover: "Crossover na Polia", flexao_braco: "Flexão de Braço",
-      pux_aberta: "Puxada Aberta no Pulley", pux_supinada: "Puxada Pegada Supinada", pux_triangulo: "Puxada Triângulo", barra_fixa: "Barra Fixa", rem_baixa: "Remada Baixa no Cabo", rem_curvada: "Remada Curvada", rem_cavalinho: "Remada Cavalinho", rem_uni: "Remada Unilateral (Serrote)", rem_articulada: "Remada Articulada", terra: "Levantamento Terra", ext_lombar: "Extensão Lombar (Banco Romano)",
+      pux_aberta: "Puxada Aberta no Pulley", pux_supinada: "Puxada Pegada Supinada", pux_triangulo: "Puxada Triângulo", barra_fixa: "Barra Fixa", rem_baixa: "Remada Baixa no Cabo", rem_curvada: "Remada Curvada", rem_cavalinho: "Remada Cavalinho", rem_uni: "Remada Unilateral", rem_articulada: "Remada Articulada", terra: "Levantamento Terra", ext_lombar: "Extensão Lombar",
       desenv_halt: "Desenvolvimento Halteres", desenv_militar: "Desenvolvimento Militar", elev_front: "Elevação Frontal", elev_lat_halt: "Elevação Lateral Halteres", elev_lat_cabo: "Elevação Lateral no Cabo", elev_lat_maq: "Elevação Lateral Máquina", cruc_inv: "Crucifixo Inverso", face_pull: "Face Pull", elev_inc_tronco: "Elev. Lateral Tronco Inclinado", encolhimento: "Encolhimento de Ombros", rem_alta: "Remada Alta",
-      rosca_direta: "Rosca Direta", rosca_alt: "Rosca Alternada", rosca_martelo: "Rosca Martelo", rosca_scott: "Rosca Scott", rosca_concentrada: "Rosca Concentrada", triceps_pulley: "Tríceps Pulley / Corda", triceps_testa: "Tríceps Testa", triceps_coice: "Tríceps Coice", triceps_frances: "Tríceps Francês", mergulho_banco: "Mergulho em Bancos / Paralelas", rosca_inversa: "Rosca Inversa", flexao_punho: "Flexão de Punho",
+      rosca_direta: "Rosca Direta", rosca_alt: "Rosca Alternada", rosca_martelo: "Rosca Martelo", rosca_scott: "Rosca Scott", rosca_concentrada: "Rosca Concentrada", triceps_pulley: "Tríceps Pulley / Corda", triceps_testa: "Tríceps Testa", triceps_coice: "Tríceps Coice", triceps_frances: "Tríceps Francês", mergulho_banco: "Mergulho em Bancos", rosca_inversa: "Rosca Inversa", flexao_punho: "Flexão de Punho",
       abd_supra: "Abdominal Supra / Crunch", abd_infra: "Abdominal Infra", abd_obliquo: "Abdominal Oblíquo", prancha_iso: "Prancha Isométrica"
     }
   },
   es: {
-    descanso: "DESCANSO", iniciar: "INICIAR ENTREN.", finalizar: "FINALIZAR", modalTitle: "¡ENTRENAMIENTO HECHO!", modalSub: "TIEMPO TOTAL DE ENTRENAMIENTO", modalBtn: "CERRAR",
-    emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA. ¡VAYA A INFERIOR, SUPERIOR O CORE PARA ARMAR SU ENTRENAMIENTO!", emptyCategory: "NINGÚN EJERCICIO EN ESTA CATEGORÍA",
-    weekdays: { mon: "Lunes", tue: "Martes", wed: "Miércoles", thu: "Jueves", fri: "Viernes", sat: "Sábado", sun: "Domingo" },
-    tabs: { today: "FICHA ENTREN.", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
-    groups: { quadriceps: "Cuádriceps", posterior: "Femoral posterior", gluteos: "Glúteos", panturrilha: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
+    descanso: "DESCANSO", iniciar: "INICIAR ENTREN.", finalizar: "FINALIZAR", modalTitle: "¡ENTRENAMIENTO HECHO!", modalSub: "TIEMPO TOTAL", modalBtn: "CERRAR",
+    emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA.", emptyCategory: "NINGÚN EJERCICIO ENCONTRADO",
+    all: "TODOS",
+    weekdays: { mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom" },
+    tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
+    groups: { quadriceps: "Cuádriceps", posterior: "Femoral", gluteos: "Glúteos", panturrilha: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
     names: {
-      agach_livre: "Sentadilla Libre", leg_press: "Prensa de Piernas (45°/Horiz.)", extensora: "Extensión de Piernas", bulgaro: "Sentadilla Búlgara", afundo: "Zancadas / Desplantes", hack: "Sentadilla Hack",
-      flexora_cad: "Curl de Piernas Sentado", flexora_mes: "Curl de Piernas Tumbado", stiff: "Peso Muerto Rumano / Stiff", flex_pe: "Curl de Pierna de Pie (Unilateral)", good_morning: "Buenos Días con Barra",
-      elev_pelvica: "Elevación de Pelvis / Hip Thrust", abdutora: "Abductores en Máquina", gluteo_cabo: "Extensión de Glúteo en Polea", sumo: "Sentadilla Sumo",
-      gemeos_sent: "Elevación Pantorrillas Sentado", gemeos_pe: "Elevación Pantorrillas de Pie", pant_leg: "Pantorrillas en Prensa",
-      sup_reto: "Press de Banca Plano", sup_inc: "Press de Banca Inclinado", sup_dec: "Press de Banca Declinado", sup_maq: "Press de Pecho en Máquina", cruc_reto: "Aperturas con Mancuernas", pec_deck: "Pec Deck / Contractora", crossover: "Cruce de Poleas", flexao_braco: "Flexiones de Brazo",
-      pux_aberta: "Polea al Pecho (Agarre Ancho)", pux_supinada: "Polea al Pecho Supinado", pux_triangulo: "Polea al Pecho con Triángulo", barra_fixa: "Barra Fija / Dominadas", rem_baixa: "Remo Sentado en Polea", rem_curvada: "Remo con Barra/Mancuernas", rem_cavalinho: "Remo en Barra T", rem_uni: "Remo Unilateral (Serrote)", rem_articulada: "Remo en Máquina Articulada", terra: "Peso Muerto", ext_lombar: "Extensiones Lumbares",
-      desenv_halt: "Press de Hombros con Mancuernas", desenv_militar: "Press Militar con Barra", elev_front: "Elevación Frontal", elev_lat_halt: "Elevaciones Laterales Mancuerna", elev_lat_cabo: "Elevaciones Laterales en Polea", elev_lat_maq: "Elevaciones Laterales en Máquina", cruc_inv: "Pájaro / Crucifijo Invertido", face_pull: "Face Pull (Polea Alta)", elev_inc_tronco: "Elevaciones Laterales Inclinado", encolhimento: "Encogimiento de Hombros", rem_alta: "Remo al Mentón",
-      rosca_direta: "Curl de Bíceps Barra/Mancuernas", rosca_alt: "Curl Alterno con Mancuernas", rosca_martelo: "Curl Martillo", rosca_scott: "Curl Banco Scott", rosca_concentrada: "Curl Concentrado", triceps_pulley: "Tríceps en Polea Alta", triceps_testa: "Press Francés", triceps_coice: "Extensión de Tríceps (Patada)", triceps_frances: "Copas de Tríceps / Francés", mergulho_banco: "Fondos entre Bancos / Paralelas", rosca_inversa: "Curl Inverso", flexao_punho: "Flexión de Muñeca",
-      abd_supra: "Abdominales / Crunches Suelo", abd_infra: "Elevaciones de Piernas", abd_obliquo: "Toques de Talón / Giro Ruso", prancha_iso: "Plancha Isométrica"
+      agach_livre: "Sentadilla Libre", leg_press: "Prensa de Piernas", extensora: "Extensión de Piernas", bulgaro: "Sentadilla Búlgara", afundo: "Zancadas", hack: "Sentadilla Hack", smith: "Sentadilla en Máquina Smith",
+      flexora_cad: "Curl de Piernas Sentado", flexora_mes: "Curl de Piernas Tumbado", stiff: "Peso Muerto Rumano", flex_pe: "Curl de Pierna de Pie", good_morning: "Buenos Días",
+      elev_pelvica: "Hip Thrust", abdutora: "Abductores en Máquina", gluteo_cabo: "Extensión en Polea", sumo: "Sentadilla Sumo",
+      gemeos_sent: "Elevación Sentado", gemeos_pe: "Elevación de Pie", pant_leg: "Pantorrillas en Prensa",
+      sup_reto: "Press de Banca Plano", sup_inc: "Press de Banca Inclinado", sup_dec: "Press de Banca Declinado", sup_maq: "Press en Máquina", cruc_reto: "Aperturas con Mancuernas", pec_deck: "Pec Deck", crossover: "Cruce de Poleas", flexao_braco: "Flexiones",
+      pux_aberta: "Polea al Pecho", pux_supinada: "Polea Supinado", pux_triangulo: "Polea con Triángulo", barra_fixa: "Dominadas", rem_baixa: "Remo Sentado", rem_curvada: "Remo con Barra", rem_cavalinho: "Remo en Barra T", rem_uni: "Remo Unilateral", rem_articulada: "Remo en Máquina", terra: "Peso Muerto", ext_lombar: "Extensiones Lumbares",
+      desenv_halt: "Press con Mancuernas", desenv_militar: "Press Militar", elev_front: "Elevación Frontal", elev_lat_halt: "Elevaciones Laterales", elev_lat_cabo: "Laterales en Polea", elev_lat_maq: "Laterales en Máquina", cruc_inv: "Pájaro", face_pull: "Face Pull", elev_inc_tronco: "Laterales Inclinado", encolhimento: "Encogimiento", rem_alta: "Remo al Mentón",
+      rosca_direta: "Curl de Bíceps", rosca_alt: "Curl Alterno", rosca_martelo: "Curl Martillo", rosca_scott: "Banco Scott", rosca_concentrada: "Curl Concentrado", triceps_pulley: "Trícep en Polea", triceps_testa: "Press Francés", triceps_coice: "Patada de Tríceps", triceps_frances: "Copas de Tríceps", mergulho_banco: "Fondos entre Bancos", rosca_inversa: "Curl Inverso", flexao_punho: "Flexión de Muñeca",
+      abd_supra: "Crunches", abd_infra: "Elevaciones de Piernas", abd_obliquo: "Giro Ruso", prancha_iso: "Plancha Isométrica"
     }
   }
 };
@@ -521,6 +336,8 @@ const I18N = {
 let lang = "pt";
 let currentTab = "today"; 
 let currentDay = "mon";
+let currentSubFilter = "all";
+
 let restSeconds = 0;
 let workoutSeconds = 0;
 let restTimerInterval = null;
@@ -534,6 +351,7 @@ const fmt = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).pad
 function init() {
   renderWeekdays();
   renderTabs();
+  renderSubFilters();
   renderExercises();
   updateProgress();
 }
@@ -562,6 +380,28 @@ function renderTabs() {
   }).join('');
 }
 
+function renderSubFilters() {
+  const subBar = document.getElementById("sub-filter-bar");
+  const list = MAP_SUBGROUPS[currentTab];
+
+  if (!list || list.length <= 1) {
+    subBar.innerHTML = "";
+    subBar.style.display = "none";
+    return;
+  }
+  
+  subBar.style.display = "flex";
+  subBar.innerHTML = list.map(subKey => {
+    const label = subKey === "all" ? I18N[lang].all : (I18N[lang].groups[subKey] || subKey);
+    const isActive = currentSubFilter === subKey ? "active" : "";
+    return `
+      <button class="filter-chip ${isActive}" onclick="setSubFilter('${subKey}')">
+        ${label.toUpperCase()}
+      </button>
+    `;
+  }).join('');
+}
+
 function setDay(day) {
   currentDay = day;
   renderWeekdays();
@@ -571,7 +411,15 @@ function setDay(day) {
 
 function setTab(tab) {
   currentTab = tab;
+  currentSubFilter = "all";
   renderTabs();
+  renderSubFilters();
+  renderExercises();
+}
+
+function setSubFilter(sub) {
+  currentSubFilter = sub;
+  renderSubFilters();
   renderExercises();
 }
 
@@ -586,6 +434,7 @@ function setLang(val) {
 
   renderWeekdays();
   renderTabs();
+  renderSubFilters();
   renderExercises();
 }
 
@@ -601,6 +450,9 @@ function getFilteredList() {
     });
   } else {
     list = EXERCISES[currentTab] || [];
+    if (currentSubFilter !== "all") {
+      list = list.filter(ex => ex.gKey === currentSubFilter);
+    }
   }
   return list;
 }
@@ -611,7 +463,7 @@ function renderExercises() {
   
   if (list.length === 0) {
     const msg = currentTab === "today" ? I18N[lang].emptyPlanner : I18N[lang].emptyCategory;
-    grid.innerHTML = `<div style="text-align:center; color:var(--muted2); padding: 40px 20px; font-family:var(--font-m); font-size:11px; line-height:1.6;">${msg}</div>`;
+    grid.innerHTML = `<div style="text-align:center; color:var(--muted2); padding: 40px 20px; font-size:12px; line-height:1.6;">${msg}</div>`;
     return;
   }
 
@@ -678,18 +530,24 @@ function updateProgress() {
   document.getElementById("global-pct").innerText = `${pct}%`;
 }
 
-// ── CONTROLADORES DOS CRONÔMETROS ──
 function toggleTimer() {
   const btn = document.getElementById("btn-toggle-timer");
+  const circle = document.getElementById("circular-progress");
+  
   if (restTimerInterval) {
     clearInterval(restTimerInterval);
     restTimerInterval = null;
     btn.innerText = "START";
+    btn.classList.remove("active");
   } else {
     btn.innerText = "STOP";
+    btn.classList.add("active");
     restTimerInterval = setInterval(() => {
       restSeconds++;
       document.getElementById("main-timer").innerText = fmt(restSeconds);
+      
+      let offset = 440 - (restSeconds * 8) % 440;
+      circle.style.strokeDashoffset = offset;
     }, 1000);
   }
 }
@@ -700,6 +558,8 @@ function resetTimer() {
   restSeconds = 0;
   document.getElementById("main-timer").innerText = "00:00";
   document.getElementById("btn-toggle-timer").innerText = "START";
+  document.getElementById("btn-toggle-timer").classList.remove("active");
+  document.getElementById("circular-progress").style.strokeDashoffset = 440;
 }
 
 function iniciarTreino() {
