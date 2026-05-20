@@ -460,7 +460,7 @@ body {
 
 .mob-tabs { 
   display: flex; 
-  gap: 8px; 
+  gap: 4px; 
   align-items: center; 
   justify-content: space-between;
   width: 100%;
@@ -469,15 +469,15 @@ body {
 .mob-tab {
   flex: 1;
   font-family: var(--font-m);
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: .05em;
+  letter-spacing: .02em;
   text-transform: uppercase;
   border: 1px solid var(--border-hi);
   background: var(--s1);
   color: var(--muted2);
-  padding: 12px 2px;
-  border-radius: 14px;
+  padding: 12px 1px;
+  border-radius: 10px;
   
   /* FORÇA O CURSOR CLICK/MAOZINHA */
   cursor: pointer !important;
@@ -767,12 +767,15 @@ const EXERCISES = {
   ],
 };
 
+const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
 const I18N = {
   en: {
     start:"START", stop:"STOP", reset:"RESET", clearDay:"CLEAR DAY", finish:"FINISH",
     complete:"SESSION COMPLETE", exercises:"exercises", empty:"No exercises selected for today",
     session:"SESSION", muscleGroup:"workout control", close:"CLOSE",
-    tabs:{ today:"TODAY'S", lower:"LOWER", upper:"UPPER", core:"CORE" },
+    tabs:{ today:"PLANNER", lower:"LOWER", upper:"UPPER", core:"CORE" },
+    weekdays: { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" },
     groups:{ all:"ALL", squat:"SQUATS", legpress:"LEG PRESS", posterior:"POSTERIOR",
              quad:"QUADS", calf:"CALVES", chest:"CHEST", back:"BACK",
              shoulder:"SHOULDERS", arms:"ARMS", abs:"ABS", lumbar:"LUMBAR", cardio:"CARDIO" },
@@ -797,9 +800,10 @@ const I18N = {
   },
   pt: {
     start:"INICIAR", stop:"PARAR", reset:"RESET", clearDay:"LIMPAR DIA", finish:"FINALIZAR",
-    complete:"TREINO CONCLUÍDO", exercises:"exercícios", empty:"Nenhum exercício selecionado para hoje",
+    complete:"TREINO CONCLUÍDO", exercises:"exercícios", empty:"Nenhum exercício selecionado para este dia",
     session:"SESSÃO", muscleGroup:"controle de treino", close:"FECHAR",
-    tabs:{ today:"HOJE", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
+    tabs:{ today:"FICHA DE TREINO", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
+    weekdays: { mon: "Segunda", tue: "Terça", wed: "Quarta", thu: "Quinta", fri: "Sexta", sat: "Sábado", sun: "Domingo" },
     groups:{ all:"TODOS", squat:"AGACHAM.", legpress:"LEG PRESS", posterior:"POSTERIOR",
              quad:"QUADRÍCEPS", calf:"PANTURRILHA", chest:"PEITO", back:"COSTAS",
              shoulder:"OMBROS", arms:"BRAÇOS", abs:"ABDÔMEN", lumbar:"LOMBAR", cardio:"CARDIO" },
@@ -824,9 +828,10 @@ const I18N = {
   },
   es: {
     start:"INICIAR", stop:"PARAR", reset:"RESET", clearDay:"LIMPIAR DÍA", finish:"FINALIZAR",
-    complete:"ENTRENAMIENTO COMPLETO", exercises:"ejercicios", empty:"Ningún ejercicio seleccionado para hoy",
+    complete:"ENTRENAMIENTO COMPLETO", exercises:"ejercicios", empty:"Ningún ejercicio seleccionado para este día",
     session:"SESIÓN", muscleGroup:"control de entrenamiento", close:"CERRAR",
-    tabs:{ today:"HOY", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
+    tabs:{ today:"FICHA DE ENTREN.", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
+    weekdays: { mon: "Lunes", tue: "Martes", wed: "Miércoles", thu: "Jueves", fri: "Viernes", sat: "Sábado", sun: "Domingo" },
     groups:{ all:"TODO", squat:"SENTAD.", legpress:"PRENSA", posterior:"POSTERIOR",
              quad:"CUÁDRICEPS", calf:"GEMELOS", chest:"PECHO", back:"ESPALDA",
              shoulder:"HOMBROS", arms:"BRAZOS", abs:"ABDOMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
@@ -834,7 +839,7 @@ const I18N = {
       "Free Squat":"Sentadilla Livre","Smith Squat":"Sentadilla Smith","Goblet Squat":"Sentadilla Goblet",
       "Sumo Squat":"Sentadilla Sumo","Leg Press 45°":"Prensa 45°","H. Leg Press":"Prensa Horiz.",
       "Lunges":"Zancadas","Walking Lunges":"Zancadas Caminando","Lying Leg Curl":"Curl Fem. Tumbado",
-      "Seated Leg Curl":"Curl Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera",
+      "Seated Leg Curl":"Cadeira Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera",
       "Leg Extension":"Extensión Cuád.","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Gemelos Pie",
       "Calf Raise (Seat)":"Gemelos Sentado","Bench Press":"Press Banca","Incline Press":"Press Inclinado",
       "Chest Machine":"Máquina Pecho","Chest Fly":"Aperturas","Reverse Fly":"Aperturas Inv.",
@@ -852,8 +857,9 @@ const I18N = {
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────
-const STORE = "gt2026_v2";
+const STORE = "gt2026_v3";
 let lang, tab, filter, exState, sec, running, timerInt;
+let currentDay = "mon"; 
 let prevPct = 0;
 
 function loadState() {
@@ -861,18 +867,19 @@ function loadState() {
     const s = JSON.parse(localStorage.getItem(STORE) || "null");
     lang    = s?.lang    || "pt";
     tab     = s?.tab     || "today";
-    filter  = "all";
+    filter  = s?.filter  || "all";
     exState = s?.exState || {};
     sec     = s?.sec     || 0;
+    currentDay = s?.currentDay || "mon";
   } catch {
-    lang = "pt"; tab = "today"; filter = "all"; exState = {}; sec = 0;
+    lang = "pt"; tab = "today"; filter = "all"; exState = {}; sec = 0; currentDay = "mon";
   }
   running = false;
   rebuildTodayDataset();
 }
 
 function persist() {
-  try { localStorage.setItem(STORE, JSON.stringify({lang, tab, exState, sec})); } catch {}
+  try { localStorage.setItem(STORE, JSON.stringify({lang, tab, filter, exState, sec, currentDay})); } catch {}
 }
 
 function rebuildTodayDataset() {
@@ -880,7 +887,7 @@ function rebuildTodayDataset() {
   const todasChaves = ["lower", "upper", "core"];
   todasChaves.forEach(t => {
     EXERCISES[t].forEach(ex => {
-      if (exState[ex.id]?.active) {
+      if (exState[ex.id]?.[currentDay]) {
         EXERCISES.today.push(ex);
       }
     });
@@ -892,277 +899,303 @@ const fmt = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).pad
 const L = () => I18N[lang];
 
 function calcProgress() {
-  const all  = Object.values(exState).filter(v => v.active);
-  const done = all.filter(v => v.done).length;
+  const all = EXERCISES.today;
+  const done = all.filter(ex => exState[ex.id]?.done?.[currentDay]).length;
   const pct  = all.length > 0 ? Math.round((done / all.length) * 100) : 0;
   return { all, done, pct };
 }
 
 function tabActiveCounts() {
   const counts = { today: EXERCISES.today.length, lower: 0, upper: 0, core: 0 };
-  Object.entries(exState).forEach(([id, v]) => {
-    if (v.active) {
-      if (EXERCISES.lower.some(e => e.id === id)) counts.lower++;
-      if (EXERCISES.upper.some(e => e.id === id)) counts.upper++;
-      if (EXERCISES.core.some(e => e.id === id)) counts.core++;
-    }
+  const todasChaves = ["lower", "upper", "core"];
+  todasChaves.forEach(t => {
+    EXERCISES[t].forEach(ex => {
+      if (exState[ex.id]?.[currentDay]) counts[t]++;
+    });
   });
   return counts;
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────
-function renderAll() {
-  rebuildTodayDataset();
-  renderNav();
-  renderFilters();
-  renderGrid();
-  updateProgress();
-  updateTimerUI();
-  updateTexts();
-}
-
-function updateTexts() {
-  const l = L();
-  document.getElementById("lbl-session").textContent  = l.session;
-  document.getElementById("hd-sub").textContent       = l.muscleGroup;
-  
-  if(tab === "today") {
-    document.getElementById("hd-title").textContent = lang === "en" ? "TODAY'S EXERCISES" : lang === "es" ? "EJERCICIOS DE HOY" : "EXERCÍCIOS DE HOJE";
-  } else {
-    document.getElementById("hd-title").textContent = l.tabs[tab];
-  }
-
-  document.getElementById("hd-session-lbl").textContent = l.session;
-  document.getElementById("btn-reset-day").textContent  = l.clearDay;
-  document.getElementById("sb-finish").textContent     = l.finish;
-  document.getElementById("mob-finish-btn").textContent = l.finish;
-  
-  document.getElementById("lang-sel").value          = lang;
-  document.getElementById("mob-lang-sel").value      = lang;
-  
-  updateTimerBtn();
-}
-
-function renderNav() {
-  const l = L();
+// ── UI RENDERERS ──────────────────────────────────────────────────────
+function renderTabs() {
+  const nav = document.getElementById("sb-nav");
+  const mTabs = document.getElementById("mob-tabs");
   const counts = tabActiveCounts();
-  const chavesAbas = ["today", "lower", "upper", "core"];
   
-  document.getElementById("sb-nav").innerHTML = chavesAbas.map(k => `
-    <button class="nav-btn${tab===k?" active":""}" onclick="switchTab('${k}')">
-      <span class="nav-accent"></span>
-      ${k === "today" ? (lang === "en" ? "TODAY'S EXERCISES" : lang === "es" ? "EJERCICIOS DE HOY" : "EXERCÍCIOS DE HOJE") : l.tabs[k]}
-      ${counts[k]>0 ? `<span class="nav-count">${counts[k]}</span>` : ""}
-    </button>
-  `).join("");
-
-  document.getElementById("mob-tabs").innerHTML = chavesAbas.map(k => `
-    <button class="mob-tab${tab===k?" active":""}" onclick="switchTab('${k}')">
-      <span class="mob-tab-dot"></span>
-      <span>${l.tabs[k]}</span>
-    </button>
-  `).join("");
+  let html = "";
+  let mHtml = "";
+  const keys = ["today", "lower", "upper", "core"];
+  
+  keys.forEach(k => {
+    const activeCls = tab === k ? "active" : "";
+    const countVal = counts[k];
+    
+    html += `
+      <button class="nav-btn ${activeCls}" onclick="setTab('${k}')">
+        <span class="nav-accent"></span>
+        ${L().tabs[k]}
+        <span class="nav-count">${countVal}</span>
+      </button>
+    `;
+    
+    mHtml += `
+      <button class="mob-tab ${activeCls}" onclick="setTab('${k}')">
+        <div>${L().tabs[k]}</div>
+        <div class="mob-tab-dot"></div>
+      </button>
+    `;
+  });
+  
+  nav.innerHTML = html;
+  mTabs.innerHTML = mHtml;
 }
 
 function renderFilters() {
-  const l = L();
+  const bar = document.getElementById("filter-bar");
   if (tab === "today") {
-    document.getElementById("filter-bar").innerHTML = `
-      <button class="filter-chip active">${l.groups.all}</button>
-    `;
+    bar.innerHTML = WEEKDAYS.map(d => {
+      const activeCls = currentDay === d ? "active" : "";
+      return `<button class="filter-chip ${activeCls}" onclick="setDay('${d}')">${L().weekdays[d]}</button>`;
+    }).join("");
     return;
   }
-  const groups = ["all", ...new Set(EXERCISES[tab].map(e => e.g))];
-  document.getElementById("filter-bar").innerHTML = groups.map(g => `
-    <button class="filter-chip${filter===g?" active":""}" onclick="setFilter('${g}')">
-      ${l.groups[g] || g}
-    </button>
-  `).join("");
+  
+  const groups = new Set(["all"]);
+  EXERCISES[tab].forEach(ex => groups.add(ex.g));
+  
+  bar.innerHTML = Array.from(groups).map(g => {
+    const activeCls = filter === g ? "active" : "";
+    const lbl = L().groups[g] || g.toUpperCase();
+    return `<button class="filter-chip ${activeCls}" onclick="setFilter('${g}')">${lbl}</button>`;
+  }).join("");
 }
 
 function renderGrid() {
-  const l = L();
-  const visible = EXERCISES[tab].filter(e => filter === "all" || e.g === filter);
+  const grid = document.getElementById("ex-grid");
+  const list = tab === "today" ? EXERCISES.today : EXERCISES[tab];
   
-  if (visible.length === 0) {
-    document.getElementById("ex-grid").innerHTML = `
-      <div class="empty-state">${l.empty}</div>
-    `;
+  let filtered = list;
+  if (tab !== "today" && filter !== "all") {
+    filtered = list.filter(ex => ex.g === filter);
+  }
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">${L().empty}</div>`;
     return;
   }
-
-  document.getElementById("ex-grid").innerHTML = visible.map((ex, i) => {
-    const st  = exState[ex.id] || {active:false, done:false};
-    const cls = st.done ? "done" : st.active ? "active" : "inactive";
-    const nm  = l.names[ex.key] || ex.key;
-    const gr  = l.groups[ex.g] || ex.g;
-    const ico = tab === "today" ? "−" : (st.active ? "−" : "+");
+  
+  grid.innerHTML = filtered.map(ex => {
+    const isAct = !!exState[ex.id]?.[currentDay];
+    const isDone = !!exState[ex.id]?.done?.[currentDay];
+    
+    let cardCls = "";
+    let toggleChar = "+";
+    if (tab === "today") {
+      if (isDone) cardCls = "done";
+    } else {
+      if (isAct) {
+        cardCls = "active";
+        toggleChar = "✓";
+      } else {
+        cardCls = "inactive";
+      }
+    }
+    
+    const translatedName = L().names[ex.key] || ex.key;
+    const groupLabel = L().groups[ex.g] || ex.g.toUpperCase();
     
     return `
-      <div class="ex-card ${cls}" id="card-${ex.id}" style="animation-delay:${i*0.03}s">
-        <button class="ex-toggle" onclick="toggleEx('${ex.id}')" aria-label="${nm}">${ico}</button>
-        <div class="ex-info" onclick="toggleExStatus('${ex.id}')">
-          <div class="ex-name">${nm}</div>
-          <div class="ex-group">${gr}</div>
-        </div>
-        <div class="check-wrap">
-          <input type="checkbox" ${st.active?"":"disabled"} ${st.done?"checked":""} onclick="toggleExStatus('${ex.id}')" aria-label="Mark completed">
-          <div class="check-box">✓</div>
+      <div class="ex-card ${cardCls}">
+        ${tab !== "today" ? `
+          <button class="ex-toggle" onclick="toggleExerciseSetup('${ex.id}', event)">${toggleChar}</button>
+        ` : `
+          <div class="check-wrap">
+            <input type="checkbox" ${isDone ? "checked" : ""} onchange="toggleExerciseDone('${ex.id}', this.checked)">
+            <div class="check-box">✓</div>
+          </div>
+        `}
+        <div class="ex-info" onclick="${tab !== "today" ? `toggleExerciseSetup('${ex.id}', event)` : ""}">
+          <div class="ex-name">${translatedName}</div>
+          <div class="ex-group">${groupLabel}</div>
         </div>
       </div>
     `;
   }).join("");
 }
 
-function updateProgress() {
+function syncHeaderAndProgress() {
   const { all, done, pct } = calcProgress();
-  const l = L();
-
-  document.getElementById("sb-pct").textContent = `${pct}%`;
-  document.getElementById("sb-fraction").textContent = `${done}/${all.length}`;
-  document.getElementById("sb-ex-count").textContent = `${all.length} ${l.exercises}`;
-  document.getElementById("track-fill").style.width = `${pct}%`;
-  document.getElementById("hd-pct").textContent = `${pct}%`;
-
-  document.getElementById("mob-pct").textContent = `${pct}%`;
-  document.getElementById("mob-fill").style.width = `${pct}%`;
-
-  const color = pct === 100 ? "var(--green)" : "var(--lime)";
-  document.getElementById("sb-pct").style.color = color;
-  document.getElementById("hd-pct").style.color = color;
-  document.getElementById("mob-pct").style.color = color;
-
+  
+  document.getElementById("sb-pct").innerText = pct + "%";
+  document.getElementById("hd-pct").innerText = pct + "%";
+  document.getElementById("mob-pct").innerText = pct + "%";
+  
+  document.getElementById("track-fill").style.width = pct + "%";
+  document.getElementById("mob-fill").style.width = pct + "%";
+  
+  document.getElementById("sb-fraction").innerText = `${done}/${all.length}`;
+  document.getElementById("sb-ex-count").innerText = `${all.length} ${L().exercises}`;
+  
+  if (tab === "today") {
+    document.getElementById("hd-title").innerText = L().weekdays[currentDay];
+    document.getElementById("hd-sub").innerText = L().tabs.today;
+  } else {
+    document.getElementById("hd-title").innerText = L().tabs[tab];
+    document.getElementById("hd-sub").innerText = L().muscleGroup;
+  }
+  
   if (pct === 100 && prevPct < 100 && all.length > 0) {
-    showToast();
+    triggerToast();
   }
   prevPct = pct;
 }
 
-// ── EVENTS & LOGIC ────────────────────────────────────────────────────
-function switchTab(k) {
-  tab = k; filter = "all";
-  renderAll();
-  window.scrollTo({ top: 0 });
-}
-
-function resetDay() {
-  if(!confirm("Resetar todo o histórico de exercícios salvos do dia?")) return;
-  exState = {}; sec = 0; resetTimerLogic();
-  persist(); renderAll();
-}
-
-function setFilter(g) {
-  filter = g; renderFilters(); renderGrid();
-}
-
-function toggleEx(id) {
-  if (!exState[id]) exState[id] = {active:false, done:false};
-  const st = exState[id];
-
-  if (!st.active) {
-    st.active = true;
-  } else {
-    st.active = false;
-    st.done = false;
-  }
-
+// ── ACTIONS ───────────────────────────────────────────────────────────
+function setTab(t) {
+  tab = t;
+  filter = "all";
+  renderTabs();
+  renderFilters();
+  renderGrid();
+  syncHeaderAndProgress();
   persist();
-  renderAll();
 }
 
-function toggleExStatus(id) {
-  if (!exState[id] || !exState[id].active) return;
-  exState[id].done = !exState[id].done;
-  persist(); renderGrid(); updateProgress();
+function setFilter(f) {
+  filter = f;
+  renderFilters();
+  renderGrid();
+  persist();
 }
 
-function setLang(v) {
-  lang = v; renderAll(); persist();
+function setDay(d) {
+  currentDay = d;
+  rebuildTodayDataset();
+  renderFilters();
+  renderGrid();
+  renderTabs();
+  syncHeaderAndProgress();
+  persist();
 }
 
-// ── TIMER & WORKOUT COMPLETION ENGINE ─────────────────────────────────
-function toggleTimer() {
-  if (running) {
-    clearInterval(timerInt); running = false;
-  } else {
-    running = true;
-    timerInt = setInterval(() => { sec++; updateTimerUI(); if(sec%5===0) persist(); }, 1000);
+function toggleExerciseSetup(id, event) {
+  if (event) event.stopPropagation();
+  if (!exState[id]) exState[id] = {};
+  
+  exState[id][currentDay] = !exState[id][currentDay];
+  
+  if (!exState[id][currentDay]) {
+    if(exState[id].done) exState[id].done[currentDay] = false;
   }
-  updateTimerBtn();
+  
+  rebuildTodayDataset();
+  renderGrid();
+  renderTabs();
+  syncHeaderAndProgress();
+  persist();
 }
 
-function resetTimerLogic() {
-  clearInterval(timerInt); running = false; sec = 0; updateTimerUI(); updateTimerBtn();
+function toggleExerciseDone(id, checked) {
+  if (!exState[id]) exState[id] = {};
+  if (!exState[id].done) exState[id].done = {};
+  
+  exState[id].done[currentDay] = checked;
+  
+  renderGrid();
+  syncHeaderAndProgress();
+  persist();
+}
+
+function setLang(l) {
+  lang = l;
+  document.getElementById("lang-sel").value = l;
+  document.getElementById("mob-lang-sel").value = l;
+  
+  const strings = {
+    pt: { resTitle: "TREINO FINALIZADO!", resTxt: "Consistência é tudo. Aqui está o resumo do seu treino:", resTime: "TEMPO TOTAL", cls: "FECHAR" },
+    en: { resTitle: "WORKOUT COMPLETE!", resTxt: "Consistency is key. Here is your workout summary:", resTime: "TOTAL TIME", cls: "CLOSE" },
+    es: { resTitle: "¡ENTRENO TERMINADO!", resTxt: "La consistencia lo es todo. Aquí está el resumen:", resTime: "TIEMPO TOTAL", cls: "CERRAR" }
+  }[l] || strings.pt;
+  
+  document.getElementById("modal-title").innerText = strings.resTitle;
+  document.getElementById("modal-text").innerText = strings.resTxt;
+  document.getElementById("modal-time-lbl").innerText = strings.resTime;
+  document.getElementById("btn-reset-day").innerText = L().clearDay;
+  
+  renderTabs();
+  renderFilters();
+  renderGrid();
+  syncHeaderAndProgress();
+  updateTimerUI();
+  persist();
+}
+
+// ── TIMER MECHANICS ───────────────────────────────────────────────────
+function toggleTimer() {
+  running = !running;
+  const b1 = document.getElementById("sb-toggle");
+  const b2 = document.getElementById("mob-toggle");
+  
+  if (running) {
+    b1.innerText = L().stop; b1.style.background = "var(--s3)";
+    b2.innerText = L().stop; b2.className = "mob-btn red";
+    timerInt = setInterval(() => {
+      sec++;
+      updateTimerUI();
+      if(sec % 5 === 0) persist();
+    }, 1000);
+  } else {
+    clearInterval(timerInt);
+    b1.innerText = L().start; b1.style.background = "var(--lime)";
+    b2.innerText = L().start; b2.className = "mob-btn lime";
+    persist();
+  }
+}
+
+function updateTimerUI() {
+  const str = fmt(sec);
+  document.getElementById("sb-timer").innerText = str;
+  document.getElementById("hd-timer").innerText = str;
+  document.getElementById("mob-t").innerText = str;
+  document.getElementById("mob-t2").innerText = str;
 }
 
 function finishWorkout() {
-  if (running) {
-    clearInterval(timerInt);
-    running = false;
-    updateTimerBtn();
-  }
-  
-  document.getElementById("modal-duration").textContent = fmt(sec);
-  
-  const l = L();
-  if(lang === "pt") {
-    document.getElementById("modal-title").textContent = "TREINO FINALIZADO!";
-    document.getElementById("modal-text").textContent = "Consistência é tudo. Aqui está o resumo do seu treino de hoje:";
-    document.getElementById("modal-time-lbl").textContent = "TEMPO TOTAL";
-  } else if(lang === "es") {
-    document.getElementById("modal-title").textContent = "¡ENTRENO HECHO!";
-    document.getElementById("modal-text").textContent = "Gran constancia. Aquí está el resumen de tu rendimiento:";
-    document.getElementById("modal-time-lbl").textContent = "TIEMPO TOTAL";
-  } else {
-    document.getElementById("modal-title").textContent = "WORKOUT DONE!";
-    document.getElementById("modal-text").textContent = "Great consistency. Here is your summary performance:";
-    document.getElementById("modal-time-lbl").textContent = "TOTAL TIME";
-  }
-  
+  if(running) toggleTimer();
+  document.getElementById("modal-duration").innerText = fmt(sec);
   document.getElementById("finish-modal").classList.add("open");
 }
 
 function closeModal() {
   document.getElementById("finish-modal").classList.remove("open");
+  sec = 0;
+  updateTimerUI();
+  resetDay();
 }
 
-function updateTimerUI() {
-  const str = fmt(sec);
-  document.getElementById("sb-timer").textContent = str;
-  document.getElementById("hd-timer").textContent = str;
-  document.getElementById("mob-t").textContent    = str;
-  document.getElementById("mob-t2").textContent   = str;
+function resetDay() {
+  const list = tab === "today" ? EXERCISES.today : EXERCISES[tab];
+  list.forEach(ex => {
+    if (exState[ex.id]) {
+      if(exState[ex.id].done) exState[ex.id].done[currentDay] = false;
+    }
+  });
+  renderGrid();
+  syncHeaderAndProgress();
+  persist();
 }
 
-function updateTimerBtn() {
-  const l = L();
-  const txt = running ? l.stop : l.start;
-  
-  const btn = document.getElementById("sb-toggle");
-  if(btn) {
-    btn.textContent = txt;
-    if(running) { btn.classList.remove("btn-lime"); btn.classList.add("btn-stop"); }
-    else { btn.classList.remove("btn-stop"); btn.classList.add("btn-lime"); }
-  }
-
-  const mBtn = document.getElementById("mob-toggle");
-  if(mBtn) {
-    mBtn.textContent = txt;
-    if(running) { mBtn.classList.remove("lime"); mBtn.classList.add("red"); }
-    else { mBtn.classList.remove("red"); mBtn.classList.add("lime"); }
-  }
-}
-
-function showToast() {
+function triggerToast() {
   const t = document.getElementById("toast");
-  t.textContent = `🏆 ${L().complete}`;
+  t.innerText = `🏆 ${L().complete}`;
   t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 3500);
+  setTimeout(() => t.classList.remove("show"), 3000);
 }
 
+// ── INICIALIZAÇÃO ─────────────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", () => {
   loadState();
-  renderAll();
+  setLang(lang);
 });
 </script>
 </body>
