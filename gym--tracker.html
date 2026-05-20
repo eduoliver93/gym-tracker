@@ -14,13 +14,13 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg:        #1a1c20; /* Fundo grafite fosco premium */
-  --s1:        #22252a; /* Superfície secundária */
-  --s2:        #2c3038; /* Elementos internos / inputs */
-  --s3:        #373c46; /* Hovers e destaques suaves */
+  --bg:        #1a1c20; 
+  --s1:        #22252a; 
+  --s2:        #2c3038; 
+  --s3:        #373c46; 
   --border:    rgba(255,255,255,0.05);
   --border-hi: rgba(255,255,255,0.12);
-  --lime:      #c8ff00; /* Lima vibrante da referência */
+  --lime:      #c8ff00; 
   --lime-glow: rgba(200,255,0,0.15);
   --red:       #ff4444;
   --green:     #00ff87;
@@ -303,7 +303,7 @@ body {
   flex: 1;
 }
 
-/* exercise card (Ref. Odama Smooth Design) */
+/* exercise card */
 .ex-card {
   position: relative; border-radius: 16px;
   border: 1px solid var(--border);
@@ -322,7 +322,7 @@ body {
 
 .ex-card.inactive { opacity: 0.35; }
 .ex-card.active { border-color: rgba(200,255,0,0.3); background: rgba(255,255,255,0.02); }
-.ex-card.done { border-color: rgba(0,255,135,0.2); background: rgba(0,255,135,0.02); }
+.ex-card.done { border-color: rgba(0,255,135,0.2); background: rgba(0,0,0,0.15); }
 
 /* toggle btn */
 .ex-toggle {
@@ -356,7 +356,7 @@ body {
 
 /* ── TOAST ──────────────────────────────────────── */
 .toast {
-  position: fixed; bottom: 90px; left: 50%;
+  position: fixed; bottom: 100px; left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: var(--lime); color: #000;
   font-family: var(--font-m); font-size: 12px; font-weight: 700;
@@ -366,7 +366,7 @@ body {
 }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-/* ── MODAL PREMIUM DE RESUMO FINALIZE ───────────────── */
+/* ── MODAL ──────────────────────────────────────── */
 .modal-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(20,22,25,0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -387,7 +387,7 @@ body {
 .modal-time-lbl { font-family: var(--font-m); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; }
 .modal-time-val { font-family: var(--font-m); font-size: 48px; font-weight: 700; color: var(--lime); margin-top: 4px; }
 
-/* ── MOBILE BARS (ODAMA ACCENT FIX) ──────────────────────────────── */
+/* ── MOBILE BARS ── */
 .mob-top {
   display: none;
   position: fixed; top:0; left:0; right:0;
@@ -441,28 +441,86 @@ body {
 .mob-btn.lime { background:var(--lime); color:#000; border-color:var(--lime); }
 .mob-btn.red  { background:var(--red); color:#fff; border-color:var(--red); }
 
+
+/* ── CORREÇÃO CRÍTICA DA NAV INFERIOR (Z-INDEX SUPERIOR) ── */
 .mob-bottom {
-  display: none; position: fixed; bottom:0; left:0; right:0;
-  background: rgba(34,37,42,0.95);
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  z-index: 200;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+  display: none; 
+  position: fixed; 
+  bottom: 0; left: 0; right: 0;
+  background: #15171a; /* Escurecido sutilmente igual à ref */
+  border-top: 1px solid var(--border-hi);
+  
+  /* Z-INDEX ULTRA ALTO + PONTEIRO GARANTIDO */
+  z-index: 99999 !important; 
+  pointer-events: auto !important;
+  
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0));
+  box-shadow: 0 -10px 35px rgba(0,0,0,0.6);
 }
 
-.mob-tabs { display: flex; height: 64px; align-items: stretch; justify-content: space-around; }
+.mob-tabs { 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+  justify-content: space-between;
+  width: 100%;
+}
+
 .mob-tab {
-  flex: 1; border: none; background: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  color: var(--muted2); font-family: var(--font-m); font-size: 10px; font-weight: 700;
-  cursor: pointer; height: 100%; width: 100%;
+  flex: 1;
+  font-family: var(--font-m);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-hi);
+  background: var(--s1);
+  color: var(--muted2);
+  padding: 12px 2px;
+  border-radius: 14px;
+  
+  /* FORÇA O CURSOR CLICK/MAOZINHA */
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 52px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
-.mob-tab.active { color: var(--lime); }
-.mob-tab-dot { width: 5px; height: 5px; border-radius: 50%; background: transparent; transition: background 0.2s; }
-.mob-tab.active .mob-tab-dot { background: var(--lime); }
 
-/* ── RESPONSIVE RESPONSIVENESS FIX ────────────────── */
+.mob-tab:hover {
+  background: var(--s2);
+  color: var(--text);
+}
+
+.mob-tab.active {
+  background: var(--lime);
+  color: #000;
+  border-color: var(--lime);
+  box-shadow: 0 4px 16px rgba(200,255,0,0.25);
+}
+
+.mob-tab:active {
+  transform: scale(0.95);
+}
+
+.mob-tab-dot { 
+  width: 5px; 
+  height: 5px; 
+  border-radius: 50%; 
+  background: rgba(255,255,255,0.15); 
+}
+.mob-tab.active .mob-tab-dot { 
+  background: #000; 
+}
+
+
+/* ── RESPONSIVIDADE EM DISPOSITIVOS MÓVEIS / TELAS PEQUENAS ── */
 @media (max-width: 700px) {
   .shell { 
     grid-template-columns: 1fr; 
@@ -471,9 +529,10 @@ body {
     display: none; 
   }
   
+  /* Ajustado o padding-bottom para criar espaço real e a lista não vazar sob os botões */
   .main { 
     padding-top: calc(180px + env(safe-area-inset-top, 0)); 
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)); 
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0)) !important; 
   }
   .main-header { 
     display: none; 
@@ -522,10 +581,13 @@ body {
   .filter-bar::-webkit-scrollbar { display: none; }
   .filter-chip { flex-shrink: 0; }
   
+  /* Ajuste para evitar sobreposições fantasmas */
   .ex-grid { 
-    padding: 16px 20px 24px; 
+    padding: 16px 20px 32px; 
     grid-template-columns: 1fr; 
     gap: 10px; 
+    position: relative;
+    z-index: 1;
   }
   
   .mob-bottom { 
@@ -710,7 +772,7 @@ const I18N = {
     start:"START", stop:"STOP", reset:"RESET", clearDay:"CLEAR DAY", finish:"FINISH",
     complete:"SESSION COMPLETE", exercises:"exercises", empty:"No exercises selected for today",
     session:"SESSION", muscleGroup:"workout control", close:"CLOSE",
-    tabs:{ today:"TODAY'S EXERCISES", lower:"LOWER BODY", upper:"UPPER BODY", core:"CORE" },
+    tabs:{ today:"TODAY'S", lower:"LOWER", upper:"UPPER", core:"CORE" },
     groups:{ all:"ALL", squat:"SQUATS", legpress:"LEG PRESS", posterior:"POSTERIOR",
              quad:"QUADS", calf:"CALVES", chest:"CHEST", back:"BACK",
              shoulder:"SHOULDERS", arms:"ARMS", abs:"ABS", lumbar:"LUMBAR", cardio:"CARDIO" },
@@ -737,7 +799,7 @@ const I18N = {
     start:"INICIAR", stop:"PARAR", reset:"RESET", clearDay:"LIMPAR DIA", finish:"FINALIZAR",
     complete:"TREINO CONCLUÍDO", exercises:"exercícios", empty:"Nenhum exercício selecionado para hoje",
     session:"SESSÃO", muscleGroup:"controle de treino", close:"FECHAR",
-    tabs:{ today:"EXERCÍCIOS DE HOJE", lower:"INFERIORES", upper:"SUPERIORES", core:"CORE" },
+    tabs:{ today:"HOJE", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
     groups:{ all:"TODOS", squat:"AGACHAM.", legpress:"LEG PRESS", posterior:"POSTERIOR",
              quad:"QUADRÍCEPS", calf:"PANTURRILHA", chest:"PEITO", back:"COSTAS",
              shoulder:"OMBROS", arms:"BRAÇOS", abs:"ABDÔMEN", lumbar:"LOMBAR", cardio:"CARDIO" },
@@ -764,12 +826,12 @@ const I18N = {
     start:"INICIAR", stop:"PARAR", reset:"RESET", clearDay:"LIMPIAR DÍA", finish:"FINALIZAR",
     complete:"ENTRENAMIENTO COMPLETO", exercises:"ejercicios", empty:"Ningún ejercicio seleccionado para hoy",
     session:"SESIÓN", muscleGroup:"control de entrenamiento", close:"CERRAR",
-    tabs:{ today:"EJERCICIOS DE HOY", lower:"TREN INFERIOR", upper:"TREN SUPERIOR", core:"CORE" },
+    tabs:{ today:"HOY", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
     groups:{ all:"TODO", squat:"SENTAD.", legpress:"PRENSA", posterior:"POSTERIOR",
              quad:"CUÁDRICEPS", calf:"GEMELOS", chest:"PECHO", back:"ESPALDA",
              shoulder:"HOMBROS", arms:"BRAZOS", abs:"ABDOMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
     names:{
-      "Free Squat":"Sentadilla Libre","Smith Squat":"Sentadilla Smith","Goblet Squat":"Sentadilla Goblet",
+      "Free Squat":"Sentadilla Livre","Smith Squat":"Sentadilla Smith","Goblet Squat":"Sentadilla Goblet",
       "Sumo Squat":"Sentadilla Sumo","Leg Press 45°":"Prensa 45°","H. Leg Press":"Prensa Horiz.",
       "Lunges":"Zancadas","Walking Lunges":"Zancadas Caminando","Lying Leg Curl":"Curl Fem. Tumbado",
       "Seated Leg Curl":"Curl Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera",
@@ -863,7 +925,13 @@ function updateTexts() {
   const l = L();
   document.getElementById("lbl-session").textContent  = l.session;
   document.getElementById("hd-sub").textContent       = l.muscleGroup;
-  document.getElementById("hd-title").textContent     = l.tabs[tab];
+  
+  if(tab === "today") {
+    document.getElementById("hd-title").textContent = lang === "en" ? "TODAY'S EXERCISES" : lang === "es" ? "EJERCICIOS DE HOY" : "EXERCÍCIOS DE HOJE";
+  } else {
+    document.getElementById("hd-title").textContent = l.tabs[tab];
+  }
+
   document.getElementById("hd-session-lbl").textContent = l.session;
   document.getElementById("btn-reset-day").textContent  = l.clearDay;
   document.getElementById("sb-finish").textContent     = l.finish;
@@ -883,7 +951,7 @@ function renderNav() {
   document.getElementById("sb-nav").innerHTML = chavesAbas.map(k => `
     <button class="nav-btn${tab===k?" active":""}" onclick="switchTab('${k}')">
       <span class="nav-accent"></span>
-      ${l.tabs[k]}
+      ${k === "today" ? (lang === "en" ? "TODAY'S EXERCISES" : lang === "es" ? "EJERCICIOS DE HOY" : "EXERCÍCIOS DE HOJE") : l.tabs[k]}
       ${counts[k]>0 ? `<span class="nav-count">${counts[k]}</span>` : ""}
     </button>
   `).join("");
