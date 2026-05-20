@@ -8,10 +8,10 @@
 <meta name="theme-color" content="#1a1c20">
 <title>GYM TRACKER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght=400;600;700;800&family=JetBrains+Mono:wght=400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & TOKENS (ODAMA UI DESIGN REF) ─────────────────────────── */
-*, *::before, *::after { box-scheme: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ── RESET & TOKENS ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
   --bg:        #1a1c20; 
@@ -29,7 +29,7 @@
   --muted2:    #9097a6;
   --font-d:    'Syne', sans-serif;
   --font-m:    'JetBrains Mono', monospace;
-  --shadow:    0 8px 24px rgba(0,0,0,0.2);
+  --shadow:    0 4px 12px rgba(0,0,0,0.15);
   color-scheme: dark;
 }
 
@@ -129,7 +129,6 @@ body {
 
 .btn-lime { background:var(--lime); color:#000; border-color:var(--lime); flex:1; }
 .btn-lime:hover { opacity:.9; color:#000; }
-.btn-stop { background:var(--red); color:#fff; border-color:var(--red); flex:1; }
 
 /* progress */
 .sb-progress {
@@ -254,6 +253,7 @@ body {
 }
 
 .header-stats { display: flex; gap: 32px; }
+.sidebar-stats { display: flex; gap: 32px; }
 .stat-block { text-align: right; }
 .stat-val { font-size: 36px; font-weight: 800; line-height: 1; color: var(--lime); }
 .stat-key { font-family: var(--font-m); font-size: 10px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
@@ -284,7 +284,7 @@ body {
 
 /* empty placeholder state */
 .empty-state {
-  grid-column: 1 / -1;
+  width: 100%;
   text-align: center;
   padding: 60px 20px;
   color: var(--muted2);
@@ -294,25 +294,24 @@ body {
   letter-spacing: 1px;
 }
 
-/* exercise grid */
+/* ── CORREÇÃO DE EMPILHAMENTO (UM EMBAIXO DO OUTRO) ── */
 .ex-grid {
   padding: 32px 48px 48px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Alinhamento colado igual ao print */
   flex: 1;
 }
 
-/* CONTAINER DO SWIPE TO DELETE */
+/* estrutura de swipe */
 .swipe-container {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  box-shadow: var(--shadow);
-  user-select: none;
+  width: 100%;
+  touch-action: pan-y;
 }
 
-/* Fundo vermelho revelado no deslize */
 .swipe-background {
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
@@ -324,40 +323,28 @@ body {
   border-radius: 16px;
   z-index: 1;
   opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.swipe-container.swiping .swipe-background {
-  opacity: 1;
+  transition: opacity 0.15s ease;
 }
 
-/* card de exercício adaptado para deslizar */
 .ex-card {
   position: relative;
   z-index: 2;
   border-radius: 16px;
   border: 1px solid var(--border);
   background: var(--s1);
-  padding: 18px 20px;
-  display: flex; align-items: center; gap: 14px;
+  padding: 20px;
+  display: flex; align-items: center; gap: 16px;
   transform: translateX(0);
-  transition: transform 0.15s ease-out, opacity 0.3s ease;
-  animation: fadeUp .3s ease both;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  width: 100%;
 }
 
-.ex-card.no-transition {
-  transition: none !important;
-}
-
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
+/* Estados visuais do card */
 .ex-card.inactive { opacity: 0.35; }
 .ex-card.active { border-color: rgba(200,255,0,0.3); background: rgba(255,255,255,0.02); }
-.ex-card.done { border-color: rgba(0,255,135,0.2); background: rgba(0,0,0,0.15); }
+.ex-card.done { border-color: rgba(0,255,135,0.3); background: rgba(0,255,135,0.02); }
 
-/* toggle btn */
 .ex-toggle {
   width: 40px; height: 40px;
   border-radius: 12px; border: none;
@@ -371,39 +358,26 @@ body {
 .ex-card.active .ex-toggle { background:var(--lime); color:#000; }
 .ex-card.done .ex-toggle  { background:var(--green); color:#000; }
 
-/* Ícone de Remover Exercício */
 .ex-remove-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 18px;
-  cursor: pointer;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  background: none; border: none; color: var(--muted);
+  font-size: 18px; cursor: pointer; padding: 8px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; transition: all 0.2s; flex-shrink: 0;
 }
-.ex-remove-btn:hover {
-  color: var(--red);
-  background: rgba(255, 68, 68, 0.1);
-}
+.ex-remove-btn:hover { color: var(--red); background: rgba(255, 68, 68, 0.1); }
 
-.ex-info { flex:1; min-width:0; cursor:pointer; }
+.ex-info { flex:1; min-width:0; }
 .ex-name { font-size: 16px; font-weight: 700; color: var(--text); }
 .ex-group { font-family: var(--font-m); font-size: 10px; color: var(--muted2); text-transform: uppercase; margin-top: 4px; }
 
 /* custom checkbox */
-.check-wrap { flex-shrink: 0; width: 26px; height: 26px; position: relative; }
+.check-wrap { flex-shrink: 0; width: 32px; height: 32px; position: relative; }
 .check-wrap input { position: absolute; opacity:0; width:100%; height:100%; cursor:pointer; margin:0; z-index:1; }
-.check-wrap input:disabled { pointer-events: none; opacity: 0.2; }
 .check-box {
-  width: 26px; height: 26px; border-radius: 8px;
+  width: 32px; height: 32px; border-radius: 10px;
   border: 2px solid var(--s3); background: var(--s2);
   display: flex; align-items: center; justify-content: center;
-  transition: all .2s; pointer-events: none; color: transparent; font-size: 12px;
+  transition: all .2s; pointer-events: none; color: transparent; font-size: 14px; font-weight: bold;
 }
 .check-wrap input:checked + .check-box { background: var(--green); border-color: var(--green); color: #000; }
 
@@ -442,208 +416,73 @@ body {
 
 /* ── MOBILE BARS ── */
 .mob-top {
-  display: none;
-  position: fixed; top:0; left:0; right:0;
-  height: 56px;
-  background: rgba(26,28,32,0.92);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  z-index: 200;
-  align-items: center; padding: 0 20px; gap: 12px;
-  padding-top: env(safe-area-inset-top, 0);
+  display: none; position: fixed; top:0; left:0; right:0; height: 56px;
+  background: rgba(26,28,32,0.92); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 200;
+  align-items: center; padding: 0 20px; gap: 12px; padding-top: env(safe-area-inset-top, 0);
 }
-
 .mob-logo { font-size: 20px; font-weight: 800; }
-
 .mob-lang-container { flex: 1; display: flex; justify-content: center; }
 .mob-lang-select {
-  background: var(--s2); color: var(--text);
-  border: 1px solid var(--border-hi);
-  padding: 5px 10px; border-radius: 8px;
-  font-family: var(--font-m); font-size: 11px; font-weight: 700;
-  outline: none; cursor: pointer;
+  background: var(--s2); color: var(--text); border: 1px solid var(--border-hi);
+  padding: 5px 10px; border-radius: 8px; font-family: var(--font-m); font-size: 11px; font-weight: 700;
 }
-
 .mob-timer-val { font-family: var(--font-m); font-size: 16px; font-weight: 700; color: var(--lime); }
 .mob-pct { font-size: 18px; font-weight: 800; color: var(--lime); min-width: 44px; text-align: right; }
 
 .mob-prog-line {
-  display: none; position: fixed; top: 56px; left:0; right:0;
-  height: 3px; background: var(--s2); z-index: 201;
+  display: none; position: fixed; top: 56px; left:0; right:0; height: 3px; background: var(--s2); z-index: 201;
   margin-top: env(safe-area-inset-top, 0);
 }
 .mob-prog-fill { height: 100%; background: var(--lime); transition: width .5s; width: 0%; }
 
 .mob-timer-row {
-  display: none; position: fixed; top: 59px; left:0; right:0;
-  height: 60px; background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px; z-index: 199;
-  align-items: center; gap: 12px;
+  display: none; position: fixed; top: 59px; left:0; right:0; height: 60px; background: var(--bg);
+  border-bottom: 1px solid var(--border); padding: 0 20px; z-index: 199; align-items: center; gap: 12px;
   margin-top: env(safe-area-inset-top, 0);
 }
-
 .mob-timer-big { font-family: var(--font-m); font-size: 24px; font-weight: 700; color: var(--lime); flex:1; }
 
 .mob-btn {
-  font-family: var(--font-m); font-size: 11px; font-weight: 700;
-  letter-spacing: .05em; text-transform: uppercase;
-  border: 1px solid var(--border-hi); background: var(--s2); color: var(--text);
-  padding: 10px 16px; border-radius: 10px; cursor: pointer; outline: none;
+  font-family: var(--font-m); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  border: 1px solid var(--border-hi); background: var(--s2); color: var(--text); padding: 10px 16px; border-radius: 10px;
 }
 .mob-btn.lime { background:var(--lime); color:#000; border-color:var(--lime); }
 .mob-btn.red  { background:var(--red); color:#fff; border-color:var(--red); }
 
-
-/* ── CORREÇÃO CRÍTICA DA NAV INFERIOR (Z-INDEX SUPERIOR) ── */
 .mob-bottom {
-  display: none; 
-  position: fixed; 
-  bottom: 0; left: 0; right: 0;
-  background: #15171a; 
-  border-top: 1px solid var(--border-hi);
-  
-  /* Z-INDEX ULTRA ALTO + PONTEIRO GARANTIDO */
-  z-index: 99999 !important; 
-  pointer-events: auto !important;
-  
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0));
-  box-shadow: 0 -10px 35px rgba(0,0,0,0.6);
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #15171a; 
+  border-top: 1px solid var(--border-hi); z-index: 99999 !important; pointer-events: auto !important;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0)); box-shadow: 0 -10px 35px rgba(0,0,0,0.6);
 }
-
-.mob-tabs { 
-  display: flex; 
-  gap: 4px; 
-  align-items: center; 
-  justify-content: space-between;
-  width: 100%;
-}
-
+.mob-tabs { display: flex; gap: 4px; align-items: center; justify-content: space-between; width: 100%; }
 .mob-tab {
-  flex: 1;
-  font-family: var(--font-m);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-  border: 1px solid var(--border-hi);
-  background: var(--s1);
-  color: var(--muted2);
-  padding: 12px 1px;
-  border-radius: 10px;
-  
-  /* FORÇA O CURSOR CLICK/MAOZINHA */
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  
-  outline: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  height: 52px;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  flex: 1; font-family: var(--font-m); font-size: 8px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+  border: 1px solid var(--border-hi); background: var(--s1); color: var(--muted2); padding: 12px 1px; border-radius: 10px;
+  cursor: pointer !important; pointer-events: auto !important; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 5px; height: 52px; transition: background 0.15s, color 0.15s, transform 0.1s;
 }
+.mob-tab.active { background: var(--lime); color: #000; border-color: var(--lime); box-shadow: 0 4px 16px rgba(200,255,0,0.25); }
+.mob-tab-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+.mob-tab.active .mob-tab-dot { background: #000; }
 
-.mob-tab:hover {
-  background: var(--s2);
-  color: var(--text);
-}
-
-.mob-tab.active {
-  background: var(--lime);
-  color: #000;
-  border-color: var(--lime);
-  box-shadow: 0 4px 16px rgba(200,255,0,0.25);
-}
-
-.mob-tab:active {
-  transform: scale(0.95);
-}
-
-.mob-tab-dot { 
-  width: 5px; 
-  height: 5px; 
-  border-radius: 50%; 
-  background: rgba(255,255,255,0.15); 
-}
-.mob-tab.active .mob-tab-dot { 
-  background: #000; 
-}
-
-
-/* ── RESPONSIVIDADE EM DISPOSITIVOS MÓVEIS / TELAS PEQUENAS ── */
 @media (max-width: 700px) {
-  .shell { 
-    grid-template-columns: 1fr; 
-  }
-  .sidebar { 
-    display: none; 
-  }
-  
-  .main { 
-    padding-top: calc(180px + env(safe-area-inset-top, 0)); 
-    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0)) !important; 
-  }
-  .main-header { 
-    display: none; 
-  }
-  
-  .mob-top { 
-    display: flex; 
-    height: 56px;
-  }
-  
-  .mob-prog-line { 
-    display: block; 
-    top: 56px;
-  }
-  
-  .mob-timer-row { 
-    display: flex; 
-    position: fixed;
-    top: 59px; 
-    left: 0; right: 0;
-    height: 60px; 
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px; 
-    z-index: 199;
-    align-items: center; 
-    gap: 12px;
-    margin-top: env(safe-area-inset-top, 0);
-  }
-  
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding-top: calc(180px + env(safe-area-inset-top, 0)); padding-bottom: calc(110px + env(safe-area-inset-bottom, 0)) !important; }
+  .main-header { display: none; }
+  .mob-top { display: flex; height: 56px; }
+  .mob-prog-line { display: block; top: 56px; }
+  .mob-timer-row { display: flex; position: fixed; top: 59px; left: 0; right: 0; height: 60px; z-index: 199; }
   .filter-bar { 
-    display: flex;
-    padding: 12px 20px; 
-    position: fixed;
-    top: calc(119px + env(safe-area-inset-top, 0)); 
-    left: 0; right: 0; 
-    height: 56px; 
-    z-index: 150;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    overflow-x: auto;
-    white-space: nowrap;
-    flex-wrap: nowrap;
+    display: flex; padding: 12px 20px; position: fixed; top: calc(119px + env(safe-area-inset-top, 0)); 
+    left: 0; right: 0; height: 56px; z-index: 150; border-bottom: 1px solid var(--border);
+    background: var(--bg); overflow-x: auto; white-space: nowrap; flex-wrap: nowrap;
   }
-  
   .filter-bar::-webkit-scrollbar { display: none; }
   .filter-chip { flex-shrink: 0; }
-  
-  .ex-grid { 
-    padding: 16px 20px 32px; 
-    grid-template-columns: 1fr; 
-    gap: 10px; 
-    position: relative;
-    z-index: 1;
-  }
-  
-  .mob-bottom { 
-    display: block; 
-  }
+  .ex-grid { padding: 16px 20px 32px; position: relative; z-index: 1; }
+  .mob-bottom { display: block; }
 }
 </style>
 </head>
@@ -651,7 +490,6 @@ body {
 
 <div class="mob-top">
   <div class="mob-logo">GYM<span style="color:var(--lime)">.</span></div>
-  
   <div class="mob-lang-container">
     <select class="mob-lang-select" id="mob-lang-sel" onchange="setLang(this.value)">
       <option value="en">EN</option>
@@ -659,14 +497,11 @@ body {
       <option value="es">ES</option>
     </select>
   </div>
-
   <div class="mob-timer-val" id="mob-t">00:00</div>
   <div class="mob-pct" id="mob-pct">0%</div>
 </div>
 
-<div class="mob-prog-line">
-  <div class="mob-prog-fill" id="mob-fill"></div>
-</div>
+<div class="mob-prog-line"><div class="mob-prog-fill" id="mob-fill"></div></div>
 
 <div class="mob-timer-row">
   <div class="mob-timer-big" id="mob-t2">00:00</div>
@@ -675,13 +510,11 @@ body {
 </div>
 
 <div class="shell">
-
   <aside class="sidebar">
     <div class="sb-top">
       <div class="logo">GYM<span class="logo-dot"></span></div>
       <div class="logo-sub">Workout Tracker · 2026</div>
     </div>
-
     <div class="sb-timer">
       <div class="section-label" id="lbl-session">SESSION</div>
       <div class="timer-digits" id="sb-timer">00:00</div>
@@ -690,22 +523,14 @@ body {
         <button class="btn" style="background:var(--red); border-color:var(--red)" onclick="finishWorkout()" id="sb-finish">FINALIZAR</button>
       </div>
     </div>
-
     <div class="sb-progress">
       <div class="progress-row">
         <div class="progress-num" id="sb-pct">0%</div>
-        <div class="progress-meta">
-          <strong id="sb-fraction">0/0</strong>
-          <span id="sb-ex-count">0 exercises</span>
-        </div>
+        <div class="progress-meta"><strong id="sb-fraction">0/0</strong><span id="sb-ex-count">0 exercises</span></div>
       </div>
-      <div class="track">
-        <div class="track-fill" id="track-fill" style="width:0%"></div>
-      </div>
+      <div class="track"><div class="track-fill" id="track-fill" style="width:0%"></div></div>
     </div>
-
     <nav class="sb-nav" id="sb-nav"></nav>
-
     <div class="sb-footer">
       <select class="lang-select" id="lang-sel" onchange="setLang(this.value)">
         <option value="en">EN</option>
@@ -723,25 +548,16 @@ body {
         <h1 class="headline" id="hd-title">EXERCÍCIOS DE HOJE</h1>
       </div>
       <div class="header-stats">
-        <div class="stat-block">
-          <div class="stat-val" id="hd-pct">0%</div>
-          <div class="stat-key">Progress</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-val" style="color:var(--text)" id="hd-timer">00:00</div>
-          <div class="stat-key" id="hd-session-lbl">SESSION</div>
-        </div>
+        <div class="stat-block"><div class="stat-val" id="hd-pct">0%</div><div class="stat-key">Progress</div></div>
+        <div class="stat-block"><div class="stat-val" style="color:var(--text)" id="hd-timer">00:00</div><div class="stat-key" id="hd-session-lbl">SESSION</div></div>
       </div>
     </div>
-
     <div class="filter-bar" id="filter-bar"></div>
     <div class="ex-grid" id="ex-grid"></div>
   </main>
 </div>
 
-<div class="mob-bottom">
-  <div class="mob-tabs" id="mob-tabs"></div>
-</div>
+<div class="mob-bottom"><div class="mob-tabs" id="mob-tabs"></div></div>
 
 <div class="modal-overlay" id="finish-modal">
   <div class="modal-card">
@@ -759,63 +575,39 @@ body {
 <div class="toast" id="toast">🏆 SESSION COMPLETE</div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────
+// ── DATA DATASET ──────────────────────────────────────────────────────
 const EXERCISES = {
   today: [],
   lower: [
-    {id:"l1", key:"Free Squat",          g:"squat"},
-    {id:"l2", key:"Smith Squat",         g:"squat"},
-    {id:"l3", key:"Goblet Squat",        g:"squat"},
-    {id:"l4", key:"Sumo Squat",          g:"squat"},
-    {id:"l5", key:"Leg Press 45°",       g:"legpress"},
-    {id:"l6", key:"H. Leg Press",        g:"legpress"},
-    {id:"l7", key:"Lunges",              g:"posterior"},
-    {id:"l8", key:"Walking Lunges",      g:"posterior"},
-    {id:"l9", key:"Lying Leg Curl",      g:"posterior"},
-    {id:"l10",key:"Seated Leg Curl",     g:"posterior"},
-    {id:"l11",key:"Stiff Deadlift",      g:"posterior"},
-    {id:"l12",key:"Hip Thrust",          g:"posterior"},
-    {id:"l13",key:"Leg Extension",       g:"quad"},
-    {id:"l14",key:"Hack Squat",          g:"quad"},
-    {id:"l15",key:"Calf Raise (Stand)",  g:"calf"},
-    {id:"l16",key:"Calf Raise (Seat)",   g:"calf"},
+    {id:"l1", key:"Free Squat",          g:"squat"}, {id:"l2", key:"Smith Squat",         g:"squat"},
+    {id:"l3", key:"Goblet Squat",        g:"squat"}, {id:"l4", key:"Sumo Squat",          g:"squat"},
+    {id:"l5", key:"Leg Press 45°",       g:"legpress"}, {id:"l6", key:"H. Leg Press",        g:"legpress"},
+    {id:"l7", key:"Lunges",              g:"posterior"}, {id:"l8", key:"Walking Lunges",      g:"posterior"},
+    {id:"l9", key:"Lying Leg Curl",      g:"posterior"}, {id:"l10",key:"Seated Leg Curl",     g:"posterior"},
+    {id:"l11",key:"Stiff Deadlift",      g:"posterior"}, {id:"l12",key:"Hip Thrust",          g:"posterior"},
+    {id:"l13",key:"Leg Extension",       g:"quad"}, {id:"l14",key:"Hack Squat",          g:"quad"},
+    {id:"l15",key:"Calf Raise (Stand)",  g:"calf"}, {id:"l16",key:"Calf Raise (Seat)",   g:"calf"}
   ],
   upper: [
-    {id:"u1", key:"Bench Press",          g:"chest"},
-    {id:"u2", key:"Incline Press",       g:"chest"},
-    {id:"u3", key:"Chest Machine",       g:"chest"},
-    {id:"u4", key:"Chest Fly",           g:"chest"},
-    {id:"u5", key:"Reverse Fly",         g:"chest"},
-    {id:"u6", key:"Push-Ups",            g:"chest"},
-    {id:"u7", key:"Lat Pulldown",        g:"back"},
-    {id:"u8", key:"Bent Over Row",       g:"back"},
-    {id:"u9", key:"Seated Row",          g:"back"},
-    {id:"u10",key:"Deadlift",            g:"back"},
-    {id:"u11",key:"Shoulder Press",      g:"shoulder"},
-    {id:"u12",key:"Lateral Raise",       g:"shoulder"},
-    {id:"u13",key:"Front Raise",         g:"shoulder"},
-    {id:"u14",key:"Rear Delt Fly",       g:"shoulder"},
-    {id:"u15",key:"Bicep Curl",          g:"arms"},
-    {id:"u16",key:"Hammer Curl",         g:"arms"},
-    {id:"u17",key:"Preacher Curl",       g:"arms"},
-    {id:"u18",key:"Tri Pushdown",        g:"arms"},
-    {id:"u19",key:"Skull Crusher",       g:"arms"},
-    {id:"u20",key:"Dips",                g:"arms"},
+    {id:"u1", key:"Bench Press",          g:"chest"}, {id:"u2", key:"Incline Press",       g:"chest"},
+    {id:"u3", key:"Chest Machine",       g:"chest"}, {id:"u4", key:"Chest Fly",           g:"chest"},
+    {id:"u5", key:"Reverse Fly",         g:"chest"}, {id:"u6", key:"Push-Ups",            g:"chest"},
+    {id:"u7", key:"Lat Pulldown",        g:"back"},  {id:"u8", key:"Bent Over Row",       g:"back"},
+    {id:"u9", key:"Seated Row",          g:"back"},  {id:"u10",key:"Deadlift",            g:"back"},
+    {id:"u11",key:"Shoulder Press",      g:"shoulder"}, {id:"u12",key:"Lateral Raise",       g:"shoulder"},
+    {id:"u13",key:"Front Raise",         g:"shoulder"}, {id:"u14",key:"Rear Delt Fly",       g:"shoulder"},
+    {id:"u15",key:"Bicep Curl",          g:"arms"},  {id:"u16",key:"Hammer Curl",         g:"arms"},
+    {id:"u17",key:"Preacher Curl",       g:"arms"},  {id:"u18",key:"Tri Pushdown",        g:"arms"},
+    {id:"u19",key:"Skull Crusher",       g:"arms"},  {id:"u20",key:"Dips",                g:"arms"}
   ],
   core: [
-    {id:"c1", key:"Plank",               g:"abs"},
-    {id:"c2", key:"Crunch",              g:"abs"},
-    {id:"c3", key:"Leg Raise",           g:"abs"},
-    {id:"c4", key:"Upper Crunch",        g:"abs"},
-    {id:"c5", key:"Rotational Bridge",   g:"abs"},
-    {id:"c6", key:"Back Extension",      g:"lumbar"},
-    {id:"c7", key:"Treadmill",           g:"cardio"},
-    {id:"c8", key:"Exercise Bike",       g:"cardio"},
-    {id:"c9", key:"Stairmaster",         g:"cardio"},
-    {id:"c10",key:"Rowing Machine",      g:"cardio"},
-    {id:"c11",key:"HIIT",                g:"cardio"},
-    {id:"c12",key:"Jumping Jacks",       g:"cardio"},
-  ],
+    {id:"c1", key:"Plank",               g:"abs"}, {id:"c2", key:"Crunch",              g:"abs"},
+    {id:"c3", key:"Leg Raise",           g:"abs"}, {id:"c4", key:"Upper Crunch",        g:"abs"},
+    {id:"c5", key:"Rotational Bridge",   g:"abs"}, {id:"c6", key:"Back Extension",      g:"lumbar"},
+    {id:"c7", key:"Treadmill",           g:"cardio"}, {id:"c8", key:"Exercise Bike",       g:"cardio"},
+    {id:"c9", key:"Stairmaster",         g:"cardio"}, {id:"c10",key:"Rowing Machine",      g:"cardio"},
+    {id:"c11",key:"HIIT",                g:"cardio"}, {id:"c12",key:"Jumping Jacks",       g:"cardio"}
+  ]
 };
 
 const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
@@ -827,26 +619,9 @@ const I18N = {
     session:"SESSION", muscleGroup:"workout control", close:"CLOSE",
     tabs:{ today:"PLANNER", lower:"LOWER", upper:"UPPER", core:"CORE" },
     weekdays: { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" },
-    groups:{ all:"ALL", squat:"SQUATS", legpress:"LEG PRESS", posterior:"POSTERIOR",
-             quad:"QUADS", calf:"CALVES", chest:"CHEST", back:"BACK",
-             shoulder:"SHOULDERS", arms:"ARMS", abs:"ABS", lumbar:"LUMBAR", cardio:"CARDIO" },
+    groups:{ all:"ALL", squat:"SQUATS", legpress:"LEG PRESS", posterior:"POSTERIOR", quad:"QUADS", calf:"CALVES", chest:"CHEST", back:"BACK", shoulder:"SHOULDERS", arms:"ARMS", abs:"ABS", lumbar:"LUMBAR", cardio:"CARDIO" },
     names: {
-      "Free Squat":"Free Squat","Smith Squat":"Smith Squat","Goblet Squat":"Goblet Squat",
-      "Sumo Squat":"Sumo Squat","Leg Press 45°":"Leg Press 45°","H. Leg Press":"H. Leg Press",
-      "Lunges":"Lunges","Walking Lunges":"Walking Lunges","Lying Leg Curl":"Lying Leg Curl",
-      "Seated Leg Curl":"Seated Leg Curl","Stiff Deadlift":"Stiff Deadlift","Hip Thrust":"Hip Thrust",
-      "Leg Extension":"Leg Extension","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Calf Raise (Stand)",
-      "Calf Raise (Seat)":"Calf Raise (Seat)","Bench Press":"Bench Press","Incline Press":"Incline Press",
-      "Chest Machine":"Chest Machine","Chest Fly":"Chest Fly","Reverse Fly":"Reverse Fly",
-      "Push-Ups":"Push-Ups","Lat Pulldown":"Puxada Frontal","Bent Over Row":"Bent Over Row",
-      "Seated Row":"Seated Row","Deadlift":"Deadlift","Shoulder Press":"Shoulder Press",
-      "Lateral Raise":"Lateral Raise","Front Raise":"Front Raise","Rear Delt Fly":"Rear Delt Fly",
-      "Bicep Curl":"Bicep Curl","Hammer Curl":"Hammer Curl","Preacher Curl":"Preacher Curl",
-      "Tri Pushdown":"Tri Pushdown","Skull Crusher":"Skull Crusher","Dips":"Dips",
-      "Plank":"Plank","Crunch":"Crunch","Leg Raise":"Leg Raise","Upper Crunch":"Upper Crunch",
-      "Rotational Bridge":"Rotational Bridge","Back Extension":"Back Extension","Treadmill":"Treadmill",
-      "Exercise Bike":"Exercise Bike","Stairmaster":"Stairmaster","Rowing Machine":"Rowing Machine",
-      "HIIT":"HIIT","Jumping Jacks":"Jumping Jacks",
+      "Free Squat":"Free Squat","Smith Squat":"Smith Squat","Goblet Squat":"Goblet Squat","Sumo Squat":"Sumo Squat","Leg Press 45°":"Leg Press 45°","H. Leg Press":"H. Leg Press","Lunges":"Lunges","Walking Lunges":"Walking Lunges","Lying Leg Curl":"Lying Leg Curl","Seated Leg Curl":"Seated Leg Curl","Stiff Deadlift":"Stiff Deadlift","Hip Thrust":"Hip Thrust","Leg Extension":"Leg Extension","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Calf Raise (Stand)","Calf Raise (Seat)":"Calf Raise (Seat)","Bench Press":"Bench Press","Incline Press":"Incline Press","Chest Machine":"Chest Machine","Chest Fly":"Chest Fly","Reverse Fly":"Reverse Fly","Push-Ups":"Push-Ups","Lat Pulldown":"Lat Pulldown","Bent Over Row":"Bent Over Row","Seated Row":"Seated Row","Deadlift":"Deadlift","Shoulder Press":"Shoulder Press","Lateral Raise":"Lateral Raise","Front Raise":"Front Raise","Rear Delt Fly":"Rear Delt Fly","Bicep Curl":"Bicep Curl","Hammer Curl":"Hammer Curl","Preacher Curl":"Preacher Curl","Tri Pushdown":"Tri Pushdown","Skull Crusher":"Skull Crusher","Dips":"Dips","Plank":"Plank","Crunch":"Crunch","Leg Raise":"Leg Raise","Upper Crunch":"Upper Crunch","Rotational Bridge":"Rotational Bridge","Back Extension":"Back Extension","Treadmill":"Treadmill","Exercise Bike":"Exercise Bike","Stairmaster":"Stairmaster","Rowing Machine":"Rowing Machine","HIIT":"HIIT","Jumping Jacks":"Jumping Jacks"
     }
   },
   pt: {
@@ -855,26 +630,9 @@ const I18N = {
     session:"SESSÃO", muscleGroup:"controle de treino", close:"FECHAR",
     tabs:{ today:"FICHA DE TREINO", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
     weekdays: { mon: "Segunda", tue: "Terça", wed: "Quarta", thu: "Quinta", fri: "Sexta", sat: "Sábado", sun: "Domingo" },
-    groups:{ all:"TODOS", squat:"AGACHAM.", legpress:"LEG PRESS", posterior:"POSTERIOR",
-             quad:"QUADRÍCEPS", calf:"PANTURRILHA", chest:"PEITO", back:"COSTAS",
-             shoulder:"OMBROS", arms:"BRAÇOS", abs:"ABDÔMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
+    groups:{ all:"TODOS", squat:"AGACHAM.", legpress:"LEG PRESS", posterior:"POSTERIOR", quad:"QUADRÍCEPS", calf:"PANTURRILHA", chest:"PEITO", back:"COSTAS", shoulder:"OMBROS", arms:"BRAÇOS", abs:"ABDÔMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
     names:{
-      "Free Squat":"Agach. Livre","Smith Squat":"Agach. Smith","Goblet Squat":"Agach. Goblet",
-      "Sumo Squat":"Agach. Sumô","Leg Press 45°":"Leg Press 45°","H. Leg Press":"Leg Press Horiz.",
-      "Lunges":"Lunges","Walking Lunges":"Passada Caminhando","Lying Leg Curl":"Mesa Flexora",
-      "Seated Leg Curl":"Cadeira Flexora","Stiff Deadlift":"Stiff","Hip Thrust":"Elev. Pélvica",
-      "Leg Extension":"Cadeira Extensora","Hack Squat":"Hack Machine","Calf Raise (Stand)":"Panturrilha Pé",
-      "Calf Raise (Seat)":"Panturrilha Sent.","Bench Press":"Supino Reto","Incline Press":"Supino Inclinado",
-      "Chest Machine":"Supino Máquina","Chest Fly":"Crucifixo","Reverse Fly":"Fly Inverso",
-      "Push-Ups":"Flexão de Braços","Lat Pulldown":"Puxada Frontal","Bent Over Row":"Remada Curvada",
-      "Seated Row":"Remada Baixa","Deadlift":"Levant. Terra","Shoulder Press":"Desenvolvimento",
-      "Lateral Raise":"Elev. Lateral","Front Raise":"Elev. Frontal","Rear Delt Fly":"Crucifixo Inv.",
-      "Bicep Curl":"Rosca Direta","Hammer Curl":"Rosca Martelo","Preacher Curl":"Rosca Scott",
-      "Tri Pushdown":"Tríceps Pulley","Skull Crusher":"Tríceps Testa","Dips":"Paralelas",
-      "Plank":"Prancha","Crunch":"Crunch","Leg Raise":"Infra","Upper Crunch":"Supra",
-      "Rotational Bridge":"Ponte Rotativa","Back Extension":"Ext. Lombar","Treadmill":"Esteira",
-      "Exercise Bike":"Bicicleta","Stairmaster":"Escada","Rowing Machine":"Remo Seco",
-      "HIIT":"HIIT","Jumping Jacks":"Polichinelo",
+      "Free Squat":"Agach. Livre","Smith Squat":"Agach. Smith","Goblet Squat":"Agach. Goblet","Sumo Squat":"Agach. Sumô","Leg Press 45°":"Leg Press 45°","H. Leg Press":"Leg Press Horiz.","Lunges":"Lunges","Walking Lunges":"Passada Caminhando","Lying Leg Curl":"Mesa Flexora","Seated Leg Curl":"Cadeira Flexora","Stiff Deadlift":"Stiff","Hip Thrust":"Elev. Pélvica","Leg Extension":"Cadeira Extensora","Hack Squat":"Hack Machine","Calf Raise (Stand)":"Panturrilha Pé","Calf Raise (Seat)":"Panturrilha Sent.","Bench Press":"Supino Reto","Incline Press":"Supino Inclinado","Chest Machine":"Supino Máquina","Chest Fly":"Crucifixo","Reverse Fly":"Fly Inverso","Push-Ups":"Flexão de Braços","Lat Pulldown":"Puxada Frontal","Bent Over Row":"Remada Curvada","Seated Row":"Remada Baixa","Deadlift":"Levant. Terra","Shoulder Press":"Desenvolvimento","Lateral Raise":"Elev. Lateral","Front Raise":"Elev. Frontal","Rear Delt Fly":"Crucifixo Inv.","Bicep Curl":"Rosca Direta","Hammer Curl":"Rosca Martelo","Preacher Curl":"Rosca Scott","Tri Pushdown":"Tríceps Pulley","Skull Crusher":"Tríceps Testa","Dips":"Paralelas","Plank":"Prancha","Crunch":"Crunch","Leg Raise":"Infra","Upper Crunch":"Supra","Rotational Bridge":"Ponte Rotativa","Back Extension":"Ext. Lombar","Treadmill":"Esteira","Exercise Bike":"Bicicleta","Stairmaster":"Escada","Rowing Machine":"Remo Seco","HIIT":"HIIT","Jumping Jacks":"Polichinelo"
     }
   },
   es: {
@@ -883,31 +641,14 @@ const I18N = {
     session:"SESIÓN", muscleGroup:"control de entrenamiento", close:"CERRAR",
     tabs:{ today:"FICHA DE ENTREN.", lower:"INFERIOR", upper:"SUPERIOR", core:"CORE" },
     weekdays: { mon: "Lunes", tue: "Martes", wed: "Miércoles", thu: "Jueves", fri: "Viernes", sat: "Sábado", sun: "Domingo" },
-    groups:{ all:"TODO", squat:"SENTAD.", legpress:"PRENSA", posterior:"POSTERIOR",
-             quad:"CUÁDRICEPS", calf:"GEMELOS", chest:"PECHO", back:"ESPALDA",
-             shoulder:"HOMBROS", arms:"BRAZOS", abs:"ABDOMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
+    groups:{ all:"TODO", squat:"SENTAD.", legpress:"PRENSA", posterior:"POSTERIOR", quad:"CUÁDRICEPS", calf:"GEMELOS", chest:"PECHO", back:"ESPALDA", shoulder:"HOMBROS", arms:"BRAZOS", abs:"ABDOMEN", lumbar:"LUMBAR", cardio:"CARDIO" },
     names:{
-      "Free Squat":"Sentadilla Livre","Smith Squat":"Sentadilla Smith","Goblet Squat":"Sentadilla Goblet",
-      "Sumo Squat":"Sentadilla Sumo","Leg Press 45°":"Prensa 45°","H. Leg Press":"Prensa Horiz.",
-      "Lunges":"Zancadas","Walking Lunges":"Zancadas Caminando","Lying Leg Curl":"Curl Fem. Tumbado",
-      "Seated Leg Curl":"Curl Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera",
-      "Leg Extension":"Extensión Cuád.","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Gemelos Pie",
-      "Calf Raise (Seat)":"Gemelos Sentado","Bench Press":"Press Banca","Incline Press":"Press Inclinado",
-      "Chest Machine":"Máquina Pecho","Chest Fly":"Aperturas","Reverse Fly":"Aperturas Inv.",
-      "Push-Ups":"Flexiones","Lat Pulldown":"Jalón al Pecho","Bent Over Row":"Remo Inclinado",
-      "Seated Row":"Remo Bajo","Deadlift":"Peso Muerto","Shoulder Press":"Press Hombro",
-      "Lateral Raise":"Elev. Laterales","Front Raise":"Elev. Frontales","Rear Delt Fly":"Apert. Poster.",
-      "Bicep Curl":"Curl Bíceps","Hammer Curl":"Curl Martillo","Preacher Curl":"Banco Scott",
-      "Tri Pushdown":"Ext. Tríceps","Skull Crusher":"Press Francés","Dips":"Fondos",
-      "Plank":"Plancha","Crunch":"Crunch","Leg Raise":"Elev. Piernas","Upper Crunch":"Crunch Superior",
-      "Rotational Bridge":"Puente Rotacional","Back Extension":"Ext. Lumbar","Treadmill":"Cinta",
-      "Exercise Bike":"Bicicleta","Stairmaster":"Escaladora","Rowing Machine":"Remo",
-      "HIIT":"HIIT","Jumping Jacks":"Saltos de Tijera",
+      "Free Squat":"Sentadilla Livre","Smith Squat":"Sentadilla Smith","Goblet Squat":"Sentadilla Goblet","Sumo Squat":"Sentadilla Sumo","Leg Press 45°":"Prensa 45°","H. Leg Press":"Prensa Horiz.","Lunges":"Zancadas","Walking Lunges":"Zancadas Caminando","Lying Leg Curl":"Curl Fem. Tumbado","Seated Leg Curl":"Curl Fem. Sentado","Stiff Deadlift":"Peso Muerto Rígido","Hip Thrust":"Empuje Cadera","Leg Extension":"Extensión Cuád.","Hack Squat":"Hack Squat","Calf Raise (Stand)":"Gemelos Pie","Calf Raise (Seat)":"Gemelos Sentado","Bench Press":"Press Banca","Incline Press":"Press Inclinado","Chest Machine":"Máquina Pecho","Chest Fly":"Aperturas","Reverse Fly":"Aperturas Inv.","Push-Ups":"Flexiones","Lat Pulldown":"Jalón al Pecho","Bent Over Row":"Remo Inclinado","Seated Row":"Remo Bajo","Deadlift":"Peso Muerto","Shoulder Press":"Press Hombro","Lateral Raise":"Elev. Laterales","Front Raise":"Elev. Frontales","Rear Delt Fly":"Apert. Poster.","Bicep Curl":"Curl Bíceps","Hammer Curl":"Curl Martillo","Preacher Curl":"Banco Scott","Tri Pushdown":"Ext. Tríceps","Skull Crusher":"Press Francés","Dips":"Fondos","Plank":"Plancha","Crunch":"Crunch","Leg Raise":"Elev. Piernas","Upper Crunch":"Crunch Superior","Rotational Bridge":"Puente Rotacional","Back Extension":"Ext. Lumbar","Treadmill":"Cinta","Exercise Bike":"Bicicleta","Stairmaster":"Escaladora","Rowing Machine":"Remo","HIIT":"HIIT","Jumping Jacks":"Saltos de Tijera"
     }
   }
 };
 
-// ── STATE ─────────────────────────────────────────────────────────────
+// ── STATE STORE ───────────────────────────────────────────────────────
 const STORE = "gt2026_v3";
 let lang, tab, filter, exState, sec, running, timerInt;
 let currentDay = "mon"; 
@@ -935,8 +676,7 @@ function persist() {
 
 function rebuildTodayDataset() {
   EXERCISES.today = [];
-  const todasChaves = ["lower", "upper", "core"];
-  todasChaves.forEach(t => {
+  ["lower", "upper", "core"].forEach(t => {
     EXERCISES[t].forEach(ex => {
       if (exState[ex.id]?.[currentDay]) {
         EXERCISES.today.push(ex);
@@ -945,7 +685,6 @@ function rebuildTodayDataset() {
   });
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────────
 const fmt = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
 const L = () => I18N[lang];
 
@@ -958,8 +697,7 @@ function calcProgress() {
 
 function tabActiveCounts() {
   const counts = { today: EXERCISES.today.length, lower: 0, upper: 0, core: 0 };
-  const todasChaves = ["lower", "upper", "core"];
-  todasChaves.forEach(t => {
+  ["lower", "upper", "core"].forEach(t => {
     EXERCISES[t].forEach(ex => {
       if (exState[ex.id]?.[currentDay]) counts[t]++;
     });
@@ -967,68 +705,43 @@ function tabActiveCounts() {
   return counts;
 }
 
-// ── UI RENDERERS ──────────────────────────────────────────────────────
+// ── UI RENDERING & INJECTIONS ─────────────────────────────────────────
 function renderTabs() {
   const nav = document.getElementById("sb-nav");
   const mTabs = document.getElementById("mob-tabs");
   const counts = tabActiveCounts();
+  let html = "", mHtml = "";
   
-  let html = "";
-  let mHtml = "";
-  const keys = ["today", "lower", "upper", "core"];
-  
-  keys.forEach(k => {
+  ["today", "lower", "upper", "core"].forEach(k => {
     const activeCls = tab === k ? "active" : "";
-    const countVal = counts[k];
-    
     html += `
       <button class="nav-btn ${activeCls}" onclick="setTab('${k}')">
-        <span class="nav-accent"></span>
-        ${L().tabs[k]}
-        <span class="nav-count">${countVal}</span>
-      </button>
-    `;
-    
+        <span class="nav-accent"></span>${L().tabs[k]}<span class="nav-count">${counts[k]}</span>
+      </button>`;
     mHtml += `
       <button class="mob-tab ${activeCls}" onclick="setTab('${k}')">
-        <div>${L().tabs[k]}</div>
-        <div class="mob-tab-dot"></div>
-      </button>
-    `;
+        <div>${L().tabs[k]}</div><div class="mob-tab-dot"></div>
+      </button>`;
   });
-  
-  nav.innerHTML = html;
-  mTabs.innerHTML = mHtml;
+  nav.innerHTML = html; mTabs.innerHTML = mHtml;
 }
 
 function renderFilters() {
   const bar = document.getElementById("filter-bar");
   if (tab === "today") {
-    bar.innerHTML = WEEKDAYS.map(d => {
-      const activeCls = currentDay === d ? "active" : "";
-      return `<button class="filter-chip ${activeCls}" onclick="setDay('${d}')">${L().weekdays[d]}</button>`;
-    }).join("");
+    bar.innerHTML = WEEKDAYS.map(d => `<button class="filter-chip ${currentDay === d ? "active" : ""}" onclick="setDay('${d}')">${L().weekdays[d]}</button>`).join("");
     return;
   }
-  
   const groups = new Set(["all"]);
   EXERCISES[tab].forEach(ex => groups.add(ex.g));
-  
-  bar.innerHTML = Array.from(groups).map(g => {
-    const activeCls = filter === g ? "active" : "";
-    const lbl = L().groups[g] || g.toUpperCase();
-    return `<button class="filter-chip ${activeCls}" onclick="setFilter('${g}')">${lbl}</button>`;
-  }).join("");
+  bar.innerHTML = Array.from(groups).map(g => `<button class="filter-chip ${filter === g ? "active" : ""}" onclick="setFilter('${g}')">${L().groups[g] || g.toUpperCase()}</button>`).join("");
 }
 
 function renderGrid() {
   const grid = document.getElementById("ex-grid");
   const list = tab === "today" ? EXERCISES.today : EXERCISES[tab];
-  
   let filtered = list;
-  if (tab !== "today" && filter !== "all") {
-    filtered = list.filter(ex => ex.g === filter);
-  }
+  if (tab !== "today" && filter !== "all") filtered = list.filter(ex => ex.g === filter);
   
   if (filtered.length === 0) {
     grid.innerHTML = `<div class="empty-state">${L().empty}</div>`;
@@ -1038,73 +751,119 @@ function renderGrid() {
   grid.innerHTML = filtered.map(ex => {
     const isAct = !!exState[ex.id]?.[currentDay];
     const isDone = !!exState[ex.id]?.done?.[currentDay];
-    
-    let cardCls = "";
-    let toggleChar = "+";
-    if (tab === "today") {
-      if (isDone) cardCls = "done";
-    } else {
-      if (isAct) {
-        cardCls = "active";
-        toggleChar = "✓";
-      } else {
-        cardCls = "inactive";
-      }
-    }
-    
-    const translatedName = L().names[ex.key] || ex.key;
-    const groupLabel = L().groups[ex.g] || ex.g.toUpperCase();
+    const transName = L().names[ex.key] || ex.key;
+    const gLabel = L().groups[ex.g] || ex.g.toUpperCase();
     
     if (tab === "today") {
-      // CARD DA FICHA DE TREINO COM SUPORTE A SWIPE DESLIZANTE
       return `
         <div class="swipe-container" data-id="${ex.id}">
           <div class="swipe-background">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </div>
-          <div class="ex-card ${cardCls}" 
-               ontouchstart="handleTouchStart(event, '${ex.id}')" 
-               ontouchmove="handleTouchMove(event, '${ex.id}')" 
-               ontouchend="handleTouchEnd(event, '${ex.id}')">
+          <div class="ex-card ${isDone ? 'done' : ''}">
             <div class="check-wrap">
               <input type="checkbox" ${isDone ? "checked" : ""} onchange="toggleExerciseDone('${ex.id}', this.checked)">
               <div class="check-box">✓</div>
             </div>
             <div class="ex-info">
-              <div class="ex-name">${translatedName}</div>
-              <div class="ex-group">${groupLabel}</div>
+              <div class="ex-name">${transName}</div>
+              <div class="ex-group">${gLabel}</div>
             </div>
-            <button class="ex-remove-btn" onclick="removeExerciseFromDay('${ex.id}', event)" title="Remover exercício">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            <button class="ex-remove-btn" onclick="removeExerciseFromDay('${ex.id}', event)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
           </div>
-        </div>
-      `;
+        </div>`;
     } else {
-      // CARD PADRÃO PARA OUTRAS ABAS DE SELEÇÃO
       return `
-        <div class="ex-card ${cardCls}">
-          <button class="ex-toggle" onclick="toggleExerciseSetup('${ex.id}', event)">${toggleChar}</button>
+        <div class="ex-card ${isAct ? 'active' : 'inactive'}">
+          <button class="ex-toggle" onclick="toggleExerciseSetup('${ex.id}', event)">${isAct ? '✓' : '+'}</button>
           <div class="ex-info" onclick="toggleExerciseSetup('${ex.id}', event)">
-            <div class="ex-name">${translatedName}</div>
-            <div class="ex-group">${groupLabel}</div>
+            <div class="ex-name">${transName}</div><div class="ex-group">${gLabel}</div>
           </div>
-        </div>
-      `;
+        </div>`;
     }
   }).join("");
+
+  if (tab === "today") attachSwipeEvents();
+}
+
+// ── SWIPE ENGINE PARA MOBILE TOUCH CONTROLS ───────────────────────────
+function attachSwipeEvents() {
+  const containers = document.querySelectorAll('.swipe-container');
+  
+  containers.forEach(container => {
+    const card = container.querySelector('.ex-card');
+    const bg = container.querySelector('.swipe-background');
+    const id = container.getAttribute('data-id');
+    
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let isSwiping = false;
+    let isScrollZone = false;
+
+    // Reset nativo
+    card.outerHTML = card.outerHTML; 
+    const cleanCard = container.querySelector('.ex-card');
+
+    cleanCard.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      currentX = 0;
+      isSwiping = false;
+      isScrollZone = false;
+      cleanCard.style.transition = 'none';
+    }, { passive: true });
+
+    cleanCard.addEventListener('touchmove', (e) => {
+      if (isScrollZone) return;
+
+      const deltaX = e.touches[0].clientX - startX;
+      const deltaY = e.touches[0].clientY - startY;
+
+      if (!isSwiping && Math.abs(deltaY) > Math.abs(deltaX)) {
+        isScrollZone = true;
+        return;
+      }
+
+      if (Math.abs(deltaX) > 10) {
+        isSwiping = true;
+      }
+
+      if (isSwiping && deltaX < 0) {
+        if(e.cancelable) e.preventDefault();
+        currentX = Math.max(deltaX, -140);
+        bg.style.opacity = '1';
+        cleanCard.style.transform = `translateX(${currentX}px)`;
+      }
+    }, { passive: false });
+
+    cleanCard.addEventListener('touchend', () => {
+      if (!isSwiping) return;
+      cleanCard.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+      
+      if (currentX < -80) {
+        cleanCard.style.transform = 'translateX(-105%)';
+        bg.style.opacity = '0';
+        setTimeout(() => {
+          removeExerciseFromDay(id);
+        }, 220);
+      } else {
+        cleanCard.style.transform = 'translateX(0px)';
+        setTimeout(() => { bg.style.opacity = '0'; }, 150);
+      }
+    }, { passive: true });
+  });
 }
 
 function syncHeaderAndProgress() {
   const { all, done, pct } = calcProgress();
-  
   document.getElementById("sb-pct").innerText = pct + "%";
   document.getElementById("hd-pct").innerText = pct + "%";
   document.getElementById("mob-pct").innerText = pct + "%";
-  
   document.getElementById("track-fill").style.width = pct + "%";
   document.getElementById("mob-fill").style.width = pct + "%";
-  
   document.getElementById("sb-fraction").innerText = `${done}/${all.length}`;
   document.getElementById("sb-ex-count").innerText = `${all.length} ${L().exercises}`;
   
@@ -1115,125 +874,21 @@ function syncHeaderAndProgress() {
     document.getElementById("hd-title").innerText = L().tabs[tab];
     document.getElementById("hd-sub").innerText = L().muscleGroup;
   }
-  
-  if (pct === 100 && prevPct < 100 && all.length > 0) {
-    triggerToast();
-  }
+  if (pct === 100 && prevPct < 100 && all.length > 0) triggerToast();
   prevPct = pct;
 }
 
-// ── SWIPE GESTURES MECHANICS ──────────────────────────────────────────
-let touchStartX = 0;
-let touchStartY = 0;
-let currentSwipeOffset = 0;
-let isSwipingCard = false;
-
-function handleTouchStart(e, id) {
-  const card = e.currentTarget;
-  const container = card.parentElement;
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-  currentSwipeOffset = 0;
-  isSwipingCard = true;
-  card.classList.add('no-transition');
-  container.classList.add('swiping');
-}
-
-function handleTouchMove(e, id) {
-  if (!isSwipingCard) return;
-  
-  const card = e.currentTarget;
-  const deltaX = e.touches[0].clientX - touchStartX;
-  const deltaY = e.touches[0].clientY - touchStartY;
-  
-  // Impede o swipe indesejado se o usuário estiver rolando a tela verticalmente
-  if (Math.abs(deltaY) > Math.abs(deltaX) && currentSwipeOffset === 0) {
-    isSwipingCard = false;
-    card.classList.remove('no-transition');
-    card.parentElement.classList.remove('swiping');
-    card.style.transform = '';
-    return;
-  }
-  
-  // Apenas permite deslizar para a esquerda (valores negativos)
-  if (deltaX < 0) {
-    // Adiciona uma resistência física leve no limite do swipe
-    currentSwipeOffset = Math.max(deltaX, -140); 
-    card.style.transform = `translateX(${currentSwipeOffset}px)`;
-    
-    // Cancela a rolagem nativa da página enquanto arrasta lateralmente
-    if (e.cancelable) e.preventDefault();
-  } else {
-    card.style.transform = 'translateX(0px)';
-    currentSwipeOffset = 0;
-  }
-}
-
-function handleTouchEnd(e, id) {
-  if (!isSwipingCard) return;
-  isSwipingCard = false;
-  
-  const card = e.currentTarget;
-  const container = card.parentElement;
-  card.classList.remove('no-transition');
-  container.classList.remove('swiping');
-  
-  // Se deslizou mais de 90px para a esquerda, executa a remoção completa do card
-  if (currentSwipeOffset < -90) {
-    card.style.transform = 'translateX(-100%)';
-    card.style.opacity = '0';
-    setTimeout(() => {
-      removeExerciseFromDay(id);
-    }, 150);
-  } else {
-    // Senão, o card volta suavemente para a posição inicial
-    card.style.transform = 'translateX(0px)';
-  }
-}
-
-// ── ACTIONS ───────────────────────────────────────────────────────────
-function setTab(t) {
-  tab = t;
-  filter = "all";
-  renderTabs();
-  renderFilters();
-  renderGrid();
-  syncHeaderAndProgress();
-  persist();
-}
-
-function setFilter(f) {
-  filter = f;
-  renderFilters();
-  renderGrid();
-  persist();
-}
-
-function setDay(d) {
-  currentDay = d;
-  rebuildTodayDataset();
-  renderFilters();
-  renderGrid();
-  renderTabs();
-  syncHeaderAndProgress();
-  persist();
-}
+// ── HANDLERS & CORE ENGINE ───────────────────────────────────────────
+function setTab(t) { tab = t; filter = "all"; renderTabs(); renderFilters(); renderGrid(); syncHeaderAndProgress(); persist(); }
+function setFilter(f) { filter = f; renderFilters(); renderGrid(); persist(); }
+function setDay(d) { currentDay = d; rebuildTodayDataset(); renderFilters(); renderGrid(); renderTabs(); syncHeaderAndProgress(); persist(); }
 
 function toggleExerciseSetup(id, event) {
   if (event) event.stopPropagation();
   if (!exState[id]) exState[id] = {};
-  
   exState[id][currentDay] = !exState[id][currentDay];
-  
-  if (!exState[id][currentDay]) {
-    if(exState[id].done) exState[id].done[currentDay] = false;
-  }
-  
-  rebuildTodayDataset();
-  renderGrid();
-  renderTabs();
-  syncHeaderAndProgress();
-  persist();
+  if (!exState[id][currentDay] && exState[id].done) exState[id].done[currentDay] = false;
+  rebuildTodayDataset(); renderGrid(); renderTabs(); syncHeaderAndProgress(); persist();
 }
 
 function removeExerciseFromDay(id, event) {
@@ -1242,115 +897,63 @@ function removeExerciseFromDay(id, event) {
     exState[id][currentDay] = false;
     if (exState[id].done) exState[id].done[currentDay] = false;
   }
-  rebuildTodayDataset();
-  renderGrid();
-  renderTabs();
-  syncHeaderAndProgress();
-  persist();
+  rebuildTodayDataset(); renderGrid(); renderTabs(); syncHeaderAndProgress(); persist();
 }
 
 function toggleExerciseDone(id, checked) {
   if (!exState[id]) exState[id] = {};
   if (!exState[id].done) exState[id].done = {};
-  
   exState[id].done[currentDay] = checked;
-  
-  renderGrid();
-  syncHeaderAndProgress();
-  persist();
+  renderGrid(); syncHeaderAndProgress(); persist();
 }
 
 function setLang(l) {
-  lang = l;
-  document.getElementById("lang-sel").value = l;
-  document.getElementById("mob-lang-sel").value = l;
-  
+  lang = l; document.getElementById("lang-sel").value = l; document.getElementById("mob-lang-sel").value = l;
   const strings = {
-    pt: { resTitle: "TREINO FINALIZADO!", resTxt: "Consistência é tudo. Aqui está o resumo do seu treino:", resTime: "TEMPO TOTAL", cls: "FECHAR" },
-    en: { resTitle: "WORKOUT COMPLETE!", resTxt: "Consistency is key. Here is your workout summary:", resTime: "TOTAL TIME", cls: "CLOSE" },
-    es: { resTitle: "¡ENTRENO TERMINADO!", resTxt: "La consistencia lo es todo. Aquí está el resumen:", resTime: "TIEMPO TOTAL", cls: "CERRAR" }
+    pt: { resTitle: "TREINO FINALIZADO!", resTxt: "Consistência é tudo. Aqui está o resumo do seu treino:", resTime: "TEMPO TOTAL" },
+    en: { resTitle: "WORKOUT COMPLETE!", resTxt: "Consistency is key. Here is your workout summary:", resTime: "TOTAL TIME" },
+    es: { resTitle: "¡ENTRENO TERMINADO!", resTxt: "La consistencia lo es todo. Aquí está el resumen:", resTime: "TIEMPO TOTAL" }
   }[l] || strings.pt;
   
   document.getElementById("modal-title").innerText = strings.resTitle;
   document.getElementById("modal-text").innerText = strings.resTxt;
   document.getElementById("modal-time-lbl").innerText = strings.resTime;
   document.getElementById("btn-reset-day").innerText = L().clearDay;
-  
-  renderTabs();
-  renderFilters();
-  renderGrid();
-  syncHeaderAndProgress();
-  updateTimerUI();
-  persist();
+  renderTabs(); renderFilters(); renderGrid(); syncHeaderAndProgress(); updateTimerUI(); persist();
 }
 
-// ── TIMER MECHANICS ───────────────────────────────────────────────────
 function toggleTimer() {
   running = !running;
-  const b1 = document.getElementById("sb-toggle");
-  const b2 = document.getElementById("mob-toggle");
-  
+  const b1 = document.getElementById("sb-toggle"); const b2 = document.getElementById("mob-toggle");
   if (running) {
-    b1.innerText = L().stop; b1.style.background = "var(--s3)";
-    b2.innerText = L().stop; b2.className = "mob-btn red";
-    timerInt = setInterval(() => {
-      sec++;
-      updateTimerUI();
-      if(sec % 5 === 0) persist();
-    }, 1000);
+    b1.innerText = L().stop; b1.style.background = "var(--s3)"; b2.innerText = L().stop; b2.className = "mob-btn red";
+    timerInt = setInterval(() => { sec++; updateTimerUI(); if(sec % 5 === 0) persist(); }, 1000);
   } else {
-    clearInterval(timerInt);
-    b1.innerText = L().start; b1.style.background = "var(--lime)";
-    b2.innerText = L().start; b2.className = "mob-btn lime";
-    persist();
+    clearInterval(timerInt); b1.innerText = L().start; b1.style.background = "var(--lime)"; b2.innerText = L().start; b2.className = "mob-btn lime"; persist();
   }
 }
 
 function updateTimerUI() {
   const str = fmt(sec);
-  document.getElementById("sb-timer").innerText = str;
-  document.getElementById("hd-timer").innerText = str;
-  document.getElementById("mob-t").innerText = str;
-  document.getElementById("mob-t2").innerText = str;
+  document.getElementById("sb-timer").innerText = str; document.getElementById("hd-timer").innerText = str;
+  document.getElementById("mob-t").innerText = str; document.getElementById("mob-t2").innerText = str;
 }
 
-function finishWorkout() {
-  if(running) toggleTimer();
-  document.getElementById("modal-duration").innerText = fmt(sec);
-  document.getElementById("finish-modal").classList.add("open");
-}
-
-function closeModal() {
-  document.getElementById("finish-modal").classList.remove("open");
-  sec = 0;
-  updateTimerUI();
-  resetDay();
-}
+function finishWorkout() { if(running) toggleTimer(); document.getElementById("modal-duration").innerText = fmt(sec); document.getElementById("finish-modal").classList.add("open"); }
+function closeModal() { document.getElementById("finish-modal").classList.remove("open"); sec = 0; updateTimerUI(); resetDay(); }
 
 function resetDay() {
   const list = tab === "today" ? EXERCISES.today : EXERCISES[tab];
-  list.forEach(ex => {
-    if (exState[ex.id]) {
-      if(exState[ex.id].done) exState[ex.id].done[currentDay] = false;
-    }
-  });
-  renderGrid();
-  syncHeaderAndProgress();
-  persist();
+  list.forEach(ex => { if (exState[ex.id]?.done) exState[ex.id].done[currentDay] = false; });
+  renderGrid(); syncHeaderAndProgress(); persist();
 }
 
 function triggerToast() {
-  const t = document.getElementById("toast");
-  t.innerText = `🏆 ${L().complete}`;
-  t.classList.add("show");
+  const t = document.getElementById("toast"); t.innerText = `🏆 ${L().complete}`; t.classList.add("show");
   setTimeout(() => t.classList.remove("show"), 3000);
 }
 
-// ── INICIALIZAÇÃO ─────────────────────────────────────────────────────
-window.addEventListener("DOMContentLoaded", () => {
-  loadState();
-  setLang(lang);
-});
+window.addEventListener("DOMContentLoaded", () => { loadState(); setLang(lang); });
 </script>
 </body>
 </html>
