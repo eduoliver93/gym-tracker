@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#080808">
@@ -14,25 +14,25 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg:       #080808;
-  --s1:       #0f0f0f;
-  --s2:       #161616;
-  --s3:       #1e1e1e;
-  --border:   rgba(255,255,255,0.07);
-  --border-hi:rgba(255,255,255,0.14);
-  --lime:     #c8ff00;
-  --lime-glow:rgba(200,255,0,0.18);
+  --bg:        #080808;
+  --s1:        #0f0f0f;
+  --s2:        #161616;
+  --s3:        #1e1e1e;
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(255,255,255,0.14);
+  --lime:      #c8ff00;
+  --lime-glow: rgba(200,255,0,0.18);
   --red:      #ff3b3b;
   --green:    #00ff87;
-  --text:     #f5f5f5;
+  --text:      #f5f5f5;
   --muted:    #444;
-  --muted2:   #6a6a6a;
-  --font-d:   'Syne', sans-serif;
-  --font-m:   'JetBrains Mono', monospace;
+  --muted2:    #6a6a6a;
+  --font-d:    'Syne', sans-serif;
+  --font-m:    'JetBrains Mono', monospace;
   color-scheme: dark;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; height: 100%; }
 
 body {
   font-family: var(--font-d);
@@ -40,6 +40,7 @@ body {
   color: var(--text);
   min-height: 100dvh;
   overflow-x: hidden;
+  position: relative;
 }
 
 /* noise grain */
@@ -384,7 +385,7 @@ body::after {
 
 /* toggle btn */
 .ex-toggle {
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   border-radius: 7px; border: 1px solid var(--border-hi);
   background: var(--s2); color: var(--muted2);
   font-size: 18px; font-weight: 700;
@@ -396,9 +397,9 @@ body::after {
 
 .ex-toggle:hover { border-color:var(--lime); color:var(--lime); }
 .ex-card.active .ex-toggle { background:var(--lime); color:#000; border-color:var(--lime); }
-.ex-card.done .ex-toggle   { background:var(--green); color:#000; border-color:var(--green); }
+.ex-card.done .ex-toggle  { background:var(--green); color:#000; border-color:var(--green); }
 
-.ex-info { flex:1; min-width:0; cursor:pointer; user-select:none; }
+.ex-info { flex:1; min-width:0; cursor:pointer; user-select:none; padding: 4px 0; }
 
 .ex-name {
   font-size: 14px; font-weight: 700;
@@ -417,7 +418,7 @@ body::after {
 /* custom checkbox */
 .check-wrap {
   flex-shrink: 0; position: relative;
-  width: 22px; height: 22px;
+  width: 28px; height: 28px;
 }
 
 .check-wrap input {
@@ -428,7 +429,7 @@ body::after {
 .check-wrap input:disabled { cursor: default; pointer-events: none; }
 
 .check-box {
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   border-radius: 6px; border: 1px solid var(--border-hi);
   background: var(--s2);
   display: flex; align-items: center; justify-content: center;
@@ -442,7 +443,7 @@ body::after {
 
 /* ── TOAST ──────────────────────────────────────── */
 .toast {
-  position: fixed; bottom: 28px; left: 50%;
+  position: fixed; bottom: 80px; left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: var(--lime); color: #000;
   font-family: var(--font-m);
@@ -468,11 +469,32 @@ body::after {
   -webkit-backdrop-filter: blur(20px);
   z-index: 200;
   align-items: center; padding: 0 16px; gap: 12px;
+  padding-top: env(safe-area-inset-top, 0);
 }
 
 .mob-logo {
   font-family: var(--font-d);
-  font-size: 18px; font-weight: 800; flex: 1;
+  font-size: 18px; font-weight: 800; flex: 0; /* Desativado o flex:1 antigo para caber o seletor centralizado */
+  white-space: nowrap;
+}
+
+/* NOVO SELETOR DE IDIOMAS MOBILE AJUSTADO PARA O TOP BAR */
+.mob-lang-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.mob-lang-select {
+  background: var(--s2);
+  color: var(--text);
+  border: 1px solid var(--border-hi);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-m);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
 }
 
 .mob-timer-val {
@@ -489,8 +511,9 @@ body::after {
 
 .mob-prog-line {
   display: none;
-  position: fixed; top:52px; left:0; right:0;
+  position: fixed; top: 52px; left:0; right:0;
   height: 2px; background: var(--s2); z-index: 201;
+  margin-top: env(safe-area-inset-top, 0);
 }
 
 .mob-prog-fill {
@@ -502,25 +525,26 @@ body::after {
 
 .mob-timer-row {
   display: none;
-  position: fixed; top:54px; left:0; right:0;
+  position: fixed; top: 54px; left:0; right:0;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-  padding: 8px 16px; z-index: 199;
+  padding: 10px 16px; z-index: 199;
   align-items: center; gap: 8px;
+  margin-top: env(safe-area-inset-top, 0);
 }
 
 .mob-timer-big {
   font-family: var(--font-m);
-  font-size: 20px; font-weight: 700; color: var(--lime); flex:1;
+  font-size: 22px; font-weight: 700; color: var(--lime); flex:1;
 }
 
 .mob-btn {
   font-family: var(--font-m);
-  font-size: 10px; font-weight: 700;
+  font-size: 11px; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase;
   border: 1px solid var(--border-hi);
   background: var(--s2); color: var(--muted2);
-  padding: 6px 14px; border-radius: 6px;
+  padding: 8px 16px; border-radius: 6px;
   cursor: pointer; transition: all .15s; outline: none;
 }
 .mob-btn:active { transform:scale(.96); }
@@ -538,23 +562,23 @@ body::after {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-.mob-tabs { display: flex; }
+.mob-tabs { display: flex; height: 58px; align-items: center; }
 
 .mob-tab {
   flex:1; border:none; background:none;
-  padding: 10px 4px 8px;
+  padding: 8px 4px; height: 100%;
   display: flex; flex-direction: column;
-  align-items: center; gap: 3px;
+  align-items: center; justify-content: center; gap: 4px;
   cursor: pointer; transition: color .15s;
   color: var(--muted2);
   font-family: var(--font-m);
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .05em; text-transform: uppercase;
 }
 .mob-tab.active { color: var(--lime); }
 
 .mob-tab-dot {
-  width: 4px; height: 4px;
+  width: 5px; height: 5px;
   border-radius: 50%;
   background: transparent;
   transition: background .15s;
@@ -565,12 +589,16 @@ body::after {
 @media (max-width: 700px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar { display: none; }
-  .main { padding-top: 104px; padding-bottom: 58px; }
-  .main-header { padding: 20px 20px 16px; }
-  .headline { font-size: 36px; }
-  .header-stats { display: none; }
-  .filter-bar { padding: 12px 16px; top: 104px; }
-  .ex-grid { padding: 16px 16px 24px; grid-template-columns: 1fr; }
+  .main { 
+    padding-top: calc(108px + env(safe-area-inset-top, 0)); 
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0)); 
+  }
+  .main-header { display: none; }
+  .filter-bar { 
+    padding: 12px 16px; 
+    top: calc(106px + env(safe-area-inset-top, 0)); 
+  }
+  .ex-grid { padding: 16px 16px 24px; grid-template-columns: 1fr; gap: 8px; }
   .mob-top { display: flex; }
   .mob-prog-line { display: block; }
   .mob-timer-row { display: flex; }
@@ -580,9 +608,17 @@ body::after {
 </head>
 <body>
 
-<!-- ── MOBILE BARS ── -->
 <div class="mob-top">
   <div class="mob-logo">GYM<span style="color:var(--lime)">.</span></div>
+  
+  <div class="mob-lang-container">
+    <select class="mob-lang-select" id="mob-lang-sel" onchange="setLang(this.value)">
+      <option value="en">EN</option>
+      <option value="pt">PT</option>
+      <option value="es">ES</option>
+    </select>
+  </div>
+
   <div class="mob-timer-val" id="mob-t">00:00</div>
   <div class="mob-pct" id="mob-pct">0%</div>
 </div>
@@ -597,10 +633,8 @@ body::after {
   <button class="mob-btn" onclick="resetTimer()">RESET</button>
 </div>
 
-<!-- ── SHELL ── -->
 <div class="shell">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-top">
       <div class="logo">GYM<span class="logo-dot"></span></div>
@@ -641,7 +675,6 @@ body::after {
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="main-header">
       <div class="headline-wrap">
@@ -665,12 +698,10 @@ body::after {
   </main>
 </div>
 
-<!-- MOBILE BOTTOM TABS -->
 <div class="mob-bottom">
   <div class="mob-tabs" id="mob-tabs"></div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">🏆 SESSION COMPLETE</div>
 
 <script>
@@ -695,7 +726,7 @@ const EXERCISES = {
     {id:"l16",key:"Calf Raise (Seat)",   g:"calf"},
   ],
   upper: [
-    {id:"u1", key:"Bench Press",         g:"chest"},
+    {id:"u1", key:"Bench Press",          g:"chest"},
     {id:"u2", key:"Incline Press",       g:"chest"},
     {id:"u3", key:"Chest Machine",       g:"chest"},
     {id:"u4", key:"Chest Fly",           g:"chest"},
@@ -877,7 +908,11 @@ function updateTexts() {
   document.getElementById("hd-session-lbl").textContent = l.session;
   document.getElementById("btn-reset-day").textContent  = l.clearDay;
   document.getElementById("sb-reset").textContent    = l.reset;
+  
+  // SINCRONIZA OS DOIS SELETORES (DESKTOP E MOBILE)
   document.getElementById("lang-sel").value          = lang;
+  document.getElementById("mob-lang-sel").value      = lang;
+  
   updateTimerBtn();
 }
 
@@ -922,161 +957,148 @@ function renderGrid() {
     return `
       <div class="ex-card ${cls}" id="card-${ex.id}" style="animation-delay:${i*0.03}s">
         <button class="ex-toggle" onclick="toggleEx('${ex.id}')" aria-label="${nm}">${ico}</button>
-        <div class="ex-info" onclick="toggleEx('${ex.id}')">
+        <div class="ex-info" onclick="toggleExStatus('${ex.id}')">
           <div class="ex-name">${nm}</div>
           <div class="ex-group">${gr}</div>
         </div>
         <div class="check-wrap">
-          <input type="checkbox"${st.done?" checked":""}${!st.active?" disabled":""}
-            onchange="toggleDone('${ex.id}',this.checked)"
-            onclick="event.stopPropagation()">
-          <div class="check-box">${st.done?"✓":""}</div>
+          <input type="checkbox" ${st.active?"":"disabled"} ${st.done?"checked":""} onclick="toggleExStatus('${ex.id}')" aria-label="Mark completed">
+          <div class="check-box">✓</div>
         </div>
-      </div>`;
+      </div>
+    `;
   }).join("");
 }
 
 function updateProgress() {
-  const {all, done, pct} = calcProgress();
+  const { all, done, pct } = calcProgress();
   const l = L();
 
-  // sidebar
-  const pctEl = document.getElementById("sb-pct");
-  pctEl.textContent = pct + "%";
-  pctEl.style.color = pct===100 ? "var(--green)" : "var(--text)";
+  // Desktop
+  document.getElementById("sb-pct").textContent = `${pct}%`;
+  document.getElementById("sb-fraction").textContent = `${done}/${all.length}`;
+  document.getElementById("sb-ex-count").textContent = `${all.length} ${l.exercises}`;
+  document.getElementById("track-fill").style.width = `${pct}%`;
+  document.getElementById("hd-pct").textContent = `${pct}%`;
 
-  document.getElementById("sb-fraction").textContent  = `${done}/${all.length}`;
-  document.getElementById("sb-ex-count").textContent  = `${all.length} ${l.exercises}`;
+  if (pct > 0) document.getElementById("track-fill").classList.add("has-progress");
+  else document.getElementById("track-fill").classList.remove("has-progress");
 
-  const fill = document.getElementById("track-fill");
-  fill.style.width = pct + "%";
-  fill.classList.toggle("has-progress", pct > 0);
+  // Mobile
+  document.getElementById("mob-pct").textContent = `${pct}%`;
+  document.getElementById("mob-fill").style.width = `${pct}%`;
 
-  // header stats
-  const hdPct = document.getElementById("hd-pct");
-  hdPct.textContent = pct + "%";
-  hdPct.style.color = pct===100 ? "var(--green)" : "var(--lime)";
+  // Color dynamics
+  const color = pct === 100 ? "var(--green)" : "var(--lime)";
+  document.getElementById("sb-pct").style.color = color;
+  document.getElementById("hd-pct").style.color = color;
+  document.getElementById("mob-pct").style.color = color;
 
-  // mobile
-  const mobPct = document.getElementById("mob-pct");
-  mobPct.textContent = pct + "%";
-  mobPct.style.color = pct===100 ? "var(--green)" : "var(--lime)";
-  document.getElementById("mob-fill").style.width = pct + "%";
-
-  // toast at 100%
-  if (pct === 100 && all.length > 0 && prevPct < 100) {
-    const toast = document.getElementById("toast");
-    toast.textContent = "🏆 " + l.complete;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3500);
+  // Toast alert
+  if (pct === 100 && prevPct < 100 && all.length > 0) {
+    showToast();
   }
   prevPct = pct;
 }
 
+// ── EVENTS & LOGIC ────────────────────────────────────────────────────
+function switchTab(k) {
+  tab = k; filter = "all";
+  renderFilters(); renderGrid(); renderNav(); updateTexts(); persist();
+}
+
+// Adicionada função explícita exigida pelo botão reset do topo
+function resetDay() {
+  if(!confirm("Reset entire tracking dataset?")) return;
+  exState = {}; sec = 0; resetTimerLogic();
+  persist(); renderAll();
+}
+
+function setFilter(g) {
+  filter = g; renderFilters(); renderGrid();
+}
+
+function toggleEx(id) {
+  if (!exState[id]) exState[id] = {active:false, done:false};
+  const st = exState[id];
+
+  if (!st.active && !st.done) st.active = true;
+  else if (st.active && !st.done) { st.active = false; st.done = false; }
+  else if (st.done) { st.active = false; st.done = false; }
+
+  persist(); renderGrid(); renderNav(); updateProgress();
+}
+
+function toggleExStatus(id) {
+  if (!exState[id] || !exState[id].active) return;
+  exState[id].done = !exState[id].done;
+  persist(); renderGrid(); updateProgress();
+}
+
+function setLang(v) {
+  lang = v; renderAll(); persist();
+}
+
+// ── TIMER ENGINE ──────────────────────────────────────────────────────
+function toggleTimer() {
+  if (running) {
+    clearInterval(timerInt); running = false;
+  } else {
+    running = true;
+    timerInt = setInterval(() => { sec++; updateTimerUI(); if(sec%5===0) persist(); }, 1000);
+  }
+  updateTimerBtn();
+}
+
+function resetTimerLogic() {
+  clearInterval(timerInt); running = false; sec = 0; updateTimerUI(); updateTimerBtn();
+}
+
+function resetTimer() {
+  resetTimerLogic(); persist();
+}
+
 function updateTimerUI() {
-  const t = fmt(sec);
-  document.getElementById("sb-timer").textContent = t;
-  document.getElementById("mob-t").textContent    = t;
-  document.getElementById("mob-t2").textContent   = t;
-  document.getElementById("hd-timer").textContent = t;
+  const str = fmt(sec);
+  document.getElementById("sb-timer").textContent = str;
+  document.getElementById("hd-timer").textContent = str;
+  document.getElementById("mob-t").textContent    = str;
+  document.getElementById("mob-t2").textContent   = str;
 }
 
 function updateTimerBtn() {
   const l = L();
-  const label = running ? l.stop : l.start;
-  const sb = document.getElementById("sb-toggle");
-  const mb = document.getElementById("mob-toggle");
-  sb.textContent = label;
-  mb.textContent = label;
-  if (running) {
-    sb.className = "btn btn-stop";
-    mb.className = "mob-btn red";
-  } else {
-    sb.className = "btn btn-lime";
-    mb.className = "mob-btn lime";
+  const txt = running ? l.stop : l.start;
+  
+  // Desktop
+  const btn = document.getElementById("sb-toggle");
+  if(btn) {
+    btn.textContent = txt;
+    if(running) { btn.classList.remove("btn-lime"); btn.classList.add("btn-stop"); }
+    else { btn.classList.remove("btn-stop"); btn.classList.add("btn-lime"); }
+  }
+
+  // Mobile
+  const mBtn = document.getElementById("mob-toggle");
+  if(mBtn) {
+    mBtn.textContent = txt;
+    if(running) { mBtn.classList.remove("lime"); mBtn.classList.add("red"); }
+    else { mBtn.classList.remove("red"); mBtn.classList.add("lime"); }
   }
 }
 
-// ── ACTIONS ───────────────────────────────────────────────────────────
-function toggleEx(id) {
-  const cur = exState[id] || {active:false, done:false};
-  exState[id] = {active: !cur.active, done: cur.active ? false : cur.done};
-  renderGrid();
-  renderNav();
-  updateProgress();
-  persist();
+function showToast() {
+  const t = document.getElementById("toast");
+  t.textContent = `🏆 ${L().complete}`;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3500);
 }
 
-function toggleDone(id, checked) {
-  if (!exState[id]) return;
-  exState[id] = {...exState[id], done: checked};
-  // update only this card's class to avoid full re-render
-  const card = document.getElementById("card-" + id);
-  if (card) {
-    card.className = "ex-card " + (checked ? "done" : "active");
-    card.querySelector(".ex-toggle").textContent = checked ? "✓" : "−";
-    card.querySelector(".check-box").textContent = checked ? "✓" : "";
-  }
-  updateProgress();
-  persist();
-}
-
-function switchTab(key) {
-  tab = key;
-  filter = "all";
-  renderNav();
-  renderFilters();
-  renderGrid();
-  document.getElementById("hd-title").textContent = L().tabs[key];
-  persist();
-}
-
-function setFilter(g) {
-  filter = g;
-  renderFilters();
-  renderGrid();
-}
-
-function setLang(l) {
-  lang = l;
+// ── INITIALIZATION ────────────────────────────────────────────────────
+window.addEventListener("DOMContentLoaded", () => {
+  loadState();
   renderAll();
-  persist();
-}
-
-function toggleTimer() {
-  if (!running) {
-    timerInt = setInterval(() => { sec++; updateTimerUI(); persist(); }, 1000);
-    running = true;
-  } else {
-    clearInterval(timerInt);
-    running = false;
-  }
-  updateTimerBtn();
-  document.getElementById("sb-timer").style.color = running ? "var(--lime)" : "var(--text)";
-}
-
-function resetTimer() {
-  clearInterval(timerInt);
-  running = false;
-  sec = 0;
-  updateTimerUI();
-  updateTimerBtn();
-  document.getElementById("sb-timer").style.color = "var(--lime)";
-  persist();
-}
-
-function resetDay() {
-  if (!confirm(L().clearDay + "?")) return;
-  exState = {};
-  renderGrid();
-  renderNav();
-  updateProgress();
-  persist();
-}
-
-// ── BOOT ──────────────────────────────────────────────────────────────
-loadState();
-renderAll();
+});
 </script>
 </body>
 </html>
