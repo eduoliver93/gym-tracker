@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +27,7 @@
   --red-glow:    rgba(255,59,48,0.15);
   --green:       #34c759;
   --text:        #ffffff;
-  --muted:       #64748b;
+  --muted:       #475569;
   --muted2:      #94a3b8;
   --font-d:      'Plus Jakarta Sans', sans-serif;
   --font-m:      'JetBrains Mono', monospace;
@@ -249,77 +248,34 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
 .check-box { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--surface-hi); background: #0c111d; display: flex; align-items: center; justify-content: center; transition: all .2s ease; color: transparent; font-size: 10px; font-weight: bold; }
 .check-wrap input:checked + .check-box { background: var(--blue-electric); border-color: var(--blue-electric); color: #fff; }
 
-/* Wrapper da lixeira para conter o balão posicionado relativamente */
-.delete-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* Botão de Lixeira */
+/* ── BOTÃO DE LIXEIRA PREMIUM REESTILIZADO ── */
 .btn-delete {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   color: var(--muted);
-  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+/* Altera o preenchimento do SVG interno nativamente */
+.btn-delete svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  transition: fill 0.2s ease;
+}
+/* Efeito interativo moderno de atenção */
 .btn-delete:hover, .btn-delete:active {
   color: var(--red);
   background: var(--red-glow);
-}
-
-/* ── TOOLTIP INTERATIVO E TRADUZÍVEL ── */
-.delete-wrapper .custom-tooltip {
-  visibility: hidden;
-  opacity: 0;
-  width: max-content;
-  max-width: 180px;
-  background-color: #ff3b30;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  
-  /* Posicionamento perfeito acima ou ao lado */
-  position: absolute;
-  z-index: 999;
-  bottom: 125%;
-  right: 0;
-  
-  /* Animação suave */
-  transform: translateY(5px);
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.35);
-  pointer-events: none;
-}
-
-/* Pequena seta indicadora na parte inferior do balão */
-.delete-wrapper .custom-tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  right: 10px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #ff3b30 transparent transparent transparent;
-}
-
-/* Ativação do Balão ao passar o Mouse */
-.delete-wrapper:hover .custom-tooltip {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
+  border-color: rgba(255, 59, 48, 0.2);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
+  transform: scale(1.05);
 }
 
 .indicator-tag { font-size: 9px; font-weight: 700; padding: 5px 10px; border-radius: 10px; background: var(--surface-hi); color: var(--muted2); }
@@ -533,7 +489,6 @@ const I18N = {
   en: {
     descanso: "REST", iniciar: "START WORKOUT", finalizar: "FINISH", modalTitle: "WORKOUT DONE!", modalSub: "TOTAL WORKOUT TIME", modalBtn: "CLOSE",
     emptyPlanner: "NO EXERCISES ADDED FOR THIS DAY YET.", emptyCategory: "NO EXERCISES FOUND", all: "ALL", btnSelect: "SELECT EXERCISES", btnNext: "NEXT", btnDone: "GET STARTED",
-    deleteTooltip: "Remove exercise",
     weekdays: { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" },
     tabs: { today: "PLANNER", lower: "LOWER", upper: "UPPER", core: "CORE" },
     groups: { quadriceps: "Quadriceps", posterior: "Hamstrings", gluteos: "Glutes", panturrilha: "Calves", peito: "Chest", costas: "Back", ombros: "Shoulders", trapezio: "Trapezius", biceps: "Biceps", triceps: "Triceps", antebraço: "Forearms", abdomen: "Abs" },
@@ -546,7 +501,6 @@ const I18N = {
   pt: {
     descanso: "DESCANSO", iniciar: "INICIAR TREINO", finalizar: "FINALIZAR", modalTitle: "TREINO FINALIZADO!", modalSub: "TEMPO TOTAL DE TREINO", modalBtn: "FECHAR",
     emptyPlanner: "NENHUM EXERCÍCIO ADICIONADO PARA ESTE DIA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO", all: "TODOS", btnSelect: "SELECIONAR EXERCÍCIOS", btnNext: "PRÓXIMO", btnDone: "COMEÇAR TREINO",
-    deleteTooltip: "Remover exercício",
     weekdays: { mon: "Segunda", tue: "Terça", wed: "Quarta", thu: "Quinta", fri: "Sexta", sat: "Sábado", sun: "Domingo" },
     tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
     groups: { quadriceps: "Quadrícep", posterior: "Posterior Coxa", gluteos: "Glúteos", panturrilha: "Panturrilhas", peito: "Peitoral", costas: "Costas", ombros: "Ombros", trapezio: "Trapézio", biceps: "Bíceps", triceps: "Trícep", antebraço: "Antebraço", abdomen: "Abdômen" },
@@ -559,14 +513,13 @@ const I18N = {
   es: {
     descanso: "DESCANSO", iniciar: "INICIAR ENTREN.", finalizar: "FINALIZAR", modalTitle: "¡ENTRENAMIENTO HECHO!", modalSub: "TIEMPO TOTAL", modalBtn: "CERRAR",
     emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO", all: "TODOS", btnSelect: "SELECIONAR EJERCICIOS", btnNext: "SIGUIENTE", btnDone: "EMPEZAR ENTRENAMIENTO",
-    deleteTooltip: "Eliminar ejercicio",
     weekdays: { mon: "Lunes", tue: "Martes", wed: "Miércoles", thu: "Jueves", fri: "Viernes", sat: "Sábado", sun: "Domingo" },
     tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
     groups: { quadriceps: "Cuádriceps", posterior: "Femoral", gluteos: "Glúteos", panturrilha: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
     ob: [
       { t: "Diseña tu Rutina Personal", d: "Navega por las pestañas inferiores (Inferior, Superior, Core) e asigna tus ejercicios clave para cada dia." },
       { t: "Temporiza tus Descansos", d: "Usa nuestro cronómetro circular dinâmico para controlar de forma exacta tu recuperación entre series." },
-      { t: "Evalúa tu Rendimiento", d: "Marca tus tareas feitas, visualiza tu porcentaje de logro diario y mantén el foco en la excelencia." }
+      { t: "Evalúa tu Rendimiento", d: "Marca tus tarefas feitas, visualiza tu porcentaje de logro diario y mantén el foco en la excelencia." }
     ]
   }
 };
@@ -831,19 +784,14 @@ function renderExercises() {
     const exerciseName = EX_NAMES_PT[ex.key] || ex.key;
     const groupName = I18N[lang].groups[ex.gKey] || ex.gKey;
 
-    // Elemento interativo à direita da linha dependendo da aba ativa
     let rightActionHtml = "";
     if (currentTab === "today") {
-      // Captura o texto traduzido correto para o balão flutuante dinâmico
-      const tooltipText = I18N[lang].deleteTooltip || "Remove exercise";
-      
       rightActionHtml = `
-        <div class="delete-wrapper">
-          <button class="btn-delete" onclick="removeExerciseFromDay('${ex.id}')">
-            🗑️
-          </button>
-          <span class="custom-tooltip">${tooltipText}</span>
-        </div>
+        <button class="btn-delete" onclick="removeExerciseFromDay('${ex.id}')">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+        </button>
       `;
     } else {
       const isLinked = activeOnDays[ex.id] && activeOnDays[ex.id][currentDay];
