@@ -105,6 +105,12 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
 .ex-name { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.4; }
 .ex-group { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
+/* Mensagem de Estado Vazio Avançada */
+.empty-state-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+.empty-state-text { color: var(--muted2); font-size: 12px; line-height: 1.6; max-width: 280px; margin-bottom: 16px; font-weight: 500; }
+.btn-select-exercises { background: transparent; color: var(--blue-electric); border: 1px solid rgba(0, 136, 255, 0.3); font-size: 11px; font-weight: 700; padding: 10px 20px; border-radius: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; font-family: var(--font-d); }
+.btn-select-exercises:active { background: var(--blue-glow); border-color: var(--blue-electric); }
+
 /* Checkbox Premium Redondo */
 .check-wrap { width: 22px; height: 22px; position: relative; }
 .check-wrap input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; z-index: 2; }
@@ -285,7 +291,7 @@ const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 const I18N = {
   en: {
     descanso: "REST", iniciar: "START WORKOUT", finalizar: "FINISH", modalTitle: "WORKOUT DONE!", modalSub: "TOTAL WORKOUT TIME", modalBtn: "CLOSE",
-    emptyPlanner: "NO EXERCISES ADDED FOR THIS DAY YET.", emptyCategory: "NO EXERCISES FOUND", all: "ALL",
+    emptyPlanner: "NO EXERCISES ADDED FOR THIS DAY YET.", emptyCategory: "NO EXERCISES FOUND", all: "ALL", btnSelect: "SELECT EXERCISES",
     weekdays: { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" },
     tabs: { today: "PLANNER", lower: "LOWER", upper: "UPPER", core: "CORE" },
     groups: { quadriceps: "Quadriceps", posterior: "Hamstrings", gluteos: "Glutes", panturrilha: "Calves", peito: "Chest", costas: "Back", ombros: "Shoulders", trapezio: "Trapezius", biceps: "Biceps", triceps: "Triceps", antebraço: "Forearms", abdomen: "Abs" },
@@ -303,7 +309,7 @@ const I18N = {
   },
   pt: {
     descanso: "DESCANSO", iniciar: "INICIAR TREINO", finalizar: "FINALIZAR", modalTitle: "TREINO FINALIZADO!", modalSub: "TEMPO TOTAL DE TREINO", modalBtn: "FECHAR",
-    emptyPlanner: "NENHUM EXERCÍCIO ADICIONADO PARA ESTE DIA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO", all: "TODOS",
+    emptyPlanner: "NENHUM EXERCÍCIO ADICIONADO PARA ESTE DIA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO", all: "TODOS", btnSelect: "SELECIONAR EXERCÍCIOS",
     weekdays: { mon: "Seg", tue: "Ter", wed: "Qua", thu: "Qui", fri: "Sex", sat: "Sáb", sun: "Dom" },
     tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
     groups: { quadriceps: "Quadríceps", posterior: "Posterior Coxa", gluteos: "Glúteos", panturrilha: "Panturrilhas", peito: "Peitoral", costas: "Costas", ombros: "Ombros", trapezio: "Trapézio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebraço", abdomen: "Abdômen" },
@@ -321,7 +327,7 @@ const I18N = {
   },
   es: {
     descanso: "DESCANSO", iniciar: "INICIAR ENTREN.", finalizar: "FINALIZAR", modalTitle: "¡ENTRENAMIENTO HECHO!", modalSub: "TIEMPO TOTAL", modalBtn: "CERRAR",
-    emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA.", emptyCategory: "NINGÚN EJERCICIO ENCONTRADO", all: "TODOS",
+    emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA.", emptyCategory: "NINGÚN EJERCICIO ENCONTRADO", all: "TODOS", btnSelect: "SELECIONAR EJERCICIOS",
     weekdays: { mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom" },
     tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
     groups: { quadriceps: "Cuádriceps", posterior: "Femoral", gluteos: "Glúteos", panturrilha: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
@@ -468,8 +474,18 @@ function renderExercises() {
   const list = getFilteredList();
   
   if (list.length === 0) {
-    const msg = currentTab === "today" ? I18N[lang].emptyPlanner : I18N[lang].emptyCategory;
-    grid.innerHTML = `<div style="text-align:center; color:var(--muted2); padding: 40px 20px; font-size:12px; line-height:1.6;">${msg}</div>`;
+    if (currentTab === "today") {
+      grid.innerHTML = `
+        <div class="empty-state-container">
+          <div class="empty-state-text">${I18N[lang].emptyPlanner}</div>
+          <button class="btn-select-exercises" onclick="setTab('lower')">
+            ${I18N[lang].btnSelect}
+          </button>
+        </div>
+      `;
+    } else {
+      grid.innerHTML = `<div style="text-align:center; color:var(--muted2); padding: 40px 20px; font-size:12px; line-height:1.6;">${I18N[lang].emptyCategory}</div>`;
+    }
     return;
   }
 
