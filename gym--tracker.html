@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,6 +48,39 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
   padding: 16px 16px calc(120px + env(safe-area-inset-bottom, 0));
 }
 
+/* ── BRAND LOGO CONTAINER ── */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.logo-container svg {
+  height: 32px;
+  width: auto;
+}
+.logo-container .logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.logo-container .logo-text span {
+  color: var(--blue-electric);
+}
+
+/* Ajuste específico para o Header */
+.brand-header .logo-container {
+  justify-content: flex-start;
+}
+.brand-header .logo-container svg {
+  height: 26px;
+}
+.brand-header .logo-container .logo-text {
+  font-size: 20px;
+}
+
 /* ── TELA DE INTRODUÇÃO / ONBOARDING ── */
 .onboarding-screen {
   position: fixed;
@@ -76,13 +110,8 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
   text-align: center;
 }
 .onboard-brand {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
-.onboard-brand span { color: var(--blue-electric); }
 
 .onboard-slides {
   position: relative;
@@ -183,8 +212,6 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
 
 /* ── HEADER ── */
 .brand-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 4px 24px; }
-.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase; }
-.brand-title span { color: var(--blue-electric); }
 .brand-right { display: flex; align-items: center; gap: 8px; }
 .lang-dropdown { background: var(--surface); color: var(--text); border: 1px solid var(--border-hi); padding: 6px 10px; border-radius: 10px; font-family: var(--font-m); font-weight: 700; font-size: 12px; outline: none; cursor: pointer; }
 .global-pct { font-family: var(--font-m); font-size: 13px; font-weight: 700; background: rgba(52,199,89,0.1); color: var(--green); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(52,199,89,0.2); }
@@ -262,14 +289,12 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
   border-radius: 12px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* Altera o preenchimento do SVG interno nativamente */
 .btn-delete svg {
   width: 16px;
   height: 16px;
   fill: currentColor;
   transition: fill 0.2s ease;
 }
-/* Efeito interativo moderno de atenção */
 .btn-delete:hover, .btn-delete:active {
   color: var(--red);
   background: var(--red-glow);
@@ -306,7 +331,14 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
 
 <div class="onboarding-screen" id="onboarding-screen">
   <div class="onboard-card">
-    <div class="onboard-brand">BODY LIFE<span>.</span></div>
+    
+    <div class="onboard-brand logo-container">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 50C20 33.4315 33.4315 20 50 20C66.5685 20 80 33.4315 80 50C80 66.5685 66.5685 80 50 80" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        <path d="M50 50M35 50C35 41.7157 41.7157 35 50 35C58.2843 35 65 41.7157 65 50C65 58.2843 58.2843 65 50 65" stroke="var(--blue-electric)" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text">BODY LIFE<span>.</span></div>
+    </div>
     
     <div class="lang-focus-box">
       <div class="lang-focus-label">Select Language / Selecione o Idioma</div>
@@ -344,7 +376,15 @@ body { font-family: var(--font-d); background: var(--bg); color: var(--text); mi
 
 <div class="app-container">
   <header class="brand-header">
-    <div class="brand-title">BODY LIFE<span>.</span></div>
+    
+    <div class="logo-container">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 50C20 33.4315 33.4315 20 50 20C66.5685 20 80 33.4315 80 50C80 66.5685 66.5685 80 50 80" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        <path d="M50 50M35 50C35 41.7157 41.7157 35 50 35C58.2843 35 65 41.7157 65 50C65 58.2843 58.2843 65 50 65" stroke="var(--blue-electric)" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text">BODY LIFE<span>.</span></div>
+    </div>
+
     <div class="brand-right">
       <select class="lang-dropdown" id="lang-sel" onchange="setLang(this.value)">
         <option value="en" selected>EN</option>
@@ -515,7 +555,7 @@ const I18N = {
     emptyPlanner: "NINGÚN EJERCICIO AGREGADO PARA ESTE DÍA.", emptyCategory: "NENHUM EXERCÍCIO ENCONTRADO", all: "TODOS", btnSelect: "SELECIONAR EJERCICIOS", btnNext: "SIGUIENTE", btnDone: "EMPEZAR ENTRENAMIENTO",
     weekdays: { mon: "Lunes", tue: "Martes", wed: "Miércoles", thu: "Jueves", fri: "Viernes", sat: "Sábado", sun: "Domingo" },
     tabs: { today: "FICHA", lower: "INFERIOR", upper: "SUPERIOR", core: "CORE" },
-    groups: { quadriceps: "Cuádriceps", posterior: "Femoral", gluteos: "Glúteos", panturrilha: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
+    groups: { quadriceps: "Cuádriceps", posterior: "Femoral", gluteos: "Glúteos", pantorrillas: "Pantorrillas", peito: "Pectoral", costas: "Espalda", ombros: "Hombros", trapezio: "Trapecio", biceps: "Bíceps", triceps: "Tríceps", antebraço: "Antebrazo", abdomen: "Abdomen" },
     ob: [
       { t: "Diseña tu Rutina Personal", d: "Navega por las pestañas inferiores (Inferior, Superior, Core) e asigna tus ejercicios clave para cada dia." },
       { t: "Temporiza tus Descansos", d: "Usa nuestro cronómetro circular dinâmico para controlar de forma exacta tu recuperación entre series." },
@@ -932,3 +972,5 @@ window.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
+
+```
