@@ -118,7 +118,7 @@ select option {
 .ex-wrapper{position:relative;border-radius:16px;overflow:hidden;touch-action:pan-y}
 .ex-delete-bg{position:absolute;right:0;top:0;bottom:0;width:80px;background:var(--red);display:flex;align-items:center;justify-content:center;border-radius:16px}
 .ex-delete-bg svg{width:22px;height:22px;fill:#fff}
-.ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;will-change:transform;z-index:1}
+.ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;will-change:transform;z-index:1;touch-action:pan-y}
 .ex-card.swiping{transition:none}
 .ex-card.snap-back{transition:transform .3s cubic-bezier(.25,.1,.25,1)}
 .ex-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;border-radius:3px 0 0 3px;transition:background .2s}
@@ -318,7 +318,6 @@ let obSlide=0;
 const fmt=s=>`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
 
 function init(){
-  // ── SOLUÇÃO DE PERSISTÊNCIA: Carrega os dados salvos anteriormente ou inicia vazio ──
   try {
     const savedActive = localStorage.getItem("bl_active");
     const savedDone = localStorage.getItem("bl_done");
@@ -426,15 +425,6 @@ function renderTabs(){
     </button>`).join("");
 }
 
-function renderTabs(){
-  const el=document.getElementById("tabs");
-  if(!el) return;
-  el.innerHTML=["today","lower","upper","core"].map(k=>`
-    <button class="tab${curTab===k?" active":""}" onclick="setTab('${k}')">
-      <div>${I18N[lang].tabs[k]}</div><div class="tab-dot"></div>
-    </button>`).join("");
-}
-
 function renderFilters(){
   const bar=document.getElementById("filter-bar");
   if(!bar) return;
@@ -495,48 +485,55 @@ function renderEx(){
   if(curTab==="today")setupSwipe();
 }
 
+// LÓGICA DE SWIPE TOTALMENTE REESCRITA COM POINTEREVENTS FLUIDOS (FIM DOS TRAVAMENTOS)
 function setupSwipe(){
   document.querySelectorAll(".ex-wrapper").forEach(wrapper=>{
     const card=wrapper.querySelector(".ex-card");
     if(!card)return;
     const id=card.id.replace("card-","");
     let startX=0,curX=0,dragging=false;
-    const THRESHOLD=72;
+    const THRESHOLD=74;
 
     function onStart(e){
-      startX=e.type==="touchstart"?e.touches[0].clientX:e.clientX;
-      curX=0;dragging=true;
+      // Ignora elementos clicáveis de input/botão para evitar ghost clicks
+      if(e.target.tagName === "INPUT" || e.target.closest("button") || e.target.closest(".tag")) return;
+      
+      dragging=true;
+      startX=e.clientX;
       card.classList.add("swiping");
       card.classList.remove("snap-back");
+      card.setPointerCapture(e.pointerId);
     }
+    
     function onMove(e){
       if(!dragging)return;
-      const x=e.type==="touchmove"?e.touches[0].clientX:e.clientX;
-      curX=Math.min(0,x-startX);
+      const diffX = e.clientX - startX;
+      // Permite apenas o arraste para a esquerda
+      curX = Math.min(0, diffX); 
       card.style.transform=`translateX(${curX}px)`;
     }
-    function onEnd(){
+    
+    function onEnd(e){
       if(!dragging)return;
       dragging=false;
       card.classList.remove("swiping");
-      if(curX<-THRESHOLD){
+      card.releasePointerCapture(e.pointerId);
+      
+      if(curX < -THRESHOLD){
         card.style.transform=`translateX(-110%)`;
-        setTimeout(()=>delEx(id),250);
+        setTimeout(()=>delEx(id),200);
       }else{
         card.classList.add("snap-back");
         card.style.transform="translateX(0)";
-        setTimeout(()=>card.classList.remove("snap-back"),250);
+        setTimeout(()=>card.classList.remove("snap-back"),200);
       }
     }
     
-    card.addEventListener("touchstart",onStart,{passive:true});
-    card.addEventListener("touchmove",onMove,{passive:true});
-    card.addEventListener("touchend",onEnd);
-    card.addEventListener("mousedown",onStart);
-    
-    wrapper.addEventListener("mousemove",onMove);
-    wrapper.addEventListener("mouseup",onEnd);
-    wrapper.addEventListener("mouseleave",onEnd);
+    // API de Ponteiros unificada (Mouse, Touch Screen, Caneta) nativa do navegador
+    card.addEventListener("pointerdown", onStart);
+    card.addEventListener("pointermove", onMove);
+    card.addEventListener("pointerup", onEnd);
+    card.addEventListener("pointercancel", onEnd);
   });
 }
 
@@ -548,7 +545,6 @@ function handleChk(id,v){
     if(!active[id])active[id]={};
     active[id][curDay]=v;
   }
-  // Salva no LocalStorage
   localStorage.setItem("bl_active", JSON.stringify(active));
   localStorage.setItem("bl_done", JSON.stringify(done));
   
@@ -560,7 +556,6 @@ function delEx(id){
   if(active[id])active[id][curDay]=false;
   if(done[id])done[id][curDay]=false;
   
-  // Salva no LocalStorage após a exclusão
   localStorage.setItem("bl_active", JSON.stringify(active));
   localStorage.setItem("bl_done", JSON.stringify(done));
   
