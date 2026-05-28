@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#060810">
-<title>BODY LIFE — FICHA DE TREINO</title>
+<title>BODY LIFE — WORKOUT SHEET</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * {
@@ -41,6 +41,60 @@ body {
   padding-bottom: 80px;
 }
 
+/* Language Selector */
+.lang-selector {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 200;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.lang-btn:hover::before {
+  width: 100px;
+  height: 100px;
+}
+
+.lang-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+}
+
+.lang-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+}
+
 /* Header */
 .header {
   padding: 20px 16px;
@@ -55,6 +109,7 @@ body {
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.5px;
+  animation: fadeInDown 0.5s ease;
 }
 
 .header h1 span {
@@ -65,9 +120,10 @@ body {
   font-size: 12px;
   color: var(--text-muted);
   margin-top: 4px;
+  animation: fadeInUp 0.5s ease;
 }
 
-/* Navigation Tabs */
+/* Navigation Tabs - CORRIGIDO para trocar idioma */
 .tabs {
   display: flex;
   gap: 8px;
@@ -82,20 +138,43 @@ body {
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 12px;
-  color: var(--text-muted);
   font-family: 'Syne', sans-serif;
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.tab-btn:hover::before {
+  left: 100%;
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
 }
 
 .tab-btn.active {
   background: var(--primary);
   border-color: var(--primary);
   color: #000;
+  animation: pulse 0.4s ease;
 }
 
 /* Day Selector */
@@ -106,10 +185,11 @@ body {
   overflow-x: auto;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  scroll-behavior: smooth;
 }
 
 .day-btn {
-  min-width: 70px;
+  min-width: 80px;
   padding: 10px;
   background: var(--surface-light);
   border: 1px solid var(--border);
@@ -119,14 +199,39 @@ body {
   font-weight: 600;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.day-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.day-btn:hover::after {
+  width: 80%;
+}
+
+.day-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
 }
 
 .day-btn.active {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border-color: transparent;
   color: #000;
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
 
 .day-btn .count {
@@ -139,6 +244,7 @@ body {
 /* Content */
 .content {
   padding: 16px;
+  animation: fadeIn 0.4s ease;
 }
 
 /* Exercise List */
@@ -147,7 +253,7 @@ body {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
-  max-height: 400px;
+  max-height: 450px;
   overflow-y: auto;
 }
 
@@ -159,23 +265,71 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  animation: slideInRight 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.exercise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+  transition: left 0.5s;
+}
+
+.exercise-card:hover::before {
+  left: 100%;
+}
+
+.exercise-card:hover {
+  transform: translateX(4px);
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .exercise-card.selected {
   border-color: var(--primary);
   background: rgba(0, 212, 255, 0.08);
+  transform: scale(1.01);
 }
 
 .exercise-icon {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   background: var(--surface-light);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.exercise-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.exercise-card:hover .exercise-img {
+  transform: scale(1.1);
+}
+
+.exercise-icon .emoji-fallback {
+  font-size: 32px;
+  transition: transform 0.3s ease;
+}
+
+.exercise-card:hover .emoji-fallback {
+  transform: scale(1.1);
 }
 
 .exercise-info {
@@ -184,8 +338,14 @@ body {
 
 .exercise-name {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 4px;
+  transition: color 0.3s ease;
+  color: var(--text);
+}
+
+.exercise-card:hover .exercise-name {
+  color: var(--primary);
 }
 
 .exercise-muscle {
@@ -202,20 +362,23 @@ body {
 }
 
 .set-input {
-  width: 70px;
+  width: 65px;
   background: var(--surface-light);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 6px 8px;
+  padding: 5px 6px;
   color: var(--text);
-  font-size: 11px;
+  font-size: 10px;
   text-align: center;
   font-family: 'DM Mono', monospace;
+  transition: all 0.3s ease;
 }
 
 .set-input:focus {
   outline: none;
   border-color: var(--primary);
+  transform: scale(1.02);
+  box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
 }
 
 .exercise-actions {
@@ -224,16 +387,36 @@ body {
 }
 
 .add-btn, .remove-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
-  font-size: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 16px;
   font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
+
+.add-btn::before, .remove-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.add-btn:hover::before, .remove-btn:hover::before {
+  width: 100px;
+  height: 100px;
 }
 
 .add-btn {
@@ -242,37 +425,77 @@ body {
   color: var(--secondary);
 }
 
+.add-btn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 255, 157, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+}
+
 .remove-btn {
   background: rgba(255, 59, 92, 0.1);
   border: 1px solid rgba(255, 59, 92, 0.3);
   color: var(--accent-red);
 }
 
-/* Muscle Group Filters */
+.remove-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 59, 92, 0.2);
+  box-shadow: 0 0 10px rgba(255, 59, 92, 0.3);
+}
+
+/* Muscle Group Filters - TAMANHO CORRIGIDO */
 .muscle-filters {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 16px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
 }
 
 .muscle-chip {
-  padding: 8px 16px;
+  padding: 10px 30px;
   background: var(--surface-light);
   border: 1px solid var(--border);
   border-radius: 30px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  color: var(--text);
+  min-width: auto;
+}
+
+.muscle-chip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.muscle-chip:hover::before {
+  left: 100%;
+}
+
+.muscle-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .muscle-chip.active {
   background: var(--primary);
   border-color: var(--primary);
   color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
 }
 
 /* Current Workout Section */
@@ -282,6 +505,13 @@ body {
   border-radius: 20px;
   padding: 16px;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease;
+}
+
+.current-workout:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .section-title {
@@ -291,6 +521,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--text);
 }
 
 .section-title span {
@@ -303,6 +534,15 @@ body {
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+  animation: slideInLeft 0.3s ease;
+}
+
+.workout-item:hover {
+  transform: translateX(4px);
+  background: rgba(0, 212, 255, 0.05);
+  padding-left: 8px;
+  border-radius: 8px;
 }
 
 .workout-item:last-child {
@@ -314,12 +554,13 @@ body {
 }
 
 .workout-item-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+  color: var(--text);
 }
 
 .workout-item-details {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -327,13 +568,19 @@ body {
 .workout-item-remove {
   background: rgba(255, 59, 92, 0.1);
   border: none;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   color: var(--accent-red);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.workout-item-remove:hover {
+  transform: scale(1.1);
+  background: rgba(255, 59, 92, 0.2);
 }
 
 .empty-workout {
@@ -343,21 +590,33 @@ body {
   font-size: 12px;
 }
 
-/* Timer Component - Independente */
+/* Timer Component */
 .timer-container {
   background: linear-gradient(135deg, var(--surface-light), var(--surface));
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 16px;
   margin-bottom: 20px;
   text-align: center;
   border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.timer-container:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.15);
 }
 
 .timer-circle {
   position: relative;
-  width: 180px;
-  height: 180px;
-  margin: 0 auto 16px;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 12px;
+  transition: transform 0.3s ease;
+}
+
+.timer-circle:hover {
+  transform: scale(1.02);
 }
 
 .timer-svg {
@@ -367,16 +626,16 @@ body {
 .timer-bg {
   fill: none;
   stroke: var(--border);
-  stroke-width: 6;
+  stroke-width: 4;
 }
 
 .timer-progress {
   fill: none;
   stroke: var(--primary);
-  stroke-width: 6;
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: 527;
-  stroke-dashoffset: 527;
+  stroke-dasharray: 351;
+  stroke-dashoffset: 351;
   transition: stroke-dashoffset 0.3s linear;
 }
 
@@ -386,13 +645,13 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'DM Mono', monospace;
-  font-size: 40px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text);
 }
 
 .timer-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -401,20 +660,45 @@ body {
 
 .timer-controls {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .timer-btn {
-  padding: 10px 24px;
+  padding: 8px 16px;
   border-radius: 30px;
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.timer-btn:hover::before {
+  width: 100px;
+  height: 100px;
+}
+
+.timer-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .timer-btn.play {
@@ -447,7 +731,29 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.save-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.save-btn:hover::before {
+  left: 100%;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
 }
 
 .save-btn:active {
@@ -460,6 +766,12 @@ body {
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.workout-progress:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
 }
 
 .progress-header {
@@ -467,6 +779,7 @@ body {
   justify-content: space-between;
   margin-bottom: 12px;
   font-size: 12px;
+  color: var(--text);
 }
 
 .progress-bar {
@@ -481,19 +794,25 @@ body {
   height: 100%;
   background: linear-gradient(90deg, var(--secondary), var(--primary));
   width: 0%;
-  transition: width 0.3s;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .exercise-check-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 10px;
   background: var(--surface-light);
   border-radius: 12px;
   margin-bottom: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInRight 0.3s ease;
+}
+
+.exercise-check-item:hover {
+  transform: translateX(4px);
+  background: rgba(0, 212, 255, 0.1);
 }
 
 .exercise-check-item.completed {
@@ -505,9 +824,14 @@ body {
 }
 
 .exercise-check-item input {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.exercise-check-item input:hover {
+  transform: scale(1.1);
 }
 
 /* Bottom Navigation */
@@ -523,6 +847,7 @@ body {
   display: flex;
   padding: 8px 16px;
   gap: 8px;
+  backdrop-filter: blur(10px);
 }
 
 .nav-item {
@@ -531,26 +856,54 @@ body {
   background: transparent;
   border: none;
   border-radius: 12px;
-  color: var(--text-muted);
   font-family: 'Syne', sans-serif;
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  position: relative;
+  overflow: hidden;
+  color: var(--text-muted);
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nav-item:hover::before {
+  left: 100%;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px);
+  color: var(--primary);
 }
 
 .nav-item.active {
   background: var(--surface-light);
   color: var(--primary);
+  transform: scale(1.05);
 }
 
 .nav-item span:first-child {
   font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover span:first-child {
+  transform: scale(1.1);
 }
 
 /* Stats Grid */
@@ -567,12 +920,26 @@ body {
   border-radius: 16px;
   padding: 16px;
   text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.4s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.15);
 }
 
 .stat-value {
   font-size: 28px;
   font-weight: 800;
   color: var(--primary);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-value {
+  transform: scale(1.05);
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
 .stat-label {
@@ -596,7 +963,7 @@ body {
   font-size: 13px;
   z-index: 1000;
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   white-space: nowrap;
 }
@@ -620,7 +987,7 @@ body {
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .modal.open {
@@ -635,10 +1002,22 @@ body {
   max-width: 280px;
   text-align: center;
   border: 1px solid var(--border);
+  transform: scale(0.7);
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal.open .modal-content {
+  transform: scale(1);
 }
 
 .modal-content h3 {
   margin-bottom: 12px;
+  color: var(--text);
+  animation: pulse 0.5s ease;
+}
+
+.modal-content p {
+  color: var(--text-muted);
 }
 
 .modal-content button {
@@ -649,27 +1028,124 @@ body {
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
 }
 
 .hidden {
   display: none;
 }
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
 </style>
 </head>
 <body>
 <div class="app">
+  <div class="lang-selector">
+    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+    <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
+    <button class="lang-btn active" data-lang="pt">🇧🇷 PT</button>
+  </div>
+
   <div class="header">
     <h1>BODY LIFE<span>.</span></h1>
-    <p>Monte sua ficha de treino personalizada</p>
+    <p id="header-subtitle">Monte sua ficha de treino personalizada</p>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="ficha">📋 FICHA</button>
-    <button class="tab-btn" data-tab="treino">💪 TREINO</button>
-    <button class="tab-btn" data-tab="stats">📊 STATS</button>
+    <button class="tab-btn active" data-tab="ficha" id="tab-ficha-btn">📋 FICHA</button>
+    <button class="tab-btn" data-tab="treino" id="tab-treino-btn">💪 TREINO</button>
+    <button class="tab-btn" data-tab="stats" id="tab-stats-btn">📊 STATS</button>
   </div>
 
-  <!-- FICHA DE TREINO TAB -->
   <div id="tab-ficha" class="tab-content">
     <div class="day-selector" id="day-selector"></div>
     
@@ -679,7 +1155,8 @@ body {
       
       <div class="current-workout">
         <div class="section-title">
-          📌 TREINO DE <span id="current-day-name">SEGUNDA</span>
+          <span id="current-workout-title">📌 TREINO DE</span>
+          <span id="current-day-name">SEGUNDA</span>
           <span id="exercise-count">0</span>
         </div>
         <div id="current-workout-list"></div>
@@ -689,16 +1166,14 @@ body {
     </div>
   </div>
 
-  <!-- TREINO DO DIA TAB -->
   <div id="tab-treino" class="tab-content hidden">
     <div class="content">
-      <!-- CRONÔMETRO INDEPENDENTE -->
       <div class="timer-container">
-        <div class="timer-label">⏱️ CRONÔMETRO DE TREINO</div>
+        <div class="timer-label" id="timer-label">⏱️ CRONÔMETRO DE TREINO</div>
         <div class="timer-circle">
-          <svg class="timer-svg" width="180" height="180" viewBox="0 0 180 180">
-            <circle class="timer-bg" cx="90" cy="90" r="84"></circle>
-            <circle class="timer-progress" id="timer-progress" cx="90" cy="90" r="84"></circle>
+          <svg class="timer-svg" width="120" height="120" viewBox="0 0 120 120">
+            <circle class="timer-bg" cx="60" cy="60" r="56"></circle>
+            <circle class="timer-progress" id="timer-progress" cx="60" cy="60" r="56"></circle>
           </svg>
           <div class="timer-number" id="timer-display">00:00:00</div>
         </div>
@@ -709,10 +1184,10 @@ body {
         </div>
       </div>
 
-      <!-- TREINO DO DIA (SEM RELAÇÃO COM O CRONÔMETRO) -->
       <div class="workout-progress">
         <div class="progress-header">
-          <span>🏋️ TREINO DE <span id="today-name"></span></span>
+          <span id="today-workout-title">🏋️ TREINO DE</span>
+          <span id="today-name"></span>
           <span id="progress-text">0/0 concluídos</span>
         </div>
         <div class="progress-bar">
@@ -725,36 +1200,36 @@ body {
     </div>
   </div>
 
-  <!-- ESTATÍSTICAS TAB -->
   <div id="tab-stats" class="tab-content hidden">
     <div class="content">
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-value" id="stat-total-workouts">0</div>
-          <div class="stat-label">Treinos</div>
+          <div class="stat-label" data-i18n-stat-workouts>Treinos</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-streak">0</div>
-          <div class="stat-label">Streak</div>
+          <div class="stat-label" data-i18n-stat-streak>Streak</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-longest-streak">0</div>
-          <div class="stat-label">Recorde</div>
+          <div class="stat-label" data-i18n-stat-record>Recorde</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-xp">0</div>
-          <div class="stat-label">XP</div>
+          <div class="stat-label" data-i18n-stat-xp>XP</div>
         </div>
       </div>
       
       <div class="current-workout">
-        <div class="section-title">📅 Últimos Treinos</div>
+        <div class="section-title">
+          <span data-i18n-last-workouts>📅 Últimos Treinos</span>
+        </div>
         <div id="history-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <button class="nav-item active" data-nav="ficha">📋 FICHA</button>
     <button class="nav-item" data-nav="treino">💪 TREINO</button>
@@ -762,88 +1237,363 @@ body {
   </div>
 </div>
 
-<!-- Toast Notification -->
 <div id="toast" class="toast">✅ Ficha salva!</div>
 
-<!-- Modal -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <h3 id="modal-title">🎉 Treino Concluído!</h3>
     <p id="modal-message">+50 XP</p>
-    <button onclick="closeModal()">Fechar</button>
+    <button onclick="closeModal()" id="modal-close-btn">Fechar</button>
   </div>
 </div>
 
 <script>
+// ============== IMAGES DATABASE ==============
+function getExerciseImage(exerciseName) {
+  const keywords = {
+    "supino": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop",
+    "peck deck": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "voador": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "crossover": "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=100&h=100&fit=crop",
+    "flexão": "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=100&h=100&fit=crop",
+    "puxada": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "remada": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "barra fixa": "https://images.unsplash.com/photo-1598971639058-2a9d19b0b6f7?w=100&h=100&fit=crop",
+    "desenvolvimento": "https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=100&h=100&fit=crop",
+    "elevação lateral": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "rosca": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "tríceps": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "agachamento": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=100&h=100&fit=crop",
+    "leg press": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "extensora": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "abdominal": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=100&h=100&fit=crop",
+    "prancha": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=100&h=100&fit=crop",
+    "stiff": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop"
+  };
+  
+  const lowerName = exerciseName.toLowerCase();
+  for (const [key, url] of Object.entries(keywords)) {
+    if (lowerName.includes(key)) {
+      return url;
+    }
+  }
+  return null;
+}
+
+// ============== INTERNATIONALIZATION ==============
+const translations = {
+  en: {
+    "header-subtitle": "Build your personalized workout plan",
+    "save-workout": "💾 SAVE WORKOUT",
+    "complete-workout": "✅ COMPLETE WORKOUT",
+    "empty-workout": "No exercises added. Select above 👆",
+    "no-workout-today": "No workout scheduled for today! Go to WORKOUT SHEET tab and build your plan.",
+    "workout-completed": "🎉 WORKOUT COMPLETED!",
+    "close": "Close",
+    "workouts": "Workouts",
+    "streak": "Streak",
+    "record": "Record",
+    "xp": "XP",
+    "last-workouts": "📅 Last Workouts",
+    "no-history": "No workouts completed yet",
+    "exercises": "exercises",
+    "sets": "sets",
+    "reps": "reps",
+    "timer-label": "⏱️ WORKOUT TIMER",
+    "timer-play": "▶ PLAY",
+    "timer-pause": "⏸ PAUSE",
+    "timer-reset": "🔄 RESET",
+    "today-workout": "🏋️ TODAY'S WORKOUT",
+    "workout-sheet": "📌 WORKOUT SHEET -",
+    "of": "of",
+    "completed": "completed",
+    "add-exercise": "Added!",
+    "remove-exercise": "Exercise removed",
+    "workout-saved": "✅ Workout saved!",
+    "complete-all": "⚠️ Complete all exercises!",
+    "no-workout-programmed": "❌ No workout programmed for today!",
+    "days": "days",
+    "tab-ficha": "WORKOUT",
+    "tab-treino": "TRAINING",
+    "tab-stats": "STATS",
+    "days_short": {
+      "seg": "MON", "ter": "TUE", "qua": "WED", "qui": "THU", "sex": "FRI", "sab": "SAT", "dom": "SUN"
+    },
+    "fullDays": {
+      "seg": "MONDAY", "ter": "TUESDAY", "qua": "WEDNESDAY", "qui": "THURSDAY", "sex": "FRIDAY", "sab": "SATURDAY", "dom": "SUNDAY"
+    },
+    "muscles": {
+      "peito": "CHEST",
+      "costas": "BACK",
+      "ombros": "SHOULDERS",
+      "biceps": "BICEPS",
+      "triceps": "TRICEPS",
+      "antebraco": "FOREARM",
+      "quadriceps": "QUADRICEPS",
+      "posteriores": "HAMSTRINGS",
+      "panturrilhas": "CALVES",
+      "core": "CORE",
+      "lombar": "LOWER BACK"
+    }
+  },
+  es: {
+    "header-subtitle": "Crea tu plan de entrenamiento personalizado",
+    "save-workout": "💾 GUARDAR RUTINA",
+    "complete-workout": "✅ COMPLETAR ENTRENO",
+    "empty-workout": "Sin ejercicios añadidos. Selecciona arriba 👆",
+    "no-workout-today": "¡No hay entrenamiento programado para hoy! Ve a la pestaña RUTINA y crea tu plan.",
+    "workout-completed": "🎉 ¡ENTRENO COMPLETADO!",
+    "close": "Cerrar",
+    "workouts": "Entrenos",
+    "streak": "Racha",
+    "record": "Récord",
+    "xp": "XP",
+    "last-workouts": "📅 Últimos Entrenos",
+    "no-history": "Aún no hay entrenos completados",
+    "exercises": "ejercicios",
+    "sets": "series",
+    "reps": "repeticiones",
+    "timer-label": "⏱️ CRONÓMETRO",
+    "timer-play": "▶ INICIAR",
+    "timer-pause": "⏸ PAUSA",
+    "timer-reset": "🔄 REINICIAR",
+    "today-workout": "🏋️ ENTRENO DE HOY",
+    "workout-sheet": "📌 RUTINA DE",
+    "of": "de",
+    "completed": "completados",
+    "add-exercise": "¡Añadido!",
+    "remove-exercise": "Ejercicio eliminado",
+    "workout-saved": "✅ ¡Rutina guardada!",
+    "complete-all": "⚠️ ¡Completa todos los ejercicios!",
+    "no-workout-programmed": "❌ ¡No hay entrenamiento programado para hoy!",
+    "days": "días",
+    "tab-ficha": "RUTINA",
+    "tab-treino": "ENTRENO",
+    "tab-stats": "ESTADÍSTICAS",
+    "days_short": {
+      "seg": "LUN", "ter": "MAR", "qua": "MIÉ", "qui": "JUE", "sex": "VIE", "sab": "SÁB", "dom": "DOM"
+    },
+    "fullDays": {
+      "seg": "LUNES", "ter": "MARTES", "qua": "MIÉRCOLES", "qui": "JUEVES", "sex": "VIERNES", "sab": "SÁBADO", "dom": "DOMINGO"
+    },
+    "muscles": {
+      "peito": "PECHO",
+      "costas": "ESPALDA",
+      "ombros": "HOMBROS",
+      "biceps": "BÍCEPS",
+      "triceps": "TRÍCEPS",
+      "antebraco": "ANTEBRAZO",
+      "quadriceps": "CUÁDRICEPS",
+      "posteriores": "ISQUIOTIBIALES",
+      "panturrilhas": "GEMELOS",
+      "core": "CORE",
+      "lombar": "LUMBAR"
+    }
+  },
+  pt: {
+    "header-subtitle": "Monte sua ficha de treino personalizada",
+    "save-workout": "💾 SALVAR FICHA",
+    "complete-workout": "✅ FINALIZAR TREINO",
+    "empty-workout": "Nenhum exercício adicionado. Selecione acima 👆",
+    "no-workout-today": "Nenhum treino programado para hoje! Vá na aba FICHA e monte seu treino.",
+    "workout-completed": "🎉 TREINO CONCLUÍDO!",
+    "close": "Fechar",
+    "workouts": "Treinos",
+    "streak": "Streak",
+    "record": "Recorde",
+    "xp": "XP",
+    "last-workouts": "📅 Últimos Treinos",
+    "no-history": "Nenhum treino realizado ainda",
+    "exercises": "exercícios",
+    "sets": "séries",
+    "reps": "reps",
+    "timer-label": "⏱️ CRONÔMETRO DE TREINO",
+    "timer-play": "▶ PLAY",
+    "timer-pause": "⏸ PAUSE",
+    "timer-reset": "🔄 RESET",
+    "today-workout": "🏋️ TREINO DE",
+    "workout-sheet": "📌 TREINO DE",
+    "of": "de",
+    "completed": "concluídos",
+    "add-exercise": "adicionado!",
+    "remove-exercise": "Exercício removido",
+    "workout-saved": "✅ Ficha de treino salva!",
+    "complete-all": "⚠️ Complete todos os exercícios!",
+    "no-workout-programmed": "❌ Nenhum treino programado para hoje!",
+    "days": "dias",
+    "tab-ficha": "FICHA",
+    "tab-treino": "TREINO",
+    "tab-stats": "STATS",
+    "days_short": {
+      "seg": "SEG", "ter": "TER", "qua": "QUA", "qui": "QUI", "sex": "SEX", "sab": "SÁB", "dom": "DOM"
+    },
+    "fullDays": {
+      "seg": "SEGUNDA", "ter": "TERÇA", "qua": "QUARTA", "qui": "QUINTA", "sex": "SEXTA", "sab": "SÁBADO", "dom": "DOMINGO"
+    },
+    "muscles": {
+      "peito": "PEITO",
+      "costas": "COSTAS",
+      "ombros": "OMBROS",
+      "biceps": "BÍCEPS",
+      "triceps": "TRÍCEPS",
+      "antebraco": "ANTEBRAÇO",
+      "quadriceps": "QUADRÍCEPS",
+      "posteriores": "POSTERIORES",
+      "panturrilhas": "PANTURRILHAS",
+      "core": "CORE",
+      "lombar": "LOMBAR"
+    }
+  }
+};
+
+let currentLang = 'pt';
+
+function t(key, params = {}) {
+  let text = translations[currentLang][key] || translations['pt'][key] || key;
+  Object.keys(params).forEach(param => {
+    text = text.replace(`{{${param}}}`, params[param]);
+  });
+  return text;
+}
+
+function updateAllTexts() {
+  // Header
+  document.getElementById("header-subtitle").textContent = t("header-subtitle");
+  
+  // Tabs principais - CORRIGIDO
+  const tabFichaBtn = document.getElementById("tab-ficha-btn");
+  const tabTreinoBtn = document.getElementById("tab-treino-btn");
+  const tabStatsBtn = document.getElementById("tab-stats-btn");
+  
+  if (tabFichaBtn) tabFichaBtn.innerHTML = `📋 ${t("tab-ficha")}`;
+  if (tabTreinoBtn) tabTreinoBtn.innerHTML = `💪 ${t("tab-treino")}`;
+  if (tabStatsBtn) tabStatsBtn.innerHTML = `📊 ${t("tab-stats")}`;
+  
+  // Bottom nav
+  const navItems = document.querySelectorAll(".nav-item");
+  if (navItems.length >= 3) {
+    navItems[0].innerHTML = `<span>📋</span> ${t("tab-ficha")}`;
+    navItems[1].innerHTML = `<span>💪</span> ${t("tab-treino")}`;
+    navItems[2].innerHTML = `<span>📊</span> ${t("tab-stats")}`;
+  }
+  
+  // Buttons
+  document.getElementById("save-workout").innerHTML = t("save-workout");
+  document.getElementById("complete-workout").innerHTML = t("complete-workout");
+  document.getElementById("timer-label").textContent = t("timer-label");
+  document.getElementById("timer-play").innerHTML = t("timer-play");
+  document.getElementById("timer-pause").innerHTML = t("timer-pause");
+  document.getElementById("timer-reset").innerHTML = t("timer-reset");
+  
+  // Stats labels
+  document.querySelectorAll("[data-i18n-stat-workouts]").forEach(el => el.textContent = t("workouts"));
+  document.querySelectorAll("[data-i18n-stat-streak]").forEach(el => el.textContent = t("streak"));
+  document.querySelectorAll("[data-i18n-stat-record]").forEach(el => el.textContent = t("record"));
+  document.querySelectorAll("[data-i18n-stat-xp]").forEach(el => el.textContent = t("xp"));
+  document.querySelectorAll("[data-i18n-last-workouts]").forEach(el => el.textContent = t("last-workouts"));
+  document.getElementById("modal-close-btn").textContent = t("close");
+  
+  // Section titles
+  document.getElementById("current-workout-title").innerHTML = t("workout-sheet");
+  document.getElementById("today-workout-title").innerHTML = t("today-workout");
+  
+  // Re-render components
+  renderDaySelector();
+  renderMuscleFilters();
+  renderExerciseList();
+  renderCurrentWorkout();
+  renderTodayWorkout();
+  renderStats();
+}
+
 // ============== EXERCÍCIOS DATABASE ==============
 const EXERCISES_DB = {
   peito: [
-    { id: "p1", name: "Supino Reto", muscle: "Peito" },
-    { id: "p2", name: "Supino Inclinado", muscle: "Peito" },
-    { id: "p3", name: "Supino Declinado", muscle: "Peito" },
-    { id: "p4", name: "Crucifixo", muscle: "Peito" },
-    { id: "p5", name: "Crossover", muscle: "Peito" },
-    { id: "p6", name: "Peck Deck", muscle: "Peito" }
+    { id: "p1", name: { en: "Flat Bench Press", es: "Press de Banca Plano", pt: "Supino Reto" }, muscle: "peito" },
+    { id: "p2", name: { en: "Incline Bench Press", es: "Press de Banca Inclinado", pt: "Supino Inclinado" }, muscle: "peito" },
+    { id: "p3", name: { en: "Decline Bench Press", es: "Press de Banca Declinado", pt: "Supino Declinado" }, muscle: "peito" },
+    { id: "p4", name: { en: "Dumbbell Fly", es: "Aperturas con Mancuernas", pt: "Crucifixo" }, muscle: "peito" },
+    { id: "p5", name: { en: "Cable Crossover", es: "Cruce de Poleas", pt: "Crossover" }, muscle: "peito" },
+    { id: "p6", name: { en: "Pec Deck", es: "Máquina Pec Deck", pt: "Peck Deck" }, muscle: "peito" },
+    { id: "p7", name: { en: "Push-up", es: "Flexión de Brazos", pt: "Flexão de Braço" }, muscle: "peito" }
   ],
   costas: [
-    { id: "c1", name: "Puxada Frente", muscle: "Costas" },
-    { id: "c2", name: "Puxada Triângulo", muscle: "Costas" },
-    { id: "c3", name: "Remada Curvada", muscle: "Costas" },
-    { id: "c4", name: "Remada Unilateral", muscle: "Costas" },
-    { id: "c5", name: "Barra Fixa", muscle: "Costas" },
-    { id: "c6", name: "Levantamento Terra", muscle: "Costas" }
-  ],
-  pernas: [
-    { id: "l1", name: "Agachamento Livre", muscle: "Pernas" },
-    { id: "l2", name: "Leg Press", muscle: "Pernas" },
-    { id: "l3", name: "Cadeira Extensora", muscle: "Pernas" },
-    { id: "l4", name: "Cadeira Flexora", muscle: "Pernas" },
-    { id: "l5", name: "Stiff", muscle: "Pernas" },
-    { id: "l6", name: "Panturrilha", muscle: "Pernas" }
+    { id: "c1", name: { en: "Lat Pulldown", es: "Jalón al Pecho", pt: "Puxada Alta" }, muscle: "costas" },
+    { id: "c2", name: { en: "Barbell Row", es: "Remo con Barra", pt: "Remada Curvada" }, muscle: "costas" },
+    { id: "c3", name: { en: "Seated Cable Row", es: "Remo en Polea", pt: "Remada Baixa" }, muscle: "costas" },
+    { id: "c4", name: { en: "Pull-up", es: "Dominada", pt: "Barra Fixa" }, muscle: "costas" },
+    { id: "c5", name: { en: "Pullover", es: "Pullover", pt: "Pullover" }, muscle: "costas" },
+    { id: "c6", name: { en: "Shrug", es: "Encogimiento", pt: "Encolhimento" }, muscle: "costas" }
   ],
   ombros: [
-    { id: "o1", name: "Desenvolvimento", muscle: "Ombros" },
-    { id: "o2", name: "Elevação Lateral", muscle: "Ombros" },
-    { id: "o3", name: "Elevação Frontal", muscle: "Ombros" },
-    { id: "o4", name: "Face Pull", muscle: "Ombros" },
-    { id: "o5", name: "Encolhimento", muscle: "Ombros" }
+    { id: "o1", name: { en: "Shoulder Press", es: "Press de Hombros", pt: "Desenvolvimento" }, muscle: "ombros" },
+    { id: "o2", name: { en: "Lateral Raise", es: "Elevación Lateral", pt: "Elevação Lateral" }, muscle: "ombros" },
+    { id: "o3", name: { en: "Front Raise", es: "Elevación Frontal", pt: "Elevação Frontal" }, muscle: "ombros" },
+    { id: "o4", name: { en: "Reverse Fly", es: "Aperturas Inversas", pt: "Crucifixo Inverso" }, muscle: "ombros" }
   ],
   biceps: [
-    { id: "b1", name: "Rosca Direta", muscle: "Bíceps" },
-    { id: "b2", name: "Rosca Alternada", muscle: "Bíceps" },
-    { id: "b3", name: "Rosca Martelo", muscle: "Bíceps" },
-    { id: "b4", name: "Rosca Scott", muscle: "Bíceps" }
+    { id: "b1", name: { en: "Barbell Curl", es: "Curl con Barra", pt: "Rosca Direta" }, muscle: "biceps" },
+    { id: "b2", name: { en: "Alternating Curl", es: "Curl Alterno", pt: "Rosca Alternada" }, muscle: "biceps" },
+    { id: "b3", name: { en: "Hammer Curl", es: "Curl Martillo", pt: "Rosca Martelo" }, muscle: "biceps" },
+    { id: "b4", name: { en: "Concentration Curl", es: "Curl Concentrado", pt: "Rosca Concentrada" }, muscle: "biceps" },
+    { id: "b5", name: { en: "Preacher Curl", es: "Curl en Predicador", pt: "Rosca Scott" }, muscle: "biceps" }
   ],
   triceps: [
-    { id: "t1", name: "Tríceps Corda", muscle: "Tríceps" },
-    { id: "t2", name: "Tríceps Testa", muscle: "Tríceps" },
-    { id: "t3", name: "Tríceps Francês", muscle: "Tríceps" },
-    { id: "t4", name: "Mergulho", muscle: "Tríceps" }
+    { id: "t1", name: { en: "Skull Crusher", es: "Rompe Cráneos", pt: "Tríceps Testa" }, muscle: "triceps" },
+    { id: "t2", name: { en: "Triceps Pushdown", es: "Extensión de Tríceps", pt: "Tríceps Pulley" }, muscle: "triceps" },
+    { id: "t3", name: { en: "Triceps Kickback", es: "Patada de Tríceps", pt: "Tríceps Coice" }, muscle: "triceps" },
+    { id: "t4", name: { en: "Bench Dip", es: "Fondo en Banco", pt: "Mergulho" }, muscle: "triceps" }
   ],
-  abdominal: [
-    { id: "a1", name: "Abdominal Supra", muscle: "Abdômen" },
-    { id: "a2", name: "Abdominal Infra", muscle: "Abdômen" },
-    { id: "a3", name: "Prancha", muscle: "Abdômen" },
-    { id: "a4", name: "Oblíquo", muscle: "Abdômen" }
+  antebraco: [
+    { id: "a1", name: { en: "Reverse Curl", es: "Curl Inverso", pt: "Rosca Inversa" }, muscle: "antebraco" },
+    { id: "a2", name: { en: "Wrist Curl", es: "Curl de Muñeca", pt: "Rosca Punho" }, muscle: "antebraco" }
+  ],
+  quadriceps: [
+    { id: "q1", name: { en: "Barbell Squat", es: "Sentadilla con Barra", pt: "Agachamento Livre" }, muscle: "quadriceps" },
+    { id: "q2", name: { en: "Leg Press", es: "Prensa de Piernas", pt: "Leg Press" }, muscle: "quadriceps" },
+    { id: "q3", name: { en: "Hack Squat", es: "Sentadilla Hack", pt: "Agachamento Hack" }, muscle: "quadriceps" },
+    { id: "q4", name: { en: "Leg Extension", es: "Extensión de Piernas", pt: "Cadeira Extensora" }, muscle: "quadriceps" },
+    { id: "q5", name: { en: "Bulgarian Split Squat", es: "Sentadilla Búlgara", pt: "Agachamento Búlgaro" }, muscle: "quadriceps" },
+    { id: "q6", name: { en: "Lunge", es: "Zancada", pt: "Afundo" }, muscle: "quadriceps" }
+  ],
+  posteriores: [
+    { id: "po1", name: { en: "Stiff Leg Deadlift", es: "Peso Muerto Piernas Rígidas", pt: "Stiff" }, muscle: "posteriores" },
+    { id: "po2", name: { en: "Lying Leg Curl", es: "Curl de Piernas Acostado", pt: "Mesa Flexora" }, muscle: "posteriores" },
+    { id: "po3", name: { en: "Seated Leg Curl", es: "Curl de Piernas Sentado", pt: "Cadeira Flexora" }, muscle: "posteriores" },
+    { id: "po4", name: { en: "Hip Thrust", es: "Elevación de Cadera", pt: "Elevação Pélvica" }, muscle: "gluteos" },
+    { id: "po5", name: { en: "Hip Abduction", es: "Abducción de Cadera", pt: "Cadeira Abdutora" }, muscle: "gluteos" }
+  ],
+  panturrilhas: [
+    { id: "pa1", name: { en: "Standing Calf Raise", es: "Elevación de Talones Parado", pt: "Panturrilha em Pé" }, muscle: "panturrilhas" },
+    { id: "pa2", name: { en: "Seated Calf Raise", es: "Elevación de Talones Sentado", pt: "Panturrilha Sentado" }, muscle: "panturrilhas" }
+  ],
+  core: [
+    { id: "co1", name: { en: "Crunch", es: "Crunches", pt: "Abdominal Supra" }, muscle: "core" },
+    { id: "co2", name: { en: "Leg Raise", es: "Elevación de Piernas", pt: "Abdominal Infra" }, muscle: "core" },
+    { id: "co3", name: { en: "Oblique Crunch", es: "Crunches Oblicuos", pt: "Abdominal Oblíquo" }, muscle: "core" },
+    { id: "co4", name: { en: "Plank", es: "Plancha", pt: "Prancha Isométrica" }, muscle: "core" }
+  ],
+  lombar: [
+    { id: "l1", name: { en: "Hyperextension", es: "Hiperextensión", pt: "Extensão Lombar" }, muscle: "lombar" }
   ]
 };
 
-const MUSCLES = ["peito", "costas", "pernas", "ombros", "biceps", "triceps", "abdominal"];
+const MUSCLES = ["peito", "costas", "ombros", "biceps", "triceps", "antebraco", "quadriceps", "posteriores", "panturrilhas", "core", "lombar"];
 const DAYS = [
-  { id: "seg", name: "SEGUNDA" },
-  { id: "ter", name: "TERÇA" },
-  { id: "qua", name: "QUARTA" },
-  { id: "qui", name: "QUINTA" },
-  { id: "sex", name: "SEXTA" },
-  { id: "sab", name: "SÁBADO" },
-  { id: "dom", name: "DOMINGO" }
+  { id: "seg", name: { en: "MON", es: "LUN", pt: "SEG" }, fullName: { en: "MONDAY", es: "LUNES", pt: "SEGUNDA" } },
+  { id: "ter", name: { en: "TUE", es: "MAR", pt: "TER" }, fullName: { en: "TUESDAY", es: "MARTES", pt: "TERÇA" } },
+  { id: "qua", name: { en: "WED", es: "MIÉ", pt: "QUA" }, fullName: { en: "WEDNESDAY", es: "MIÉRCOLES", pt: "QUARTA" } },
+  { id: "qui", name: { en: "THU", es: "JUE", pt: "QUI" }, fullName: { en: "THURSDAY", es: "JUEVES", pt: "QUINTA" } },
+  { id: "sex", name: { en: "FRI", es: "VIE", pt: "SEX" }, fullName: { en: "FRIDAY", es: "VIERNES", pt: "SEXTA" } },
+  { id: "sab", name: { en: "SAT", es: "SÁB", pt: "SÁB" }, fullName: { en: "SATURDAY", es: "SÁBADO", pt: "SÁBADO" } },
+  { id: "dom", name: { en: "SUN", es: "DOM", pt: "DOM" }, fullName: { en: "SUNDAY", es: "DOMINGO", pt: "DOMINGO" } }
 ];
 
-// ============== TIMER STATE (INDEPENDENTE) ==============
+// ============== TIMER STATE ==============
 let timerSeconds = 0;
 let timerInterval = null;
 let isTimerRunning = false;
-const CIRCUMFERENCE = 2 * Math.PI * 84; // 527.78
+const CIRCUMFERENCE = 2 * Math.PI * 56;
 
 // ============== APP STATE ==============
 let state = {
@@ -872,7 +1622,7 @@ function showToast(message, isError = false) {
   }, 2000);
 }
 
-// ============== TIMER FUNCTIONS (INDEPENDENTES) ==============
+// ============== TIMER FUNCTIONS ==============
 function formatTime(seconds) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -882,8 +1632,6 @@ function formatTime(seconds) {
 
 function updateTimerDisplay() {
   document.getElementById("timer-display").textContent = formatTime(timerSeconds);
-  
-  // Progress circle (max 1 hour = 3600 seconds)
   const maxSeconds = 3600;
   const progress = Math.min(timerSeconds / maxSeconds, 1);
   const offset = CIRCUMFERENCE * (1 - progress);
@@ -932,6 +1680,11 @@ function loadData() {
       state.totalWorkouts = data.totalWorkouts || 0;
       state.xp = data.xp || 0;
     }
+    
+    const savedLang = localStorage.getItem("bodylife_lang");
+    if (savedLang && translations[savedLang]) {
+      currentLang = savedLang;
+    }
   } catch(e) {}
   
   DAYS.forEach(day => {
@@ -954,12 +1707,16 @@ function saveData() {
   localStorage.setItem("bodylife_data", JSON.stringify(toSave));
 }
 
-// ============== RENDER FICHA ==============
+function saveLanguage() {
+  localStorage.setItem("bodylife_lang", currentLang);
+}
+
+// ============== RENDER FUNCTIONS ==============
 function renderDaySelector() {
   const container = document.getElementById("day-selector");
   container.innerHTML = DAYS.map(day => {
     const count = state.workoutPlan[day.id]?.length || 0;
-    return `<button class="day-btn ${state.selectedDay === day.id ? 'active' : ''}" data-day="${day.id}">${day.name.substring(0, 3)}<span class="count">${count}</span></button>`;
+    return `<button class="day-btn ${state.selectedDay === day.id ? 'active' : ''}" data-day="${day.id}">${day.name[currentLang]}<span class="count">${count}</span></button>`;
   }).join("");
   
   document.querySelectorAll(".day-btn").forEach(btn => {
@@ -968,14 +1725,20 @@ function renderDaySelector() {
       renderDaySelector();
       renderExerciseList();
       renderCurrentWorkout();
-      document.getElementById("current-day-name").textContent = DAYS.find(d => d.id === state.selectedDay)?.name || "SEGUNDA";
+      const fullDay = DAYS.find(d => d.id === state.selectedDay);
+      document.getElementById("current-day-name").textContent = fullDay?.fullName[currentLang] || "MONDAY";
     });
   });
 }
 
+// FUNÇÃO CORRIGIDA DOS FILTROS DE MÚSCULOS
 function renderMuscleFilters() {
   const container = document.getElementById("muscle-filters");
-  container.innerHTML = MUSCLES.map(muscle => `<button class="muscle-chip ${state.currentMuscle === muscle ? 'active' : ''}" data-muscle="${muscle}">${muscle.toUpperCase()}</button>`).join("");
+  
+  container.innerHTML = MUSCLES.map(muscle => {
+    let muscleDisplayName = translations[currentLang].muscles[muscle] || muscle.toUpperCase();
+    return `<button class="muscle-chip ${state.currentMuscle === muscle ? 'active' : ''}" data-muscle="${muscle}">${muscleDisplayName}</button>`;
+  }).join("");
   
   document.querySelectorAll(".muscle-chip").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -992,9 +1755,37 @@ function renderExerciseList() {
   const currentExercises = state.workoutPlan[state.selectedDay] || [];
   const isInPlan = (id) => currentExercises.some(e => e.id === id);
   
+  if (exercises.length === 0) {
+    container.innerHTML = `<div class="empty-workout">Nenhum exercício disponível para este grupo</div>`;
+    return;
+  }
+  
   container.innerHTML = exercises.map(ex => {
     const exists = isInPlan(ex.id);
-    return `<div class="exercise-card ${exists ? 'selected' : ''}"><div class="exercise-icon">💪</div><div class="exercise-info"><div class="exercise-name">${ex.name}</div><div class="exercise-muscle">${ex.muscle}</div><div class="exercise-sets"><input type="number" class="set-input" id="sets-${ex.id}" placeholder="Séries" value="${exists ? currentExercises.find(e => e.id === ex.id)?.sets || 4 : 4}"><input type="number" class="set-input" id="reps-${ex.id}" placeholder="Reps" value="${exists ? currentExercises.find(e => e.id === ex.id)?.reps || 12 : 12}"></div></div><div class="exercise-actions">${exists ? `<button class="remove-btn" data-id="${ex.id}">✕</button>` : `<button class="add-btn" data-id="${ex.id}" data-name="${ex.name}" data-muscle="${ex.muscle}">+</button>`}</div></div>`;
+    const exerciseName = ex.name[currentLang];
+    const muscleName = translations[currentLang].muscles[ex.muscle] || ex.muscle.toUpperCase();
+    const imageUrl = getExerciseImage(exerciseName);
+    
+    return `<div class="exercise-card ${exists ? 'selected' : ''}">
+      <div class="exercise-icon">
+        ${imageUrl ? 
+          `<img class="exercise-img" src="${imageUrl}" alt="${exerciseName}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"> 
+           <div class="emoji-fallback" style="display: none;">💪</div>` : 
+          `<div class="emoji-fallback">💪</div>`
+        }
+      </div>
+      <div class="exercise-info">
+        <div class="exercise-name">${exerciseName}</div>
+        <div class="exercise-muscle">${muscleName}</div>
+        <div class="exercise-sets">
+          <input type="number" class="set-input" id="sets-${ex.id}" placeholder="${t('sets')}" value="${exists ? currentExercises.find(e => e.id === ex.id)?.sets || 4 : 4}">
+          <input type="number" class="set-input" id="reps-${ex.id}" placeholder="${t('reps')}" value="${exists ? currentExercises.find(e => e.id === ex.id)?.reps || 12 : 12}">
+        </div>
+      </div>
+      <div class="exercise-actions">
+        ${exists ? `<button class="remove-btn" data-id="${ex.id}">✕</button>` : `<button class="add-btn" data-id="${ex.id}" data-name="${exerciseName}" data-muscle="${muscleName}">+</button>`}
+      </div>
+    </div>`;
   }).join("");
   
   document.querySelectorAll(".add-btn").forEach(btn => {
@@ -1011,7 +1802,7 @@ function renderExerciseList() {
         renderExerciseList();
         renderCurrentWorkout();
         renderDaySelector();
-        showToast(`➕ ${name} adicionado!`, false);
+        showToast(`➕ ${name} ${t('add-exercise')}`, false);
       }
     });
   });
@@ -1024,7 +1815,7 @@ function renderExerciseList() {
       renderExerciseList();
       renderCurrentWorkout();
       renderDaySelector();
-      showToast(`✖️ Exercício removido`, false);
+      showToast(`✖️ ${t('remove-exercise')}`, false);
     });
   });
 }
@@ -1033,12 +1824,19 @@ function renderCurrentWorkout() {
   const container = document.getElementById("current-workout-list");
   const exercises = state.workoutPlan[state.selectedDay] || [];
   if (exercises.length === 0) {
-    container.innerHTML = '<div class="empty-workout">Nenhum exercício adicionado. Selecione acima 👆</div>';
+    container.innerHTML = `<div class="empty-workout">${t('empty-workout')}</div>`;
     document.getElementById("exercise-count").textContent = "0";
     return;
   }
-  container.innerHTML = exercises.map(ex => `<div class="workout-item"><div class="workout-item-info"><div class="workout-item-name">${ex.name}</div><div class="workout-item-details">${ex.sets} séries x ${ex.reps} reps | ${ex.muscle}</div></div><button class="workout-item-remove" data-id="${ex.id}">✕</button></div>`).join("");
+  container.innerHTML = exercises.map(ex => `<div class="workout-item">
+    <div class="workout-item-info">
+      <div class="workout-item-name">${ex.name}</div>
+      <div class="workout-item-details">${ex.sets} ${t('sets')} x ${ex.reps} ${t('reps')} | ${ex.muscle}</div>
+    </div>
+    <button class="workout-item-remove" data-id="${ex.id}">✕</button>
+  </div>`).join("");
   document.getElementById("exercise-count").textContent = exercises.length;
+  
   document.querySelectorAll(".workout-item-remove").forEach(btn => {
     btn.addEventListener("click", () => {
       state.workoutPlan[state.selectedDay] = state.workoutPlan[state.selectedDay].filter(e => e.id !== btn.dataset.id);
@@ -1050,7 +1848,6 @@ function renderCurrentWorkout() {
   });
 }
 
-// ============== TREINO DO DIA (SEM RELAÇÃO COM TIMER) ==============
 function getTodayId() {
   const days = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
   return days[new Date().getDay()];
@@ -1058,16 +1855,16 @@ function getTodayId() {
 
 function renderTodayWorkout() {
   const todayId = getTodayId();
-  const todayName = DAYS.find(d => d.id === todayId)?.name || "HOJE";
-  document.getElementById("today-name").textContent = todayName;
+  const todayFullName = DAYS.find(d => d.id === todayId)?.fullName[currentLang] || "TODAY";
+  document.getElementById("today-name").textContent = todayFullName;
   
   const exercises = state.workoutPlan[todayId] || [];
   const completed = state.completedExercises[todayId] || {};
   const container = document.getElementById("today-workout-list");
   
   if (exercises.length === 0) {
-    container.innerHTML = '<div class="empty-workout">Nenhum treino programado para hoje! Vá na aba FICHA e monte seu treino.</div>';
-    document.getElementById("progress-text").textContent = "0/0";
+    container.innerHTML = `<div class="empty-workout">${t('no-workout-today')}</div>`;
+    document.getElementById("progress-text").textContent = `0/0 ${t('completed')}`;
     document.getElementById("progress-fill").style.width = "0%";
     return;
   }
@@ -1076,10 +1873,16 @@ function renderTodayWorkout() {
   container.innerHTML = exercises.map(ex => {
     const isChecked = completed[ex.id] || false;
     if (isChecked) completedCount++;
-    return `<div class="exercise-check-item ${isChecked ? 'completed' : ''}" data-id="${ex.id}"><div><div class="exercise-name">${ex.name}</div><div class="workout-item-details">${ex.sets} séries x ${ex.reps} reps</div></div><input type="checkbox" ${isChecked ? 'checked' : ''} data-id="${ex.id}"></div>`;
+    return `<div class="exercise-check-item ${isChecked ? 'completed' : ''}" data-id="${ex.id}">
+      <div>
+        <div class="exercise-name">${ex.name}</div>
+        <div class="workout-item-details">${ex.sets} ${t('sets')} x ${ex.reps} ${t('reps')}</div>
+      </div>
+      <input type="checkbox" ${isChecked ? 'checked' : ''} data-id="${ex.id}">
+    </div>`;
   }).join("");
   
-  document.getElementById("progress-text").textContent = `${completedCount}/${exercises.length}`;
+  document.getElementById("progress-text").textContent = `${completedCount}/${exercises.length} ${t('completed')}`;
   document.getElementById("progress-fill").style.width = `${(completedCount / exercises.length * 100)}%`;
   
   document.querySelectorAll("#today-workout-list input[type='checkbox']").forEach(cb => {
@@ -1089,7 +1892,6 @@ function renderTodayWorkout() {
       state.completedExercises[todayId][cb.dataset.id] = cb.checked;
       saveData();
       renderTodayWorkout();
-      // NÃO INICIA O TIMER - O TIMOR É INDEPENDENTE
     });
   });
   
@@ -1111,11 +1913,11 @@ function completeWorkout() {
   const completedCount = exercises.filter(ex => completed[ex.id]).length;
   
   if (exercises.length === 0) {
-    showToast("❌ Nenhum treino programado para hoje!", true);
+    showToast(t('no-workout-programmed'), true);
     return;
   }
   if (completedCount < exercises.length) {
-    showToast(`⚠️ Complete todos os ${exercises.length} exercícios!`, true);
+    showToast(`${t('complete-all')}`, true);
     return;
   }
   
@@ -1138,13 +1940,12 @@ function completeWorkout() {
   state.completedExercises[todayId] = {};
   saveData();
   
-  document.getElementById("modal-title").textContent = "🎉 TREINO CONCLUÍDO!";
-  document.getElementById("modal-message").innerHTML = `+${xpEarned} XP<br>🔥 Streak: ${state.streak} dias`;
+  document.getElementById("modal-title").textContent = t('workout-completed');
+  document.getElementById("modal-message").innerHTML = `+${xpEarned} XP<br>🔥 ${t('streak')}: ${state.streak} ${t('days')}`;
   document.getElementById("modal").classList.add("open");
   
   renderTodayWorkout();
   renderStats();
-  // NÃO RESETA O TIMER - O TIMER É INDEPENDENTE
 }
 
 function renderStats() {
@@ -1155,18 +1956,31 @@ function renderStats() {
   
   const historyContainer = document.getElementById("history-list");
   if (state.workoutHistory.length === 0) {
-    historyContainer.innerHTML = '<div class="empty-workout">Nenhum treino realizado ainda</div>';
+    historyContainer.innerHTML = `<div class="empty-workout">${t('no-history')}</div>`;
   } else {
-    historyContainer.innerHTML = state.workoutHistory.map(h => `<div class="workout-item"><div class="workout-item-info"><div class="workout-item-name">${h.date}</div><div class="workout-item-details">${h.exercises} exercícios</div></div><div class="workout-item-info" style="text-align:right;">+${h.xp} XP</div></div>`).join("");
+    historyContainer.innerHTML = state.workoutHistory.map(h => `<div class="workout-item">
+      <div class="workout-item-info">
+        <div class="workout-item-name">${h.date}</div>
+        <div class="workout-item-details">${h.exercises} ${t('exercises')}</div>
+      </div>
+      <div class="workout-item-info" style="text-align:right;">+${h.xp} XP</div>
+    </div>`).join("");
   }
 }
 
 function switchTab(tabId) {
   state.currentTab = tabId;
-  document.getElementById("tab-ficha").classList.add("hidden");
-  document.getElementById("tab-treino").classList.add("hidden");
-  document.getElementById("tab-stats").classList.add("hidden");
-  document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+  const tabs = document.getElementById("tab-ficha");
+  const treino = document.getElementById("tab-treino");
+  const stats = document.getElementById("tab-stats");
+  
+  tabs.classList.add("hidden");
+  treino.classList.add("hidden");
+  stats.classList.add("hidden");
+  
+  if (tabId === "ficha") tabs.classList.remove("hidden");
+  if (tabId === "treino") treino.classList.remove("hidden");
+  if (tabId === "stats") stats.classList.remove("hidden");
   
   document.querySelectorAll(".tab-btn, .nav-item").forEach(el => {
     el.classList.remove("active");
@@ -1181,29 +1995,48 @@ function closeModal() {
   document.getElementById("modal").classList.remove("open");
 }
 
+// ============== LANGUAGE SWITCHER ==============
+function setLanguage(lang) {
+  if (!translations[lang]) return;
+  currentLang = lang;
+  saveLanguage();
+  
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.dataset.lang === lang) btn.classList.add("active");
+  });
+  
+  updateAllTexts();
+}
+
 // ============== INITIALIZE ==============
 loadData();
+
+document.querySelectorAll(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+});
+
+document.querySelector(`.lang-btn[data-lang="${currentLang}"]`).classList.add("active");
+
 renderDaySelector();
 renderMuscleFilters();
 renderExerciseList();
 renderCurrentWorkout();
-document.getElementById("current-day-name").textContent = "SEGUNDA";
+const initialFullDay = DAYS.find(d => d.id === state.selectedDay);
+document.getElementById("current-day-name").textContent = initialFullDay?.fullName[currentLang] || "MONDAY";
 renderStats();
+updateAllTexts();
 
-// Timer Event Listeners (INDEPENDENTES)
 document.getElementById("timer-play").addEventListener("click", playTimer);
 document.getElementById("timer-pause").addEventListener("click", pauseTimer);
 document.getElementById("timer-reset").addEventListener("click", resetTimer);
 
-// Tab Event Listeners
 document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
 document.querySelectorAll(".nav-item").forEach(item => item.addEventListener("click", () => switchTab(item.dataset.nav)));
 
-// Save and Complete Buttons
-document.getElementById("save-workout").addEventListener("click", () => { saveData(); showToast("✅ Ficha de treino salva!", false); });
+document.getElementById("save-workout").addEventListener("click", () => { saveData(); showToast(t('workout-saved'), false); });
 document.getElementById("complete-workout").addEventListener("click", completeWorkout);
 
-// Initialize timer display
 updateTimerDisplay();
 renderTodayWorkout();
 </script>
