@@ -251,7 +251,7 @@ body {
   overflow-x: visible;
 }
 
-/* Exercise List - CORRIGIDO */
+/* Exercise List */
 .exercise-list {
   display: flex;
   flex-direction: column;
@@ -461,7 +461,7 @@ body {
   box-shadow: 0 0 10px rgba(255, 59, 92, 0.3);
 }
 
-/* Muscle Group Filters - CORRIGIDO */
+/* Muscle Group Filters */
 .muscle-filters {
   display: flex;
   gap: 8px;
@@ -1280,7 +1280,6 @@ function getExerciseImage(exerciseName) {
   const keywords = {
     "supino": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop",
     "peck deck": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
-    "voador": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
     "crossover": "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=100&h=100&fit=crop",
     "flexão": "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=100&h=100&fit=crop",
     "puxada": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
@@ -1295,7 +1294,11 @@ function getExerciseImage(exerciseName) {
     "extensora": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
     "abdominal": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=100&h=100&fit=crop",
     "prancha": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=100&h=100&fit=crop",
-    "stiff": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop"
+    "stiff": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "panturrilha": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=100&h=100&fit=crop",
+    "corrida": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=100&h=100&fit=crop",
+    "bicicleta": "https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?w=100&h=100&fit=crop",
+    "corda": "https://images.unsplash.com/photo-1519583274991-36dcf0f6cf16?w=100&h=100&fit=crop"
   };
   
   const lowerName = exerciseName.toLowerCase();
@@ -1352,15 +1355,13 @@ const translations = {
     "muscles": {
       "peito": "CHEST",
       "costas": "BACK",
+      "pernas": "LEGS",
       "ombros": "SHOULDERS",
       "biceps": "BICEPS",
       "triceps": "TRICEPS",
-      "antebraco": "FOREARM",
-      "quadriceps": "QUADRICEPS",
-      "posteriores": "HAMSTRINGS",
-      "panturrilhas": "CALVES",
-      "core": "CORE",
-      "lombar": "LOWER BACK"
+      "trapezio": "TRAPS",
+      "panturrilhas_abdomen": "CALVES & ABS",
+      "cardio": "CARDIO"
     }
   },
   es: {
@@ -1406,15 +1407,13 @@ const translations = {
     "muscles": {
       "peito": "PECHO",
       "costas": "ESPALDA",
+      "pernas": "PIERNAS",
       "ombros": "HOMBROS",
       "biceps": "BÍCEPS",
       "triceps": "TRÍCEPS",
-      "antebraco": "ANTEBRAZO",
-      "quadriceps": "CUÁDRICEPS",
-      "posteriores": "ISQUIOTIBIALES",
-      "panturrilhas": "GEMELOS",
-      "core": "CORE",
-      "lombar": "LUMBAR"
+      "trapezio": "TRAPECIO",
+      "panturrilhas_abdomen": "PANTORRILLAS & ABD",
+      "cardio": "CARDIO"
     }
   },
   pt: {
@@ -1460,15 +1459,13 @@ const translations = {
     "muscles": {
       "peito": "PEITO",
       "costas": "COSTAS",
+      "pernas": "PERNAS",
       "ombros": "OMBROS",
       "biceps": "BÍCEPS",
       "triceps": "TRÍCEPS",
-      "antebraco": "ANTEBRAÇO",
-      "quadriceps": "QUADRÍCEPS",
-      "posteriores": "POSTERIORES",
-      "panturrilhas": "PANTURRILHAS",
-      "core": "CORE",
-      "lombar": "LOMBAR"
+      "trapezio": "TRAPÉZIO",
+      "panturrilhas_abdomen": "PANTURRILHAS & ABD",
+      "cardio": "CARDIO"
     }
   }
 };
@@ -1484,10 +1481,8 @@ function t(key, params = {}) {
 }
 
 function updateAllTexts() {
-  // Header
   document.getElementById("header-subtitle").textContent = t("header-subtitle");
   
-  // Tabs principais
   const tabFichaBtn = document.getElementById("tab-ficha-btn");
   const tabTreinoBtn = document.getElementById("tab-treino-btn");
   const tabStatsBtn = document.getElementById("tab-stats-btn");
@@ -1496,7 +1491,6 @@ function updateAllTexts() {
   if (tabTreinoBtn) tabTreinoBtn.innerHTML = `💪 ${t("tab-treino")}`;
   if (tabStatsBtn) tabStatsBtn.innerHTML = `📊 ${t("tab-stats")}`;
   
-  // Bottom nav
   const navItems = document.querySelectorAll(".nav-item");
   if (navItems.length >= 3) {
     navItems[0].innerHTML = `<span>📋</span> ${t("tab-ficha")}`;
@@ -1504,7 +1498,6 @@ function updateAllTexts() {
     navItems[2].innerHTML = `<span>📊</span> ${t("tab-stats")}`;
   }
   
-  // Buttons
   document.getElementById("save-workout").innerHTML = t("save-workout");
   document.getElementById("complete-workout").innerHTML = t("complete-workout");
   document.getElementById("timer-label").textContent = t("timer-label");
@@ -1512,7 +1505,6 @@ function updateAllTexts() {
   document.getElementById("timer-pause").innerHTML = t("timer-pause");
   document.getElementById("timer-reset").innerHTML = t("timer-reset");
   
-  // Stats labels
   document.querySelectorAll("[data-i18n-stat-workouts]").forEach(el => el.textContent = t("workouts"));
   document.querySelectorAll("[data-i18n-stat-streak]").forEach(el => el.textContent = t("streak"));
   document.querySelectorAll("[data-i18n-stat-record]").forEach(el => el.textContent = t("record"));
@@ -1520,11 +1512,9 @@ function updateAllTexts() {
   document.querySelectorAll("[data-i18n-last-workouts]").forEach(el => el.textContent = t("last-workouts"));
   document.getElementById("modal-close-btn").textContent = t("close");
   
-  // Section titles
   document.getElementById("current-workout-title").innerHTML = t("workout-sheet");
   document.getElementById("today-workout-title").innerHTML = t("today-workout");
   
-  // Re-render components
   renderDaySelector();
   renderMuscleFilters();
   renderExerciseList();
@@ -1533,79 +1523,114 @@ function updateAllTexts() {
   renderStats();
 }
 
-// ============== EXERCÍCIOS DATABASE ==============
+// ============== EXERCÍCIOS DATABASE COMPLETA ==============
 const EXERCISES_DB = {
+  // PEITO
   peito: [
-    { id: "p1", name: { en: "Flat Bench Press", es: "Press de Banca Plano", pt: "Supino Reto" }, muscle: "peito" },
-    { id: "p2", name: { en: "Incline Bench Press", es: "Press de Banca Inclinado", pt: "Supino Inclinado" }, muscle: "peito" },
-    { id: "p3", name: { en: "Decline Bench Press", es: "Press de Banca Declinado", pt: "Supino Declinado" }, muscle: "peito" },
-    { id: "p4", name: { en: "Dumbbell Fly", es: "Aperturas con Mancuernas", pt: "Crucifixo" }, muscle: "peito" },
-    { id: "p5", name: { en: "Cable Crossover", es: "Cruce de Poleas", pt: "Crossover" }, muscle: "peito" },
-    { id: "p6", name: { en: "Pec Deck", es: "Máquina Pec Deck", pt: "Peck Deck" }, muscle: "peito" },
-    { id: "p7", name: { en: "Push-up", es: "Flexión de Brazos", pt: "Flexão de Braço" }, muscle: "peito" }
+    { id: "p1", name: { en: "Barbell Bench Press", es: "Press de Banca con Barra", pt: "Supino Reto com Barra" }, muscle: "peito" },
+    { id: "p2", name: { en: "Incline Dumbbell Press", es: "Press Inclinado con Mancuernas", pt: "Supino Inclinado com Halteres" }, muscle: "peito" },
+    { id: "p3", name: { en: "High Cable Crossover", es: "Cruce de Poleas Alta", pt: "Crossover na Polia Alta" }, muscle: "peito" },
+    { id: "p4", name: { en: "Decline Press or Chest Dips", es: "Press Declinado o Fondos", pt: "Supino Declinado ou Peito Paralelas" }, muscle: "peito" },
+    { id: "p5", name: { en: "Flat Dumbbell Fly", es: "Aperturas Planas con Mancuernas", pt: "Crucifixo Reto com Halteres" }, muscle: "peito" },
+    { id: "p6", name: { en: "Machine Press", es: "Press Articulado en Máquina", pt: "Press Articulado na Máquina" }, muscle: "peito" },
+    { id: "p7", name: { en: "Incline Barbell Press", es: "Press Inclinado con Barra", pt: "Supino Inclinado com Barra" }, muscle: "peito" },
+    { id: "p8", name: { en: "Weighted Push-up", es: "Flexión con Peso", pt: "Flexão de Braço com Peso" }, muscle: "peito" }
   ],
+  // COSTAS
   costas: [
-    { id: "c1", name: { en: "Lat Pulldown", es: "Jalón al Pecho", pt: "Puxada Alta" }, muscle: "costas" },
-    { id: "c2", name: { en: "Barbell Row", es: "Remo con Barra", pt: "Remada Curvada" }, muscle: "costas" },
-    { id: "c3", name: { en: "Seated Cable Row", es: "Remo en Polea", pt: "Remada Baixa" }, muscle: "costas" },
-    { id: "c4", name: { en: "Pull-up", es: "Dominada", pt: "Barra Fixa" }, muscle: "costas" },
-    { id: "c5", name: { en: "Pullover", es: "Pullover", pt: "Pullover" }, muscle: "costas" },
-    { id: "c6", name: { en: "Shrug", es: "Encogimiento", pt: "Encolhimento" }, muscle: "costas" }
+    { id: "c1", name: { en: "Lat Pulldown", es: "Jalón al Pecho en Polea", pt: "Puxada Alta no Pulley" }, muscle: "costas" },
+    { id: "c2", name: { en: "Seated Cable Row", es: "Remo en Polea con Triángulo", pt: "Remada Baixa Triângulo" }, muscle: "costas" },
+    { id: "c3", name: { en: "Barbell Row", es: "Remo Curvado con Barra", pt: "Remada Curvada com Barra" }, muscle: "costas" },
+    { id: "c4", name: { en: "Cable Pullover", es: "Pull-Over en Polea", pt: "Pull-Over na Polia" }, muscle: "costas" },
+    { id: "c5", name: { en: "T-Bar Row", es: "Remo T", pt: "Remada Cavalinho" }, muscle: "costas" },
+    { id: "c6", name: { en: "Reverse Grip Pulldown", es: "Jalón con Supinación", pt: "Puxada com Pegada Supinada" }, muscle: "costas" },
+    { id: "c7", name: { en: "Deadlift", es: "Peso Muerto", pt: "Levantamento Terra" }, muscle: "costas" },
+    { id: "c8", name: { en: "One Arm Dumbbell Row", es: "Remo Unilateral con Mancuerna", pt: "Remada Unilateral com Haltere" }, muscle: "costas" }
   ],
+  // PERNAS
+  pernas: [
+    { id: "l1", name: { en: "Barbell Squat", es: "Sentadilla con Barra", pt: "Agachamento Livre com Barra" }, muscle: "pernas" },
+    { id: "l2", name: { en: "Leg Press 45°", es: "Prensa 45°", pt: "Leg Press 45°" }, muscle: "pernas" },
+    { id: "l3", name: { en: "Leg Extension", es: "Extensión de Piernas", pt: "Cadeira Extensora" }, muscle: "pernas" },
+    { id: "l4", name: { en: "Lying Leg Curl", es: "Curl de Piernas Acostado", pt: "Cadeira / Mesa Flexora" }, muscle: "pernas" },
+    { id: "l5", name: { en: "Stiff Leg Deadlift", es: "Peso Muerto Piernas Rígidas", pt: "Levantamento Terra Stiff" }, muscle: "pernas" },
+    { id: "l6", name: { en: "Dumbbell Lunge", es: "Zancada con Mancuernas", pt: "Avanço / Passada com Halteres" }, muscle: "pernas" },
+    { id: "l7", name: { en: "Bulgarian Split Squat", es: "Sentadilla Búlgara", pt: "Agachamento Búlgaro" }, muscle: "pernas" },
+    { id: "l8", name: { en: "Hip Thrust", es: "Elevación de Cadera", pt: "Elevação Pélvica" }, muscle: "pernas" }
+  ],
+  // OMBROS
   ombros: [
-    { id: "o1", name: { en: "Shoulder Press", es: "Press de Hombros", pt: "Desenvolvimento" }, muscle: "ombros" },
-    { id: "o2", name: { en: "Lateral Raise", es: "Elevación Lateral", pt: "Elevação Lateral" }, muscle: "ombros" },
-    { id: "o3", name: { en: "Front Raise", es: "Elevación Frontal", pt: "Elevação Frontal" }, muscle: "ombros" },
-    { id: "o4", name: { en: "Reverse Fly", es: "Aperturas Inversas", pt: "Crucifixo Inverso" }, muscle: "ombros" }
+    { id: "o1", name: { en: "Dumbbell Shoulder Press", es: "Press de Hombros con Mancuernas", pt: "Desenvolvimento com Halteres" }, muscle: "ombros" },
+    { id: "o2", name: { en: "Cable Lateral Raise", es: "Elevación Lateral en Polea", pt: "Elevação Lateral na Polia" }, muscle: "ombros" },
+    { id: "o3", name: { en: "Dumbbell Front Raise", es: "Elevación Frontal con Mancuernas", pt: "Elevação Frontal com Halteres" }, muscle: "ombros" },
+    { id: "o4", name: { en: "Reverse Fly", es: "Aperturas Inversas", pt: "Crucifixo Invertido" }, muscle: "ombros" },
+    { id: "o5", name: { en: "Dumbbell Lateral Raise", es: "Elevación Lateral con Mancuernas", pt: "Elevação Lateral com Halteres" }, muscle: "ombros" },
+    { id: "o6", name: { en: "Arnold Press", es: "Press Arnold", pt: "Desenvolvimento Arnold" }, muscle: "ombros" },
+    { id: "o7", name: { en: "Incline Lateral Raise", es: "Elevación Lateral Inclinada", pt: "Elevação Lateral Inclinada no Banco" }, muscle: "ombros" },
+    { id: "o8", name: { en: "Face Pull", es: "Face Pull", pt: "Face Pull" }, muscle: "ombros" }
   ],
+  // BÍCEPS
   biceps: [
-    { id: "b1", name: { en: "Barbell Curl", es: "Curl con Barra", pt: "Rosca Direta" }, muscle: "biceps" },
-    { id: "b2", name: { en: "Alternating Curl", es: "Curl Alterno", pt: "Rosca Alternada" }, muscle: "biceps" },
+    { id: "b1", name: { en: "EZ Bar Curl", es: "Curl con Barra W", pt: "Rosca Direta com Barra W" }, muscle: "biceps" },
+    { id: "b2", name: { en: "Alternating Dumbbell Curl", es: "Curl Alterno con Mancuernas", pt: "Rosca Alternada com Halteres" }, muscle: "biceps" },
     { id: "b3", name: { en: "Hammer Curl", es: "Curl Martillo", pt: "Rosca Martelo" }, muscle: "biceps" },
-    { id: "b4", name: { en: "Concentration Curl", es: "Curl Concentrado", pt: "Rosca Concentrada" }, muscle: "biceps" },
-    { id: "b5", name: { en: "Preacher Curl", es: "Curl en Predicador", pt: "Rosca Scott" }, muscle: "biceps" }
+    { id: "b4", name: { en: "Incline Dumbbell Curl", es: "Curl en Banco Inclinado", pt: "Rosca Banco Inclinado" }, muscle: "biceps" },
+    { id: "b5", name: { en: "Preacher Curl", es: "Curl en Predicador", pt: "Rosca Scott" }, muscle: "biceps" },
+    { id: "b6", name: { en: "Concentration Curl", es: "Curl Concentrado", pt: "Rosca Concentrada" }, muscle: "biceps" },
+    { id: "b7", name: { en: "Cable Curl", es: "Curl en Polea", pt: "Rosca Direta na Polia" }, muscle: "biceps" },
+    { id: "b8", name: { en: "Reverse Curl", es: "Curl Inverso", pt: "Rosca Inversa" }, muscle: "biceps" }
   ],
+  // TRÍCEPS
   triceps: [
-    { id: "t1", name: { en: "Skull Crusher", es: "Rompe Cráneos", pt: "Tríceps Testa" }, muscle: "triceps" },
-    { id: "t2", name: { en: "Triceps Pushdown", es: "Extensión de Tríceps", pt: "Tríceps Pulley" }, muscle: "triceps" },
+    { id: "t1", name: { en: "Cable Triceps Pushdown", es: "Extensión de Tríceps con Soga", pt: "Tríceps Corda na Polia" }, muscle: "triceps" },
+    { id: "t2", name: { en: "EZ Bar Skull Crusher", es: "Rompe Cráneos con Barra W", pt: "Tríceps Testa com Barra W" }, muscle: "triceps" },
     { id: "t3", name: { en: "Triceps Kickback", es: "Patada de Tríceps", pt: "Tríceps Coice" }, muscle: "triceps" },
-    { id: "t4", name: { en: "Bench Dip", es: "Fondo en Banco", pt: "Mergulho" }, muscle: "triceps" }
+    { id: "t4", name: { en: "Overhead Dumbbell Extension", es: "Extensión Tras Nuca con Mancuerna", pt: "Tríceps Francês com Haltere" }, muscle: "triceps" },
+    { id: "t5", name: { en: "Close Grip Bench Press", es: "Press de Banca con Agarre Cerrado", pt: "Supino Fechado" }, muscle: "triceps" },
+    { id: "t6", name: { en: "Bench Dip", es: "Fondo en Banco", pt: "Mergulho nas Paralelas ou Banco" }, muscle: "triceps" },
+    { id: "t7", name: { en: "Triceps Pushdown", es: "Extensión de Tríceps", pt: "Tríceps Pulley" }, muscle: "triceps" },
+    { id: "t8", name: { en: "Reverse Grip Triceps Pushdown", es: "Extensión de Tríceps Supinada", pt: "Tríceps Unilateral na Polia" }, muscle: "triceps" }
   ],
-  antebraco: [
-    { id: "a1", name: { en: "Reverse Curl", es: "Curl Inverso", pt: "Rosca Inversa" }, muscle: "antebraco" },
-    { id: "a2", name: { en: "Wrist Curl", es: "Curl de Muñeca", pt: "Rosca Punho" }, muscle: "antebraco" }
+  // TRAPÉZIO
+  trapezio: [
+    { id: "tr1", name: { en: "Dumbbell Shrug", es: "Encogimiento con Mancuernas", pt: "Encolhimento com Halteres" }, muscle: "trapezio" },
+    { id: "tr2", name: { en: "Incline Y-Raise", es: "Y-Raise en Banco Inclinado", pt: "Y-Raise no Banco Inclinado" }, muscle: "trapezio" },
+    { id: "tr3", name: { en: "Reverse Fly", es: "Aperturas Inversas", pt: "Crucifixo Invertido" }, muscle: "trapezio" },
+    { id: "tr4", name: { en: "Wide Grip Upright Row", es: "Remo Alto con Agarre Ancho", pt: "Remada Alta com Pegada Larga" }, muscle: "trapezio" },
+    { id: "tr5", name: { en: "Behind the Back Barbell Shrug", es: "Encogimiento con Barra Trasera", pt: "Encolhimento na Barra por Trás" }, muscle: "trapezio" },
+    { id: "tr6", name: { en: "Smith Machine Shrug", es: "Encogimiento en Smith", pt: "Encolhimento no Smith" }, muscle: "trapezio" },
+    { id: "tr7", name: { en: "Front Barbell Shrug", es: "Encogimiento con Barra Frontal", pt: "Encolhimento com Barra pela Frente" }, muscle: "trapezio" },
+    { id: "tr8", name: { en: "Unilateral Cable Shrug", es: "Encogimiento Unilateral en Polea", pt: "Encolhimento Unilateral na Polia" }, muscle: "trapezio" }
   ],
-  quadriceps: [
-    { id: "q1", name: { en: "Barbell Squat", es: "Sentadilla con Barra", pt: "Agachamento Livre" }, muscle: "quadriceps" },
-    { id: "q2", name: { en: "Leg Press", es: "Prensa de Piernas", pt: "Leg Press" }, muscle: "quadriceps" },
-    { id: "q3", name: { en: "Hack Squat", es: "Sentadilla Hack", pt: "Agachamento Hack" }, muscle: "quadriceps" },
-    { id: "q4", name: { en: "Leg Extension", es: "Extensión de Piernas", pt: "Cadeira Extensora" }, muscle: "quadriceps" },
-    { id: "q5", name: { en: "Bulgarian Split Squat", es: "Sentadilla Búlgara", pt: "Agachamento Búlgaro" }, muscle: "quadriceps" },
-    { id: "q6", name: { en: "Lunge", es: "Zancada", pt: "Afundo" }, muscle: "quadriceps" }
+  // PANTURRILHAS E ABDÔMEN
+  panturrilhas_abdomen: [
+    { id: "pa1", name: { en: "Standing Calf Raise", es: "Elevación de Talones Parado", pt: "Gêmeos em Pé" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa2", name: { en: "Seated Calf Raise", es: "Elevación de Talones Sentado", pt: "Gêmeos Sentado" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa3", name: { en: "Leg Press Calf Raise", es: "Elevación de Talones en Prensa", pt: "Gêmeos no Leg Press" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa4", name: { en: "Crunch", es: "Crunches", pt: "Abdominal Supra" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa5", name: { en: "Leg Raise", es: "Elevación de Piernas", pt: "Abdominal Infra" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa6", name: { en: "Plank", es: "Plancha", pt: "Prancha Isométrica" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa7", name: { en: "Cable Oblique Crunch", es: "Crunches Oblicuos en Polea", pt: "Abdominal de Lado" }, muscle: "panturrilhas_abdomen" },
+    { id: "pa8", name: { en: "Smith Machine Calf Raise", es: "Elevación de Talones en Smith", pt: "Gêmeos no Smith" }, muscle: "panturrilhas_abdomen" }
   ],
-  posteriores: [
-    { id: "po1", name: { en: "Stiff Leg Deadlift", es: "Peso Muerto Piernas Rígidas", pt: "Stiff" }, muscle: "posteriores" },
-    { id: "po2", name: { en: "Lying Leg Curl", es: "Curl de Piernas Acostado", pt: "Mesa Flexora" }, muscle: "posteriores" },
-    { id: "po3", name: { en: "Seated Leg Curl", es: "Curl de Piernas Sentado", pt: "Cadeira Flexora" }, muscle: "posteriores" },
-    { id: "po4", name: { en: "Hip Thrust", es: "Elevación de Cadera", pt: "Elevação Pélvica" }, muscle: "gluteos" },
-    { id: "po5", name: { en: "Hip Abduction", es: "Abducción de Cadera", pt: "Cadeira Abdutora" }, muscle: "gluteos" }
-  ],
-  panturrilhas: [
-    { id: "pa1", name: { en: "Standing Calf Raise", es: "Elevación de Talones Parado", pt: "Panturrilha em Pé" }, muscle: "panturrilhas" },
-    { id: "pa2", name: { en: "Seated Calf Raise", es: "Elevación de Talones Sentado", pt: "Panturrilha Sentado" }, muscle: "panturrilhas" }
-  ],
-  core: [
-    { id: "co1", name: { en: "Crunch", es: "Crunches", pt: "Abdominal Supra" }, muscle: "core" },
-    { id: "co2", name: { en: "Leg Raise", es: "Elevación de Piernas", pt: "Abdominal Infra" }, muscle: "core" },
-    { id: "co3", name: { en: "Oblique Crunch", es: "Crunches Oblicuos", pt: "Abdominal Oblíquo" }, muscle: "core" },
-    { id: "co4", name: { en: "Plank", es: "Plancha", pt: "Prancha Isométrica" }, muscle: "core" }
-  ],
-  lombar: [
-    { id: "l1", name: { en: "Hyperextension", es: "Hiperextensión", pt: "Extensão Lombar" }, muscle: "lombar" }
+  // CARDIO (NOVO!)
+  cardio: [
+    { id: "cd1", name: { en: "Running", es: "Correr", pt: "Corrida" }, muscle: "cardio" },
+    { id: "cd2", name: { en: "Walking", es: "Caminar", pt: "Caminhada" }, muscle: "cardio" },
+    { id: "cd3", name: { en: "Stationary Bike", es: "Bicicleta Estática", pt: "Bicicleta Ergométrica" }, muscle: "cardio" },
+    { id: "cd4", name: { en: "Elliptical", es: "Elíptica", pt: "Elíptico" }, muscle: "cardio" },
+    { id: "cd5", name: { en: "Rowing Machine", es: "Remo Máquina", pt: "Remo" }, muscle: "cardio" },
+    { id: "cd6", name: { en: "Jump Rope", es: "Saltar la Cuerda", pt: "Pular Corda" }, muscle: "cardio" },
+    { id: "cd7", name: { en: "Stair Climber", es: "Escaladora", pt: "Escada" }, muscle: "cardio" },
+    { id: "cd8", name: { en: "Swimming", es: "Natación", pt: "Natação" }, muscle: "cardio" },
+    { id: "cd9", name: { en: "HIIT", es: "HIIT", pt: "HIIT" }, muscle: "cardio" },
+    { id: "cd10", name: { en: "Burpees", es: "Burpees", pt: "Burpees" }, muscle: "cardio" },
+    { id: "cd11", name: { en: "Jumping Jacks", es: "Saltos de tijera", pt: "Polichinelos" }, muscle: "cardio" },
+    { id: "cd12", name: { en: "Mountain Climbers", es: "Escaladores", pt: "Escalador" }, muscle: "cardio" }
   ]
 };
 
-const MUSCLES = ["peito", "costas", "ombros", "biceps", "triceps", "antebraco", "quadriceps", "posteriores", "panturrilhas", "core", "lombar"];
+const MUSCLES = ["peito", "costas", "pernas", "ombros", "biceps", "triceps", "trapezio", "panturrilhas_abdomen", "cardio"];
 const DAYS = [
   { id: "seg", name: { en: "MON", es: "LUN", pt: "SEG" }, fullName: { en: "MONDAY", es: "LUNES", pt: "SEGUNDA" } },
   { id: "ter", name: { en: "TUE", es: "MAR", pt: "TER" }, fullName: { en: "TUESDAY", es: "MARTES", pt: "TERÇA" } },
@@ -1766,8 +1791,20 @@ function renderMuscleFilters() {
   const container = document.getElementById("muscle-filters");
   if (!container) return;
   
+  const muscleDisplayNames = {
+    peito: translations[currentLang].muscles.peito,
+    costas: translations[currentLang].muscles.costas,
+    pernas: translations[currentLang].muscles.pernas,
+    ombros: translations[currentLang].muscles.ombros,
+    biceps: translations[currentLang].muscles.biceps,
+    triceps: translations[currentLang].muscles.triceps,
+    trapezio: translations[currentLang].muscles.trapezio,
+    panturrilhas_abdomen: translations[currentLang].muscles.panturrilhas_abdomen,
+    cardio: translations[currentLang].muscles.cardio
+  };
+  
   container.innerHTML = MUSCLES.map(muscle => {
-    let muscleDisplayName = translations[currentLang].muscles[muscle] || muscle.toUpperCase();
+    let muscleDisplayName = muscleDisplayNames[muscle] || muscle.toUpperCase();
     return `<button class="muscle-chip ${state.currentMuscle === muscle ? 'active' : ''}" data-muscle="${muscle}">${muscleDisplayName}</button>`;
   }).join("");
   
