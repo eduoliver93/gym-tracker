@@ -33,12 +33,14 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  overflow-x: visible;
 }
 
 .app {
   max-width: 500px;
   margin: 0 auto;
   padding-bottom: 80px;
+  overflow-x: visible;
 }
 
 /* Language Selector */
@@ -246,16 +248,18 @@ body {
 .content {
   padding: 16px;
   animation: fadeIn 0.4s ease;
+  overflow-x: visible;
 }
 
-/* Exercise List */
+/* Exercise List - CORRIGIDO */
 .exercise-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
   margin-bottom: 15px;
   max-height: 450px;
   overflow-y: auto;
+  overflow-x: visible;
 }
 
 .exercise-card {
@@ -270,7 +274,7 @@ body {
   cursor: pointer;
   animation: slideInRight 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .exercise-card::before {
@@ -282,6 +286,7 @@ body {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.05), transparent);
   transition: left 0.5s;
+  pointer-events: none;
 }
 
 .exercise-card:hover::before {
@@ -301,8 +306,8 @@ body {
 }
 
 .exercise-icon {
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   background: var(--surface-light);
   border-radius: 12px;
   display: flex;
@@ -311,6 +316,7 @@ body {
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .exercise-img {
@@ -325,7 +331,7 @@ body {
 }
 
 .exercise-icon .emoji-fallback {
-  font-size: 32px;
+  font-size: 28px;
   transition: transform 0.3s ease;
 }
 
@@ -335,14 +341,20 @@ body {
 
 .exercise-info {
   flex: 1;
+  min-width: 0;
+  overflow: visible;
 }
 
 .exercise-name {
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
   margin-bottom: 4px;
   transition: color 0.3s ease;
   color: var(--text);
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.3;
 }
 
 .exercise-card:hover .exercise-name {
@@ -350,29 +362,33 @@ body {
 }
 
 .exercise-muscle {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .exercise-sets {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-top: 6px;
+  flex-wrap: wrap;
 }
 
 .set-input {
-  width: 65px;
+  width: 60px;
   background: var(--surface-light);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 5px 6px;
+  padding: 4px 4px;
   color: var(--text);
-  font-size: 10px;
+  font-size: 9px;
   text-align: center;
   font-family: 'DM Mono', monospace;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .set-input:focus {
@@ -385,18 +401,19 @@ body {
 .exercise-actions {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .add-btn, .remove-btn {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   position: relative;
   overflow: hidden;
@@ -444,19 +461,21 @@ body {
   box-shadow: 0 0 10px rgba(255, 59, 92, 0.3);
 }
 
-/* Muscle Group Filters - ALINHADOS AO CENTRO */
+/* Muscle Group Filters - CORRIGIDO */
 .muscle-filters {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 16px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding: 8px 12px;
   scroll-behavior: smooth;
   justify-content: flex-start;
+  background: var(--surface);
+  border-radius: 16px;
 }
 
 .muscle-chip {
-  padding: 10px 50px;
+  padding: 8px 20px;
   background: var(--surface-light);
   border: 1px solid var(--border);
   border-radius: 30px;
@@ -466,13 +485,14 @@ body {
   white-space: nowrap;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   color: var(--text);
   min-width: auto;
   text-align: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .muscle-chip::before {
@@ -484,6 +504,7 @@ body {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
   transition: left 0.5s;
+  pointer-events: none;
 }
 
 .muscle-chip:hover::before {
@@ -1637,7 +1658,10 @@ function formatTime(seconds) {
 }
 
 function updateTimerDisplay() {
-  document.getElementById("timer-display").textContent = formatTime(timerSeconds);
+  const timerDisplay = document.getElementById("timer-display");
+  if (timerDisplay) {
+    timerDisplay.textContent = formatTime(timerSeconds);
+  }
   const maxSeconds = 3600;
   const progress = Math.min(timerSeconds / maxSeconds, 1);
   const offset = CIRCUMFERENCE * (1 - progress);
@@ -1720,6 +1744,7 @@ function saveLanguage() {
 // ============== RENDER FUNCTIONS ==============
 function renderDaySelector() {
   const container = document.getElementById("day-selector");
+  if (!container) return;
   container.innerHTML = DAYS.map(day => {
     const count = state.workoutPlan[day.id]?.length || 0;
     return `<button class="day-btn ${state.selectedDay === day.id ? 'active' : ''}" data-day="${day.id}">${day.name[currentLang]}<span class="count">${count}</span></button>`;
@@ -1737,9 +1762,9 @@ function renderDaySelector() {
   });
 }
 
-// FUNÇÃO CORRIGIDA DOS FILTROS DE MÚSCULOS - ALINHADOS AO CENTRO
 function renderMuscleFilters() {
   const container = document.getElementById("muscle-filters");
+  if (!container) return;
   
   container.innerHTML = MUSCLES.map(muscle => {
     let muscleDisplayName = translations[currentLang].muscles[muscle] || muscle.toUpperCase();
@@ -1757,6 +1782,7 @@ function renderMuscleFilters() {
 
 function renderExerciseList() {
   const container = document.getElementById("exercise-list");
+  if (!container) return;
   const exercises = EXERCISES_DB[state.currentMuscle] || [];
   const currentExercises = state.workoutPlan[state.selectedDay] || [];
   const isInPlan = (id) => currentExercises.some(e => e.id === id);
@@ -1775,8 +1801,7 @@ function renderExerciseList() {
     return `<div class="exercise-card ${exists ? 'selected' : ''}">
       <div class="exercise-icon">
         ${imageUrl ? 
-          `<img class="exercise-img" src="${imageUrl}" alt="${exerciseName}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"> 
-           <div class="emoji-fallback" style="display: none;">💪</div>` : 
+          `<img class="exercise-img" src="${imageUrl}" alt="${exerciseName}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'emoji-fallback\'>💪</div>'">` : 
           `<div class="emoji-fallback">💪</div>`
         }
       </div>
@@ -1828,6 +1853,7 @@ function renderExerciseList() {
 
 function renderCurrentWorkout() {
   const container = document.getElementById("current-workout-list");
+  if (!container) return;
   const exercises = state.workoutPlan[state.selectedDay] || [];
   if (exercises.length === 0) {
     container.innerHTML = `<div class="empty-workout">${t('empty-workout')}</div>`;
@@ -1867,6 +1893,7 @@ function renderTodayWorkout() {
   const exercises = state.workoutPlan[todayId] || [];
   const completed = state.completedExercises[todayId] || {};
   const container = document.getElementById("today-workout-list");
+  if (!container) return;
   
   if (exercises.length === 0) {
     container.innerHTML = `<div class="empty-workout">${t('no-workout-today')}</div>`;
@@ -1961,6 +1988,7 @@ function renderStats() {
   document.getElementById("stat-xp").textContent = state.xp;
   
   const historyContainer = document.getElementById("history-list");
+  if (!historyContainer) return;
   if (state.workoutHistory.length === 0) {
     historyContainer.innerHTML = `<div class="empty-workout">${t('no-history')}</div>`;
   } else {
@@ -1976,17 +2004,17 @@ function renderStats() {
 
 function switchTab(tabId) {
   state.currentTab = tabId;
-  const tabs = document.getElementById("tab-ficha");
-  const treino = document.getElementById("tab-treino");
-  const stats = document.getElementById("tab-stats");
+  const tabFicha = document.getElementById("tab-ficha");
+  const tabTreino = document.getElementById("tab-treino");
+  const tabStats = document.getElementById("tab-stats");
   
-  tabs.classList.add("hidden");
-  treino.classList.add("hidden");
-  stats.classList.add("hidden");
+  if (tabFicha) tabFicha.classList.add("hidden");
+  if (tabTreino) tabTreino.classList.add("hidden");
+  if (tabStats) tabStats.classList.add("hidden");
   
-  if (tabId === "ficha") tabs.classList.remove("hidden");
-  if (tabId === "treino") treino.classList.remove("hidden");
-  if (tabId === "stats") stats.classList.remove("hidden");
+  if (tabId === "ficha" && tabFicha) tabFicha.classList.remove("hidden");
+  if (tabId === "treino" && tabTreino) tabTreino.classList.remove("hidden");
+  if (tabId === "stats" && tabStats) tabStats.classList.remove("hidden");
   
   document.querySelectorAll(".tab-btn, .nav-item").forEach(el => {
     el.classList.remove("active");
